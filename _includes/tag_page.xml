@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
  
-  <title>{{site.title.short}} - Posts tagged '{{page.tag}}'</title>
+  <title>{{site.title_short}} - Posts tagged '{{page.tag}}'</title>
  <link href="http://mperry.github.com/tag/{{page.tag}}.xml" rel="self"/>
  <link href="http://mperry.github.com/"/>
  <updated>{{ site.time | date_to_xmlschema }}</updated>
