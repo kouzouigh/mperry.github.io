@@ -8,7 +8,7 @@
   // * domain: domain from which images and javascript dependencies are served, defaults to tagaholic.me, images
   //   are assumed to be under /images and javascript files under /javascripts
   $.githubUserPage = function(options) {
-    options = $.extend({domain: 'tagaholic.me', user: location.href.match(/([^\/]+)\/?$/)[1]}, options || {})
+    options = $.extend({domain: '{{site.host}}', user: location.href.match(/([^\/]+)\/?$/)[1]}, options || {})
     plugin_domain = options.domain;
     displayBookmarkletStatus(options.user);
     $.getJSON("http://github.com/api/v1/json/"+options.user +"?callback=?", function(json) {

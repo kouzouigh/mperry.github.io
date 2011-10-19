@@ -4,11 +4,11 @@ layout: nil
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
  
- <title>Tagaholic</title>
+ <title>{{site.title.short}}</title>
  <link href="http://tagaholic.me/atom.xml" rel="self"/>
- <link href="http://tagaholic.me/"/>
+ <link href="{{site.url}}"/>
  <updated>{{ site.time | date_to_xmlschema }}</updated>
- <id>http://tagaholic.me/</id>
+ <id>{{site.url}}</id>
  <author>
    <name>Mark Perry</name>
    <email>maperry78@yahoo.com.au</email>
