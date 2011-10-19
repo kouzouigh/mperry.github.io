@@ -1,4 +1,4 @@
-auto: false
+auto: true
 lsi: false
 host: mperry.github.com
 url: http://mperry.github.com
