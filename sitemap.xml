@@ -17,14 +17,14 @@ site_pages:
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 {% for site_page in page.site_pages %}
 <url>
-  <loc>http://tagaholic.me{{site_page}}</loc>
+  <loc>http://mperry.github.com{{site_page}}</loc>
   <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
   <changefreq>hourly</changefreq>
 </url>
 {% endfor %}
 {% for post in site.posts %}
 <url>
-  <loc>http://tagaholic.me{{ post.url }}</loc>
+  <loc>http://mperry.github.com{{ post.url }}</loc>
   <lastmod>{{ post.date | date_to_xmlschema }}</lastmod>
   <changefreq>hourly</changefreq>
 </url>
