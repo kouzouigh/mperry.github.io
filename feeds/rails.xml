@@ -1,0 +1,5 @@
+---
+layout: nil
+tag: 'rails'
+---
+{% include tag_page.xml %}
