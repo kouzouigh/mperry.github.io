@@ -15,14 +15,6 @@ title: Home
 </div>
 
 <div class='home_box home_right'>
-  <script src="http://www.google.com/jsapi?key=ABQIAAAA233GLZktV9QhuJocUp-TlhTtPYQV4TwasrBhcmG-GObKzvbfXxREr_KzWOOt_7H4wHNSk2TlineseA" type="text/javascript"></script>  
-  <script src="/javascripts/google_ajax_search.js" type="text/javascript" charset="utf-8"></script>
-
-  <h2 class='home_box_title'>Search</h2>
-  <div class="repo" id="search"></div>
-</div>
-
-<div class='home_box home_right'>
   <h2 class='home_box_title'>Latest Posts (<a href='/blog.html'>More</a>)</h2>
   <div id="latest_posts" class="repo">
      <ul>
@@ -37,36 +29,5 @@ title: Home
 
 <div class='home_box home_right'>
   <h2 class='home_box_title'>Projects (<a href='/projects.html'>More</a>)</h2>
-  <div id='github-projects'>
-    <div class="repo">  
-      <h3> <a href="http://github.com/cldwalker/local_gem">local_gem</a></h3> 
-      <span class="desc">Load/require any gem/library simply given its path. Great for nascent gems or for
-        trying the latest code on a gem.</span>
-    </div>
-  </div>
 </div>
 
-<div class='home_box home_right'>
-  <script
-    src="http://feeds.delicious.com/v2/js/cldwalker?icon=m&count=3&sort=date&tags&extended&name&showadd"
-    type="text/javascript"></script>
-</div>
-
-<script type="text/javascript" charset="utf-8">
-  $.githubUser('cldwalker', function(data) {
-    $('#github-projects').html('');
-    
-    var repos = $.grep(data.user.repositories, function(e) { return !e.private});
-    repos.sort(function(a,b) {
-      return b.watchers - a.watchers;
-    });
-    
-    $(repos.slice(0,3)).each(function() {
-      $('#github-projects').append("\
-<div class='repo'>\
-  <h3><a href='" + ((this.homepage == '') ? this.url : this.homepage) + "'>" + this.name + "</a></h3>\
-  <span class='desc'>"+this.description+"</span>\
-</div>");
-    });
-  });
-</script>
