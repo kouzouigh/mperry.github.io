@@ -3,7 +3,9 @@ lsi: false
 host: "mperry.github.com"
 url: "http://mperry.github.com"
 title_full: "Software Matters!: Thoughts on the discipline of Software Engineering"
-title_short: "Software Matters"
+title_short: "Software Matters!"
+title_first: "Software Matters!"
+title_second: "Thoughts on the discipline of Software Engineering"
 email: "maperry78@yahoo.com.au"
 name: "Mark Perry"
 
