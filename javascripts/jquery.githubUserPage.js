@@ -5,7 +5,7 @@
   // These options are mainly useful while developing on the bookmarklet.
   //Options:
   // * user: github user i.e. defunkt, defaults to scraping it from the current url
-  // * domain: domain from which images and javascript dependencies are served, defaults to tagaholic.me, images
+  // * domain: domain from which images and javascript dependencies are served, defaults to mperry.github.com, images
   //   are assumed to be under /images and javascript files under /javascripts
   $.githubUserPage = function(options) {
     options = $.extend({domain: '{{site.host}}', user: location.href.match(/([^\/]+)\/?$/)[1]}, options || {})

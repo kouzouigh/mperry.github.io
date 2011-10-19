@@ -5,7 +5,7 @@ layout: nil
 <feed xmlns="http://www.w3.org/2005/Atom">
  
  <title>{{site.title_short}}</title>
- <link href="http://tagaholic.me/atom.xml" rel="self"/>
+ <link href="{{site.url}}/atom.xml" rel="self"/>
  <link href="{{site.url}}"/>
  <updated>{{ site.time | date_to_xmlschema }}</updated>
  <id>{{site.url}}</id>
