@@ -17,9 +17,9 @@ layout: nil
  {% for post in site.posts limit:15 %}
  <entry>
    <title>{{ post.title }}</title>
-   <link href="http://tagaholic.me{{ post.url }}"/>
+   <link href="{{site.url}}{{ post.url }}"/>
    <updated>{{ post.date | date_to_xmlschema }}</updated>
-   <id>http://tagaholic.me{{ post.id }}</id>
+   <id>{{post.url}}{{ post.id }}</id>
    <content type="html">{{ post.content | xml_escape }}</content>
  </entry>
  {% endfor %}

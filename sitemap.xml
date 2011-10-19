@@ -3,6 +3,7 @@ layout: nil
 site_pages:
   - /
   - /about.html
+  - /bio.html
   - /blog.html
   - /hirb/
   - /has_machine_tags/
