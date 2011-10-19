@@ -2,8 +2,8 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
  
   <title>{{site.title_short}} - Posts tagged '{{page.tag}}'</title>
- <link href="http://mperry.github.com/tag/{{page.tag}}.xml" rel="self"/>
- <link href="http://mperry.github.com/"/>
+ <link href="{{site.url}}/tag/{{page.tag}}.xml" rel="self"/>
+ <link href="{{site.url}}/"/>
  <updated>{{ site.time | date_to_xmlschema }}</updated>
  <id>{{site.url}}</id>
  <author>
