@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
  
-  <title>Tagaholic - Posts tagged '{{page.tag}}'</title>
- <link href="http://tagaholic.me/tag/{{page.tag}}.xml" rel="self"/>
- <link href="http://tagaholic.me/"/>
+  <title>{{site.title.short}} - Posts tagged '{{page.tag}}'</title>
+ <link href="http://mperry.github.com/tag/{{page.tag}}.xml" rel="self"/>
+ <link href="http://mperry.github.com/"/>
  <updated>{{ site.time | date_to_xmlschema }}</updated>
- <id>http://tagaholic.me/</id>
+ <id>{{site.url}}</id>
  <author>
    <name>Mark Perry</name>
    <email>maperry78@yahoo.com.au</email>
