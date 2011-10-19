@@ -6,7 +6,6 @@ description: My initial test post
 tags:
   - post:type=test
 ---
-{{ page.description }}
 
 This is my first post to test my blog.
 
