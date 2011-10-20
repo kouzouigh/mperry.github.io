@@ -7,7 +7,7 @@ layout: master
   	<a href='{{ page.feed_url }}' class='float-right'>
   		<img src='/images/subscribe-icon.gif' alt='Subscribe'/>
   	</a> 
-  	<a href='/blog.html' style="color: white">Latest Blog Post</a>
+  	<a href='/blog.html' style="color: white">Last Post</a>
   </h2>
   
   <div class='post'>
@@ -18,7 +18,7 @@ layout: master
 </div>
 
 <div class='home_box home_right'>
-  <h2 class='home_box_title'><a href='/blog.html'>Recent Blog Posts</a></h2>
+  <h2 class='home_box_title'><a href='/blog.html'>Recent Posts</a></h2>
   <div id="latest_posts" class="repo">
      <ul>
     {% for post in site.posts limit:10 %}
