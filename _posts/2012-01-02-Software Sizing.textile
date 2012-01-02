@@ -7,7 +7,7 @@ tags:
   - post:type=sizing
 ---
 
-This year, I read read Capers Jones excellent book Software Engineering Best Practices and was impressed with the usefulness and practicality of fast software sizing based on pattern matching.  It relies on the many thousands of applications that already have function point size data available.  By categorising these existing applications in a number of properties similar, yet to be constructed, applications can be sized by comparing the intended application to those with similar patterns.  The properties are:
+I recently read the excellent book Software Engineering Best Practices (2010) by Capers Jones and was impressed with the usefulness and practicality of fast software sizing based on pattern matching.  It relies on the many thousands of applications that already have function point size data available.  By categorising these existing applications in a number of properties similar, yet to be constructed, applications can be sized by comparing the intended application to those with similar patterns.  The properties are:
 - nature
 - scope
 - class
@@ -18,7 +18,7 @@ This year, I read read Capers Jones excellent book Software Engineering Best Pra
 
 This taxonomy is copyrighted and is including in Applied Software Measurement by Capers Jones.  Each property is not assigned the same weight and at the time the book was written was included in a patent application.
 
-What is included in the book is information based on the scope property that then needs to be scaled based on the other properties.  The base scopes are:
+What is included in the book is information based on the scope property that then needs to be scaled based on the other properties.  The base scopes are (function point size in parentheses):
 - Algorithm (1)
 - Subroutine (5)
 - Module (10)
@@ -35,14 +35,14 @@ What is included in the book is information based on the scope property that the
 - New national system (250K)
 - New global system (500K)
 
-This information can be used well before the applications requirement have begun.  Included in the book are 150 sample application sizes based on pattern matching, of which I have included some below:
+This information can be used well before the applications requirement have begun.  Included in the book are 150 sample application sizes based on pattern matching, of which I have included some below (again, function point size in parentheses):
 
 - Star wars missile defence (350K)
 - Oracle (310K)
-- US Air traffic control (306K)
+- US air traffic control (306K)
 - SAP (296K)
 - Microsoft Vista (157K)
-- Microsoft Office professional (93K)
+- Microsoft Office Professional (93K)
 - Airline reservation system (38K)
 - Data warehouse (21K)
 - Skype (21K)
@@ -55,7 +55,10 @@ This information can be used well before the applications requirement have begun
 - Instant messaging (680)
 - Denial of service virus (140)
 
-Caution should be used when applying pattern matching to size software.  This technique is still fairly experimental and may need tweaking.  Also required is an examination of a large sample of projects already completed with standardised function point counts.  The author examined several hundred projects using his technique.
+Caution should be used when applying pattern matching to size software.  This technique is still fairly experimental and may need tweaking.  Also required is an examination of a large sample of projects already completed with standardised function point counts.  The author examined several hundred projects using this technique.
 
 Regardless, this information can be used to create a rough estimate on the function point size of the application and using a function point to lines of code table (e.g. http://www.qsm.com/resources/function-point-languages-table) one can quickly estimate the size of a proposed application, along with a potential cost (in man months) and schedule.
+
+Related, static analysis tools that produce LOC counts are a source of function point sizing that may confirm these initial estimates.  The open static analysis tool Sonar has a site called Nemo for analysing open source projects (http://nemo.sonarsource.org/).  JDK7 is the largest project analysed with 1.14 million LOC.  Using a Java conversion rate of 53 LOC per function point gives the size of this project as 21.5K function points.  This estimates that JDK7 is around the same size as Skype, the iPhone and Linux.
+
 
