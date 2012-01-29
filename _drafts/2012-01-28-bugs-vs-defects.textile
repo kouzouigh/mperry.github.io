@@ -6,7 +6,7 @@ description: Why software issues should not be called bugs
 tags:
   - post:type=terms
 ---
-I've had quite a few people ask me why I refer to software issues as defects instead of the almost ubiquitously used term bugs.  This was inspired by the writing of Watts Humphrey, in particular his book ["A Discipline For Software Engineering":http://www.amazon.com/Discipline-Software-Engineering-Watts-Humphrey/dp/0201546108] (1995) which has since been superceded by ["PSP: A Self-Improvement Process for Software Engineers": http://www.sei.cmu.edu/library/abstracts/books/0321305493.cfm].
+I've had quite a few people ask me why I refer to software issues as defects instead of the almost ubiquitously used term "bugs".  This was inspired by the writing of Watts Humphrey, in particular his book ["A Discipline For Software Engineering":http://www.amazon.com/Discipline-Software-Engineering-Watts-Humphrey/dp/0201546108] (1995) which has since been superceded by ["PSP: A Self-Improvement Process for Software Engineers": http://www.sei.cmu.edu/library/abstracts/books/0321305493.cfm].
 
 !http://ecx.images-amazon.com/images/I/414H064YW2L._SL500_AA300_.jpg!
 
@@ -18,8 +18,9 @@ By calling issues defects it encourages developers to take accountability for bo
 
 Defects should not be thought of as minor inconveniences that will be fixed later, caught be the compiler or found in testing.  We know from statistical gathering that the best way to prevent and remove defects is at the time they occur and other techniques find but a small portion of defects.  Testing, for example, typically only finds 35-40% of defects.  If you rely on testing alone for software quality, you aren't going to find many defects and your time in UAT and production for finding and fixing defects will balloon.
 
+Miriam Webster dictionary defines "defective":http://www.merriam-webster.com/dictionary/defective as:
 
+bq. a : imperfect in form or function : faulty <a defective pane of glass> 
 
-
-
+This is the best description of our software and reflects the potential serious issues defective software can cause.
 

@@ -1,0 +1,8 @@
+---
+layout: post
+title: Fast Software Sizing
+keywords: sizing, function points, estimating, pattern matching, Capers Jones
+description: Using pattern matching for software size estimation
+tags:
+  - post:type=sizing
+---
