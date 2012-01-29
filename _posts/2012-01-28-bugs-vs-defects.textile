@@ -6,7 +6,7 @@ description: Why software issues should not be called bugs
 tags:
   - post:type=terms
 ---
-I've had quite a few people ask me why I refer to software issues as defects instead of the almost ubiquitously used term "bugs".  This was inspired by the writing of Watts Humphrey, in particular his book ["A Discipline For Software Engineering":http://www.amazon.com/Discipline-Software-Engineering-Watts-Humphrey/dp/0201546108] (1995) which has since been superceded by "PSP: A Self-Improvement Process for Software Engineers": http://www.sei.cmu.edu/library/abstracts/books/0321305493.cfm.
+I've had quite a few people ask me why I refer to software issues as defects instead of the almost ubiquitously used term "bugs".  This was inspired by the writing of Watts Humphrey, in particular his book ["A Discipline For Software Engineering":http://www.amazon.com/Discipline-Software-Engineering-Watts-Humphrey/dp/0201546108] (1995) which has since been superceded by "PSP: A Self-Improvement Process for Software Engineers":http://www.sei.cmu.edu/library/abstracts/books/0321305493.cfm.
 
 !http://ecx.images-amazon.com/images/I/414H064YW2L._SL500_AA300_.jpg!
 
