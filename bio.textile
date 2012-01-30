@@ -4,6 +4,8 @@ title: Biography
 ---
 Here is the corporate spiel about myself, Mark Perry.
 
+!images/mperry_small.jpg!
+
 bq. Mark is an outstanding and passionate software architect and team leader with extensive project management skills experienced in the full software development lifecycle.  He has exceptional skills in the architecture, design and delivery of complex, distributed systems and proven expertise leading, managing and optimising development teams to ensure difficult projects successfully deliver business value with innovative, high quality and cost effective solutions.  His strengths also include software quality, software process improvement and software economics.
 
 You can contact me via email:
