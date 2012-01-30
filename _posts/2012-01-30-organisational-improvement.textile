@@ -83,7 +83,7 @@ Not all improvement must be cost justified.  Schedule accuracy, schedule predict
 
 h2.  Credits
 
-This post was inspired by a discussion at the "Brisbane Functional Programming Group":http://www.bfpg.com on the introduction of functional programming to organisations, the benefits, costs and overcoming resistance.  However the strucuture of improvement proposals are generic.  The structure of this post was taken from the Watts Humphrey column, "Making the Strategic Case for Process Improvement".  Much of the content has been paraphrased and rewritten.
+This post was inspired by a discussion at the "Brisbane Functional Programming Group":http://www.bfpg.org on the introduction of functional programming to organisations, the benefits, costs and overcoming resistance.  However the strucuture of improvement proposals are generic.  The structure of this post was taken from the Watts Humphrey column, "Making the Strategic Case for Process Improvement".  Much of the content has been paraphrased and rewritten.
 
 
 
