@@ -2,4 +2,12 @@
 layout: master
 title: Biography
 ---
-Spiel about myself, Mark Perry.
+Here is the corporate spiel about myself, Mark Perry.
+
+bq. Mark is an outstanding and passionate software architect and team leader with extensive project management skills experienced in the full software development lifecycle.  He has exceptional skills in the architecture, design and delivery of complex, distributed systems and proven expertise leading, managing and optimising development teams to ensure difficult projects successfully deliver business value with innovative, high quality and cost effective solutions.  His strengths also include software quality, software process improvement and software economics.
+
+You can contact me via email:
+* maperry78 [at] yahoo [dot] com [dot] au
+
+You can also view my "LinkedIn profile":http://www.linkedin.com/profile/view?id=154224666&trk=tab_pro.
+
