@@ -16,10 +16,6 @@ Java has been declared either dead or dying multiple times thoughout it's life. 
 # Continuations
 # Meta-programming
 # Limited obvious types
-** decimal
-** date and time intervals
-** date, time and datetime representations
-** tuples, options
 # Lack of unified type system
 # Immutability
 # Laziness
@@ -58,7 +54,7 @@ Java has just the simple assert mechanism.  Support for "Design by Contract":htt
 * Contracts => General and strong theorems, checked at run time for particular instances (can be turned on or off)
 * Unit testing => Specific and strong theorems, checked quasi-statically on interesting cases
 
-These three type of theorems are not well integrated in programming languages (presenting research opportunities).
+These theorems are not well integrated in programming languages (presenting research opportunities).
 
 h2. Continuations
 
@@ -74,9 +70,7 @@ The Java Date and Time API is a mess.  Sure we can use Joda-Time until JSR 310 g
 
 The double type is a poor implmentation of the decimal type "IEEE 754":http://en.wikipedia.org/wiki/Decimal_floating_point.  Consider the Java program below which shows mutliples of 0.1.
 
-bq..
-
-package mperry;
+bq.. package mperry;
 
 public class DoublePrecision {
 
