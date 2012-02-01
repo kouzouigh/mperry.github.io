@@ -34,11 +34,13 @@ Dynamic/static typing and "type inference":http://en.wikipedia.org/wiki/Type_inf
 
 h2. Generic Type Erasure (Reification)
 
-!>http://ecx.images-amazon.com/images/I/51FKSNAV2GL._BO2,204,203,200_PIsitb-sticker-arrow-click,TopRight,35,-76_AA300_SH20_OU01_.jpg!
 The problem with generic type erasure is shown nicely in Josh Bloch's book "Effective Java":http://www.amazon.com/Effective-Java-Programming-Language-Guide/dp/B003D3OFRA (Chapter 5 - Generics).  Since arrays are erroneously covariant instead of invariant, generics should be used to improve your code for (weak) type safety.  Some problems with generics:
 * Calling a method with a generic argument defaults the type of the argument to Object at runtime, calling a method that the programmer did not expect
 * Cannot create objects of the generic type
 * Others
+
+!http://ecx.images-amazon.com/images/I/51FKSNAV2GL._BO2,204,203,200_PIsitb-sticker-arrow-click,TopRight,35,-76_AA300_SH20_OU01_.jpg!
+
 
 h2. Lambdas
 
@@ -60,7 +62,7 @@ These three type of theorems are not well integrated in programming languages (p
 
 h2. Continuations
 
-Continuations:http://en.wikipedia.org/wiki/Continuation would make web programming dead simple.  Just restore the state and continue the computation.
+"Continuations":http://en.wikipedia.org/wiki/Continuation would make web programming dead simple.  Just restore the state and continue the computation.
 
 h2. Meta-programming
 
@@ -72,7 +74,7 @@ The Java Date and Time API is a mess.  Sure we can use Joda-Time until JSR 310 g
 
 The double type is a poor implmentation of the decimal type "IEEE 754":http://en.wikipedia.org/wiki/Decimal_floating_point.  Consider the Java program below which shows mutliples of 0.1.
 
-bc..
+bq..
 
 package mperry;
 
@@ -95,7 +97,7 @@ public class DoublePrecision {
 
 p. Which produces the following output:
 
-bc.
+bq.
 0: 0.0 1: 0.1 2: 0.2 3: 0.30000000000000004 4: 0.4 5: 0.5 6: 0.6000000000000001 7: 0.7000000000000001 8: 0.8 9: 0.9 
 10: 1.0 11: 1.1 12: 1.2000000000000002 13: 1.3 14: 1.4000000000000001 15: 1.5 16: 1.6 17: 1.7000000000000002 18: 1.8 19: 1.9000000000000001 
 
@@ -117,8 +119,7 @@ h2. Laziness
 
 Laziness in programming languages is really useful.  From wikipedia:
 
-bq.:http://en.wikipedia.org/wiki/Lazy_evaluation
-* Performance increases due to avoiding unnecessary calculations and avoiding error conditions in the evaluation of compound expressions.
+bq.:http://en.wikipedia.org/wiki/Lazy_evaluation * Performance increases due to avoiding unnecessary calculations and avoiding error conditions in the evaluation of compound expressions.
 * The capability of constructing potentially infinite data structures
 * The capability of defining control structures as abstractions instead of as primitives.
 
@@ -139,21 +140,20 @@ This can involve:
 
 h2. Concurrency
 
-The fork/join framework is a step in the right direction, but still dominant is the lock/semaphore/monitor paradigm created in the 60s over 40 years ago.  How many people are sure their concurrent code is correct in all situations?  Software transactional memory implementations look like they "exist in Java": http://en.wikipedia.org/wiki/Software_transactional_memory#Java, but I have not tried any myself.
+The fork/join framework is a step in the right direction, but still dominant is the lock/semaphore/monitor paradigm created in the 60s over 40 years ago.  How many people are sure their concurrent code is correct in all situations?  Software transactional memory implementations look like they "exist in Java":http://en.wikipedia.org/wiki/Software_transactional_memory#Java, but I have not tried any myself.
 
 h2. Multiple inheritance
 
 Eiffel did this right, but C++ created nightmares with diamond inheritance which tainted the entire concept.  Scala seems to be bringing this back in a limited way with traits.
 
-p.
 ...and I haven't even mentioned the modularity coming in Java 8.
 
 h2. References
 
 A few references that I thought made good reading:
 * "Is Java dead?":http://codemonkeyism.com/java-dead/
-* "A comparison of Microsoft's c# programming language to Sun Microsystems' Java programming language": http://www.25hoursaday.com/CsharpVsJava.html#conclusion2k7
+* "A comparison of Microsoft's c# programming language to Sun Microsystems' Java programming language":http://www.25hoursaday.com/CsharpVsJava.html#conclusion2k7
 * "Why Java Sucks & C# Rocks":http://www.slideshare.net/jeffz/why-java-sucks-and-c-rocks-final
-* "Beyond Java": http://www.amazon.com/Beyond-Java-Bruce-Tate/dp/0596100949
+* "Beyond Java":http://www.amazon.com/Beyond-Java-Bruce-Tate/dp/0596100949
 * "Hindler email archive on history of type inference algorithm":http://www.cis.upenn.edu/~bcpierce/types/archives/1988/msg00042.html
 * "Layman's type inference":http://www.enotes.com/topic/Type_inference
