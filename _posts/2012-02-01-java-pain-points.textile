@@ -99,7 +99,8 @@ Also missing is simple tuples (see Python) and the Option type (for type safe ha
 
 h2. Unified Type System
 
-The Java type system is a hodge-podge of different abstractions that lacks an elegant, unified model.  You need to work with arrays, classes and primitives.  Compare this to Scala's type system. !http://www.scala-lang.org/sites/default/files/images/classhierarchy.png!.
+The Java type system is a hodge-podge of different abstractions that lacks an elegant, unified model.  You need to work with arrays, classes and primitives.  Compare this to Scala's type system.
+!images/scala_classhierarchy.png!
 
 Java arrays are a pain to work with and are unfortunately covariant.  Primitves have to be boxed and unboxed and interact strangely with var args and generics.  Ugly!
 
