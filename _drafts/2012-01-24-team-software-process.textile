@@ -6,5 +6,3 @@ description: Using pattern matching for software size estimation
 tags:
   - post:type=sizing
 ---
-
-http://www.artima.com/intv/contracts.html
