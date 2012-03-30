@@ -1,0 +1,37 @@
+---
+layout: post
+title: Sum Types
+keywords: 
+description: 
+tags:
+  - post:type=
+---
+
+Many data structures involve different types of data, e.g. in a tree, nodes have children but leaves do not.  The type of the value determines the structure of the data.  These types are called sum types and include the binary sum (choice of two things) and the nullary sum (the choice of no things).  Finite sums generalise these cases to an arbitrary number in a finite set.
+
+Nullary and Binary Sum
+
+Typ t ::= 	void void nullary sum
+			sum(t1;t2) t1+t2 binary sum
+			
+Exp e ::= 	abort[t](e) abort(e) abort
+			in[t1;t2][l](e) l.e left injection
+			in[t1;t2][r](e) r.e right injection
+			case(e; x1.e1; x2.e2) case e {l.x => e1 | r.x => e2} case analysis
+
+The nullary sum has a choice of zero and therefore has no values.  The value abort(e) aborts the computation in the event that e evaluates to a value, which it cannot do.  A value can be drawn from the left or the right and we can discriminate on the two choices using case analysis.
+
+
+Finite Sum
+
+Nullary and binary sums generalise to finite sums
+
+<TODO, use the dependent type>
+Typ t ::= sum(fi,!tigi2I) [ti]i2I sum
+
+Exp e ::= in[~t][i](e) i.e injection
+case(e;fi,!xi.eigi2I) caseefi.xi )eigi2I case analysis
+
+The finite sum and a finite index over the sums.
+
+
