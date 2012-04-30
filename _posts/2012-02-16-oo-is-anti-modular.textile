@@ -3,8 +3,7 @@ layout: post
 title: OO is anti-modular
 keywords: OO, object-oriented, programming, types, modularity, ML, Java, FP, functional programming, type theory
 description: Object oriented programming is anti-modular
-tags:
-  - post:type=modularity
+tags: modularity
 ---
 
 Robert Harper, Professor of Computer Science at Carnegie Mellon University, recently posted about replacing object-oriented (OO) programming with functional programming (FP) to first year students.  He states: 

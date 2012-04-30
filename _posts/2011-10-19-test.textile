@@ -3,8 +3,7 @@ layout: post
 title: Initial test
 keywords: test
 description: My initial test post
-tags:
-  - post:type=test
+tags: test
 ---
 
 This is my first post to test my blog.

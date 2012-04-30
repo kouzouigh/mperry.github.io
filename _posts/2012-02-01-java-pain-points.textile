@@ -3,8 +3,7 @@ layout: post
 title: Java Pain Points
 keywords: java, verbosity, language, features
 description: The problems with the Java progamming language
-tags:
-  - post:type=java
+tags: java
 ---
 Java has been declared either dead or dying multiple times thoughout it's life.  For Java programmers unaware of the debate, this can be very disconcerting.  I have used Java for the majority of my programming life and from my observations Java programmers are ignorant of other languages.  However, great Java programmers are the languages loudest critics, but what are the harshest Java pain points?
 

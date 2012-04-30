@@ -3,8 +3,7 @@ layout: post
 title: Making the Case for Organisational Improvement
 keywords: process improvement, software process improvement, SPI, change, strategy, management, proposal
 description: Making the strategic and tactical case for organisational process improvement
-tags:
-  - post:type=process improvement
+tags: process_improvement
 ---
 
 Many engineers feel debilitated and enfeebled by autocratic managers, lacking the power and authority to make meaningful changes to their development practices.  Assuming you can get some management support for the idea of organisational improvement and get their ear, how do you make the strategic and tactical case for improvement?  Regardless of the change proposed (process, language, tool, etc) the generic case for improvement of any type consists of:

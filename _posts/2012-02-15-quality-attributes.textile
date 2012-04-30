@@ -3,8 +3,7 @@ layout: post
 title: Quality Attributes
 keywords: architecture, quality attributes, system attributes, architectural attributes, quality scenarios, system quality attributes
 description: A description of system quality attributes and scenarios
-tags:
-  - post:type=quality_attributes
+tags: quality_attributes
 ---
 
 Software Quality Attributes are the benchmarks that describe a systems behavior within an environment. The quality attributes provide the means for measuring the fitness and suitability of a product. Software architecture has a profound affect on most qualities in one way or another and software quality attributes affect architecture. 

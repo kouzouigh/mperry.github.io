@@ -3,8 +3,7 @@ layout: post
 title: Edsger Dijkstra
 keywords: history, dijkstra, teaching, formal methods, verification, people
 description: Thinking of Dijkstra
-tags:
-  - post:type=people
+tags: people
 ---
 
 !http://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Edsger_Wybe_Dijkstra.jpg/225px-Edsger_Wybe_Dijkstra.jpg!
