@@ -9,8 +9,8 @@ tags: process_improvement
 Many engineers feel debilitated and enfeebled by autocratic managers, lacking the power and authority to make meaningful changes to their development practices.  Assuming you can get some management support for the idea of organisational improvement and get their ear, how do you make the strategic and tactical case for improvement?  Regardless of the change proposed (process, language, tool, etc) the generic case for improvement of any type consists of:
 
 * Clearly define what you propose.
-* Understand today’s business environment.
-* Identify the executive’s current hot buttons.
+* Understand today's business environment.
+* Identify the executive's current hot buttons.
 * Make an initial sanity check.
 * Start the plan with two or three prototypes.
 * Estimate the one-time introduction costs.
@@ -18,7 +18,7 @@ Many engineers feel debilitated and enfeebled by autocratic managers, lacking th
 * Document the available experience data.
 * Estimate the expected savings.
 * Decide how to measure the actual benefits.
-* Determine the improvement’s likely impact on the executive’s current key concerns.
+* Determine the improvement's likely impact on the executive's current key concerns.
 * Identify any other ways that the proposed improvement could benefit the business.
 * Produce a presentation to give this story clearly and concisely.
 

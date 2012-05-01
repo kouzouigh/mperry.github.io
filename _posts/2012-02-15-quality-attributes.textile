@@ -53,13 +53,23 @@ Consider an availability general scenario:
 
 General Availability Scenario Generation
 
-| _. Scenario Part | _. Possible Values |
+table{border:1px solid black; }.
+|_.Scenario Part|_.Possible Values|
 | Source | internal or external |
 | Stimulus | omission, crash, timing, response |
 | Artifact | System processors, communications channels, storage, processes |
 | Environment | Normal, degraded |
-| Response | Detect event then one or more of: * record event * notify user or other systems * disable sources according to rules * make unavailable for period * continue operation in normal or degraded mode |
-| Response Measure | * Interval that the system must become available * Availability time * Degraded mode interval * Repair time |
+| Response | Detect event then one or more of: 
+* record event 
+* notify user or other systems 
+* disable sources according to rules 
+* make unavailable for period 
+* continue operation in normal or degraded mode |
+| Response Measure | 
+* Interval that the system must become available 
+* Availability time 
+* Degraded mode interval 
+* Repair time |
 
 h3. Modifiability
 
@@ -67,7 +77,8 @@ The cost of a change, specically
 * What can change?   Functions, platform, environment, system qualities, capacity
 * Who makes the change and when?  This is commonly done to source code during implementation, but an end user or system admin could make a change.  Time phases could be: implementation, compile time, build, configuration, execution.
 
-| _. Scenario Part | _. Possible Values |
+table{border:1px solid black; }.
+|_. Scenario Part |_. Possible Values |
 | Source | End user, developer, system admin |
 | Stimulus | Add/delete/modify/vary functionality, quality attribute or capacity |
 | Artifact | User interface, platform, environment, other system |
@@ -79,7 +90,8 @@ h3. Performance
 
 The timing of events, interrupts, messages, user requests or the passage of time and the system response.  How long does this take?
 
-| _. Scenario Part | _. Possible Values |
+table{border:1px solid black; }.
+|_. Scenario Part |_. Possible Values |
 | Source | One of multitude independent sources or within system |
 | Stimulus | Perdioc event, sporadic events, non-deterministic (stochastic) events |
 | Artifact | System |
@@ -99,8 +111,8 @@ The ability to resist unauthorised usage.  Characterised by:
 # Availability - The system is available for genuine use (e.g. denial of service brings down website)
 # Auditing - tracking of activities to later reconstruct them.
 
-
-| _. Scenario Part | _. Possible Values |
+table{border:1px solid black; }.
+|_. Scenario Part |_. Possible Values |
 | Source | Individual or system that is: 
 * correctly identified, identified incorrectly, unknown identity 
 who is: 
@@ -117,7 +129,8 @@ h3. Testability
 
 The extent of the ease the software faults can be demonstrated.
 
-| _. Scenario Part | _. Possible Values |
+table{border:1px solid black; }.
+|_. Scenario Part |_. Possible Values |
 | Source | Unit tester, integration tester, system tester, client acceptance tester, user |
 | Stimulus | Analysis, architecture, design, class, integration, delivery |
 | Artifact | Design, code, application |
@@ -138,7 +151,8 @@ The ease to perform a task and user support
 * User customisation
 * Confidence that correct action was taken
 
-| _. Scenario Part | _. Possible Values |
+table{border:1px solid black; }.
+|_. Scenario Part |_. Possible Values |
 | Source | End user |
 | Stimulus | Learn system features, use system efficiently, minimise error impact, adapt system, feel comfortable |
 | Artifact | System |

@@ -23,11 +23,11 @@ Recently I watched a really interesting video regarding Dijkstra called "Discipl
 
 Which got me thinking who perhaps are the greatest computer scientists of all time?  My list would be:
 
-* Charles Babbage (1791 – 1871)
-* Alan Turing (1912 – 1954))
-* John von Neumann (1903 - 1957)
-* Edsger Dijkstra (1930 – 2002)
-* Donald Knuth (1938 - current)
+* Charles Babbage, 1791 - 1871
+* Alan Turing, 1912 - 1954
+* John von Neumann, 1903 - 1957
+* Edsger Dijkstra, 1930 - 2002
+* Donald Knuth, 1938 - current
 
 Whilst the first three are responsible for establishing the computer industry, Dijkstra and Knuth are probably the greatest of the industrial era (post World War 2), computer science's founding generation.
 
