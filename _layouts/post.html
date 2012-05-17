@@ -50,21 +50,3 @@ function toggleMachineTags() {
 <noscript><a href="http://mperry.disqus.com/?url=ref">View the discussion thread.</a></noscript>
 <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
 
-<script type="text/javascript" charset="utf-8">
-  function displayRelatedPosts(wildcard, related_posts) {
-    var related_posts = $.grep(related_posts, function(e) { return !location.href.match(e.url) }).reverse().slice(0,3);
-    var table = "<h3>Related Posts</h3>" + "<table class='post-list'>" +
-    related_posts.map( function(e) {
-      return "<tr>" + "<th><a href='"+e.url+"'>"+e.title+"</a></th>"+ 
-      "<td><span class='table_tag_description'>tagged with</span></td><td>" +
-      e.tags.map( function(tag) { return "<a class='machine_tag_search' href='/blog.html#"+tag+"'>"+tag+"</a>" }).join(', ') +
-      "</td></tr>";
-    }).join("\n") + "</table>";
-    $('#related_posts').html(table);
-    $("td a.machine_tag_search").hideMachineTags();
-  }
-  
-  $( function() {
-    $.machineTagSearch($('#related_tag').text(), {jsonUrl: "/feeds/posts.json", displayCallback: displayRelatedPosts, appendHash: false});
-  });
-</script>
