@@ -1,10 +1,9 @@
 ---
 layout: post
 title: Product Types
-keywords: 
-description: 
-tags:
-  - post:type=
+keywords: type, type theory, product type
+description: Product Type
+tags: type theory
 ---
 
 The binary product of two types is the set of ordered pairs of those two types.  The values of the binary product is retrieved using projections, which select the first or second value in the pair.  The nullary product (or unit) type consists of the empty tuple of no values.
@@ -13,31 +12,29 @@ More generally, the finite product type are tuples indexed by a finite set of in
 - n-tuples where the indices I = {0, 1, ..., n - 1}
 - labelled tuples (or records) indexed by symbols
 
-The syntax for nullary and binary products is described by the following grammar:
-
-
-Typ t ::= 	unit unit nullary product
-			prod(t1;t2) t1 X t2 binary product
-Exp e ::= 	triv <> null tuple
-			pair(e1;e2) <e1, e2> ordered pair
-			pr[l](e) e.l left projection
-			pr[r](e) e.r right projection
-
+Products have both an eager and lazy interpretation.
 
 The syntax for nullary and binary products is described by the following grammar:
-			
-			
-< TODO Insert grammar page 97>
+
+table{border:1px solid black; }.
+|_.Element|_.Abstract Syntax|_.Conrete Syntax|_.Description|
+| Typ t ::= | unit | unit | nullary product |
+| | prod(t1;t2) | t1 X t2 | binary product |
+| Exp e ::= | triv | <> | null tuple |
+| | pair(e1;e2) | <e1, e2> | ordered pair |
+| | pr [l] (e) | e.l | left projection |
+| | pr [ r ] (e) | e.r | right projection |
+
 
 Note that the type of the index is the dependent sum type where an integer index is bounded to 0 <= i < n.  Where n = 0, the type of the index is empty, that is, it has no inhabitants.  Writing the indices explicitly in the tuple:
-(i0 -> t0, i1 -> t1, ..., i.n - 1 -> t.n - 1)
+(i.0 -> t.0, i.1 -> t.1, ..., i.n - 1 -> t.n - 1)
 makes clear the association between the index and the element.  The indices can be represented as bounded integers or using unique labels so that the components of the tuple are more readable.  
 
 Product types are the essence of structured data.  Common product types in programming languages includes:
-- functions with multiple arguments (a tuple with labels) or multiple results
-- objects represented as a set of functions
-- structues, labelled tuples with mutable data
-- arrays (a special tuple where the tuple has the same data type for each element)
+* functions with multiple arguments (a tuple with labels) or multiple results
+* objects represented as a set of functions
+* structues, labelled tuples with mutable data
+* arrays (a special tuple where the tuple has the same data type for each element)
 
 Given the product type is fundamental to programming, it is suprising so many languages have so little support for them!
 
