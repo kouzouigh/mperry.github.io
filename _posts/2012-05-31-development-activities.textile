@@ -1,0 +1,18 @@
+---
+layout: post
+title: Development Activities Effort
+keywords: type, type theory, sum type
+description: Proportion of development effort spent on various development activities
+tags: metrics project management
+---
+Often the software development industry seems so fad oriented it is great to see some facts and evidence in books.  Capers Jones' book, Applied Software Measurement, is stuffed with important and useful information, particularly if your organisation has yet to start a metrics effort.  
+
+!http://ecx.images-amazon.com/images/I/51OPavuzBhL._BO2,204,203,200_PIsitb-sticker-arrow-click,TopRight,35,-76_AA300_SH20_OU01_.jpg!:http://www.amazon.com/Applied-Software-Measurement-Analysis-Productivity/dp/0071502440
+
+Much of software estimation is done by developer gut feel without knowledge of evidence, metrics and biases.  Having such basic information as the typical effort spent in various software development activities can guide you as a validation step in your project plans.  However, this information is hard to come by, particular if your organisation does not collect data.  The table on page 257 is great for a quick overview.
+
+!../../../../images/development_activities_effort.png!
+
+Since development activities are dependent on the size and complexity of the project, Jones recommends to assume the project is 1500 function points.  Note that this table predicts the likely development activities and the percentage of effort spent on each one.  If your team is spending vastly different proportions than the industry average it begs the questions as to why this is the case?  The time spent thinking about this question is extremely valuable.
+
+
