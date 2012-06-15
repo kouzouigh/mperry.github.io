@@ -1,0 +1,83 @@
+---
+layout: post
+title: The Groovy Type System
+keywords: groovy, programming, types
+description: A discussion of the Groovy Type System
+tags: groovy types programming
+---
+
+It seems timely to consider the type system of Groovy given the release of Groovy 2.0.0_rc3 and the impending final release of Groovy 2.0.0.  I introduced Grails into a client organisation, but at times there was some misunderstanding that Groovy (1.x) had an optional static type system.  This is not the case and is easily shown to be false.  Groovy has optional type annotations that are checked at runtime as terms are cast to the types in the type annotations.  Consider the following small program
+
+pre.. package mperry
+
+class Test {
+
+	def static main(def args) {
+		new Test().test()
+	}
+	
+	def test() {
+		def a = 4
+		String b = a
+		println "b = $b"
+		int c = this
+		println "c = $c"
+		
+	}
+}
+
+p. This progams compiles, but when run produces the following output
+
+pre.. b = 4
+Caught: org.codehaus.groovy.runtime.typehandling.GroovyCastException: Cannot cast object 'mperry.Test@198b8b57' with class 'mperry.Test' to class 'int'
+org.codehaus.groovy.runtime.typehandling.GroovyCastException: Cannot cast object 'mperry.Test@198b8b57' with class 'mperry.Test' to class 'int'
+	at mperry.Test.test(Test.groovy:13)
+	at mperry.Test$test.call(Unknown Source)
+	at mperry.Test.main(Test.groovy:6)
+
+p. So what is happenning here?  The term for the variable this is attempted to be assigned to the variable c, declared to be of type int.  However the type of the term is Test, not int, hence the cast exception.  It is instructive to decompile the Java bytecode produced (using JD-GUI)
+
+pre.. package mperry;
+
+import groovy.lang.GroovyObject;
+import groovy.lang.MetaClass;
+import org.codehaus.groovy.runtime.GStringImpl;
+import org.codehaus.groovy.runtime.ScriptBytecodeAdapter;
+import org.codehaus.groovy.runtime.callsite.CallSite;
+import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation;
+
+public class Test
+  implements GroovyObject
+{
+  public Test()
+  {
+    Test this;
+    CallSite[] arrayOfCallSite = $getCallSiteArray();
+    MetaClass localMetaClass = $getStaticMetaClass();
+    this.metaClass = localMetaClass;
+  }
+
+  public static void main(String[] args)
+  {
+    CallSite[] arrayOfCallSite = $getCallSiteArray(); arrayOfCallSite[0].call(arrayOfCallSite[1].callConstructor($get$$class$mperry$Test()));
+  }
+
+  public Object test() {
+    CallSite[] arrayOfCallSite = $getCallSiteArray(); Object a = (Integer)DefaultTypeTransformation.box(4);
+    String b = (String)ScriptBytecodeAdapter.castToType(a, $get$$class$java$lang$String());
+    arrayOfCallSite[2].callCurrent(this, new GStringImpl(new Object[] { b }, new String[] { "b = ", "" }));
+    int c = DefaultTypeTransformation.intUnbox(this);
+    return arrayOfCallSite[3].callCurrent(this, new GStringImpl(new Object[] { (Integer)DefaultTypeTransformation.box(c) }, new String[] { "c = ", "" })); return null;
+  }
+
+  static
+  {
+    __$swapInit();
+  }
+}
+
+p. Note the cast, both explicit (e.g. assigning to b) and implicit (assigning to c).
+
+What is interesting is the introduction of option static typing and optional static compilation to Groovy 2, see "here":http://docs.codehaus.org/display/GROOVY/2012/05/07/Static+compilation+in+the+new+Groovy+2.0+beta.  This introduces semantic issues in the interpretation of Groovy programs, i.e., the behaviour of the progam depends on the mode of compilation.  However, it does address the important flaw that Groovy was always very slow compared to Java.  With static compilation and the use of the invoke dynamic feature of JDK7, performance should now be comparable.  Yet I have a nagging doubt on the elegance and foundations of the language given the recent introduction of the type system and the fundamental dependence on Java's type system.  There are many benefits that Scala has over Groovy, including the type system and the considerable momentum behind Scala as the Java replacement in both industry and academia.
+
+
