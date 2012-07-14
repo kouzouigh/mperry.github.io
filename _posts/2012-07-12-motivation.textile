@@ -1,0 +1,130 @@
+---
+layout: post
+title: Principles of Team Motivation
+keywords: TSP, motivation, team, behaviour
+description: Motivational theory in the context of software teams
+tags: motivation
+---
+
+Motivation drives much of human behaviour and is fundamental to creative behaviour.  Yet what is motivation and how can we motivate others?  Motivation is a deep and complex subject but we know enough about motivation, particularly for software teams.
+
+h2. What is it?
+
+Motivation is an urge to act.  Maslow defines five levels of need:
+- Physical needs for survival, e.g. hunger and thirst
+- Safety, security and comfort
+- Emotional needs: belonging to a family or group, to be loved and cared for.
+- Esteem, recognition and respect for what we are
+- Self actualisation, what we have done and it's impact, results and achievement rewarded by personal satisfaction
+
+Self actualisation is required for software engineering which must be consistently satisfied for outstanding work.  For this to occur, each of the lower levels must be satisfied.
+
+!../../../../images/motivation_triangle.png!
+
+h2. Goals
+
+Goals are an important part of motivation.  The more important you believe the goal is the harder you will work to achieve the goal.  To reinforce the circle, the harder we work to achieve a goal, the more likely we will value achieving it.  In other words, the harder the journey the more we value the destination.
+
+Developers work best when the ideas they hold are in agreement.  When ideas are in agreement they are consonant.  Conversely, when they disagree they are dissonant ideas, bringing discomfort due to the apparent disagreement.  Cognitive dissonance can be caused by management making demands that developers believe are not reasonable.  If management decides on a particular date that does not look reasonable, developers will not hold that as particularly important and not strive to achieve the date.  Whilst the team believes in the date the more important the date becomes and the more committed the team becomes!
+
+h2. Feedback
+
+Feedback is the evidence collected that the team is on track to achieve it's goal.  Whilst evidence indicates we will achieve our goal the team will exert themselves to achieve it which reinforces team motivation.  Feedback is also important to:
+- identify strengths
+- identity areas of improvement
+- identity bias, arrogance or ignorance that impede improvement
+
+h2. Sustaining Motivation
+
+Motivation is best maintained by giving frequent feedback of team progress against goals.  Distant goals are rarely motivating factors.  The teams needs to connect the many short term goals to the overall team goal.
+
+h2. Kinds of Motivation
+
+There are four different kinds of motivation:
+- Intrinsic: attraction of the work.
+- Extrinsic: reward of doing the work.
+- Personal: individual values.
+- Interpersonal: social influences.
+
+Previous studies have identified the top ten IT workers motivation:
+# Challenge and responsibility
+# Flexibility
+# A stable work environment
+# Compensation
+# Professional development
+# Peer recognition
+# Stimulating colleagues and managers
+# Exciting job content
+# Organisational culture
+# Location and community
+
+Notice that money is fourth, clearly the vast majority are intrinsic.  Managers who want excellence must focus on the task itself and not external rewards.  Great people have high standards whose performance is not increased by external factors.
+
+h2. Intinsic motivation
+
+As a manager, how do you appeal to intrinsic motivation?  You can tap into these factors:
+
+* challenge 
+* interest
+* learning
+* meaning - change the world
+* purpose - achieve something important
+* creative flow - intense absorption and pleasure from doing the work
+
+h2. Extrinsic motivation
+
+Types of extrinsic motivation are: 
+# money
+# fame and recognition
+# awards
+# praise and appreciation
+# status and priviledge
+# opportunity
+# obligations and deadlines
+# bribes
+# threats
+
+As politicians well know, threats can be an effective (but destructive) motivational tool.  Simply imply a team member's job may be under review if the task is not completed as instructed.  Whilst this is rarely a productive tactic, it will get a reaction, but probably not the one you want.  When management resorts to threats and fear developers move down the Maslov hierarchy.  This can induce protective and irrational behaviour.  For example, using measurements on the wrong metric often means developers optimise that metric to the detriment of overall team producitivy.
+
+Greed is the most common motivation used in the workplace.  Think salary increases and bonuses.  These reward systems require that a measurement system is constructed to calculate the reward.  However workplace performance is rarely simple enough for this to be successful and can often motivate counter productive behaviour.
+
+Transactional leadership, where bonuses or more money is given, switches the objective from the accomplishment to the reward.  This substitutes greed for self actualisation.  People will try to maximise their reward for minimal effort.  This might sound like what you want, but it really isn't.  Rewarding developers by lines of code will mean programs suddenly need alot more lines to achieve than they did previously.
+
+h2. Personal Motivation
+
+What personal values does the person hold: generosity, success, authenticity, knowledge, security, pleasure, power, harmony, achievement?
+
+h2. Commitment
+
+A commitment is the promise to do something.  A person's desire to achieve the commitment is the primary continuing motivation, the exact level of motivation is primarily decided on how the commitment was made.
+
+Two parties are generally involved in a commitment negotiation.  The buyer describes what is desired and attempts to convince the seller that the commitment is important and easy for them to meet.  The seller then offers a counter proposal.  This continues until they agree or break off negotiations.
+
+To reach agreement the seller must convince the buyer they have the expertise and experience to meet the commitment promised.  Consistently demonstrated performance leads to credibility.  
+
+After the two parties reach an agreement, the seller must perform the agreed work.  The seller, in our case the development team, is expected to do what is required to fulfill the commitment.  Software engineering work often raises suprises and that costs time and money.  Often a Herculean effort is made to reach the goal where the developers are motivated by their commitment.
+
+Different people react differently to the commitments they make.  Some make extraordinary efforts to meet them whilst others seem to ignore them as soon as they are made.  What is interesting is that team commitments have greater motivational power than individual commitments.  When all members have participated in a commitment and the teams depends somewhat on each person, the entire team is highly motivated to reach the commitment.
+
+h2. Building Motivation
+
+To build a motivated, committed team, ensure the following four factors are satisfied:
+- Voluntary: Managers and leaders must ask for commitment, not dictate, browbeat or force them.
+- Visible: Teams must negotiate their own commitments and that process must be transparent.
+- Credible: They must be back with previous evidence and a plan on how the commitment will be met
+- Owned: Those that do the work must make the plan and negotiate the commitment
+
+!../../../../images/motivation_elements.png!
+
+h2. Sustaining Motivation
+
+The element above form the basis of providing team motivation but you still need to periodically reinforce that commitment throughout the project.  Break the project into intermediate milestones that provide feedback.  Track progress at least weekly.  If the team begins to doubt the work is not achievable address the concern directly for their work will suffer.  Either provide evidence the plan is achievable, change the plan or renegotiate the work so that the new commitment is believed to be achievable.
+
+h2. References
+
+Drucker,Management Challenges for the 21st Century, 1999.
+Maslow, Motivation and Personality, 1954.
+Humphrey, TSP - Leading a Development Team, 2006.
+McGuiness, How to Motivate Creative People (Including Yourself), 2009.
+
+
