@@ -2,7 +2,7 @@
 layout: post
 title: The Difficulty of Software Engineering
 keywords: 
-description: A discussion of why software sngineering is complex, difficult and intellectually challenging
+description: A discussion of why software engineering is complex, difficult and intellectually challenging
 tags:
 ---
 
