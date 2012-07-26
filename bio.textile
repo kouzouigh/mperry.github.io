@@ -8,18 +8,17 @@ Here is the corporate spiel about myself, Mark Perry.
 
 Feel free to peruse my "LinkedIn profile":http://www.linkedin.com/profile/view?id=154224666&trk=tab_pro.
 
-bq. Mark is an outstanding and passionate software architect and team leader with extensive project management skills experienced in the full software development lifecycle.  He has exceptional skills in the architecture, design and delivery of complex, distributed systems and proven expertise leading, managing and optimising development teams to ensure difficult projects successfully deliver business value with innovative, high quality and cost effective solutions.  His strengths also include software quality, software process improvement and software economics.
+bq. Mark is a software architect and team leader with project management skills, he is experienced in the full software development lifecycle.  He has developed the architecture, design and delivery of complex, distributed systems and proven expertise leading, managing and optimising development teams to ensure difficult projects successfully deliver business value with innovative, high quality and cost effective solutions.  His strengths also include software quality, software process improvement and software economics.
 
 You can contact me via email:
 * maperry78 [at] yahoo [dot] com [dot] au
 
 My main interests are:
-- Software architecture (styles, tactics, tradeoff analysis)
+- Software architecture (styles, tactics, tradeoffs, analysis)
 - Team Leadership (motivation, planning, estimation, quality)
 - Project management (interpersonal, technical, management)
-- Java and JVM technologies (JEE, EJB, JAX-RS, JAX-WS, Spring, Hibernate, Groovy, Scala)
-- Web (HTTP, services, JSF, Grails)
+- Java and JVM technologies (JEE/J2EE, Groovy, Scala, EJB, JAX-RS, JAX-WS, Spring, Hibernate)
+- Web (Grails, HTTP, services, JSF)
 - Software methodologies (Agile, Scrum, PSP/TSP)
 - Software quality and process improvement (metrics, benchmarking, economics, CMMI)
-- Functional programming, Type Theory
-- Design By Contract, formal methods
+- Functional programming (Haskell, Scala, ML/SML), Type Theory, Design By Contract
