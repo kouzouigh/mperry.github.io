@@ -1,16 +1,14 @@
 ---
 layout: post
 title: New Leadership Competencies
-keywords: 
-description: New leadership competencies
+keywords: Deming, leadership, motivation, software, lean, Scholtes
+description: The need to transform management based on new leadership competencies
 tags:
 ---
 
 IT managers have an insatiable hunger for fadish, silver bullet, quick fix solutions to complex problems.  This understates and fails to understand the important of systems in accomplishing tasks.  Fighting against broken systems that actively hinder and demotivate teams is poison to highly effective and efficient organisatons.  Great running systems allows teams and individuals to do superb work they can be proud of.
 
 | !{ height: 100px; }http://bks4.books.google.com.au/books?id=_pPd2ssliiUC&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE73NTJkrjl1qYBe68v2oaT-TZUTXXTVwn54AJnhrWDomsnRWLD23g6x6t_0OzIZLPu5zd9TS3XMpAxdSTGBXiaxlTmuTyyJn8PS0_zG0SaPYYPLxKO36MgZgPOoyi45wNGeD_TXy! | Peter Scholtes' book, "The Leader's Handbook: Making Things Happen, Getting Things Done":http://books.google.com.au/books/about/The_Leader_s_Handbook.html?id=_pPd2ssliiUC&redir_esc=y describes the need to transform management and gives practical advice based on the work of Deming's systems thinking.  In this post I summarise chapter 2, "The New Leadership Competencies". |
-
-
 
 bq. "All of the empowered, motivated, teamed-up, self-directed, incentivized, accountable, reengineered, and reinvented people you can muster cannot compensate for a dysfunctional system. When the system is functioning well, these other things are all just foofaraw. When the system is not functioning well, these things are still only empty, meaningless twaddle." - Scholtes
 
