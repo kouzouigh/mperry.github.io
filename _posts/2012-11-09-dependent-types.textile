@@ -1,0 +1,42 @@
+---
+layout: post
+title: Introduction to Dependent Types
+keywords: dependent, types, type, theory 
+description: Introduction to Dependent Types
+tags:
+---
+
+Dependent types are functions whose type depends on a value.  This comes in two forms:
+* the dependent product (&prod;, Pi) whose return type is dependent on the argument 
+* the dependent sum (&sum;, Sigma) whose argument type depends on the value of the first argument
+
+h2. Dependent Product
+
+The dependent product generalises Arrow Types.  An example of the dependent product would be a function which, given a Natural number n, returns an array of Integers of size n.  This is written:
+
+bq. &prod; n: Natural . Array(Integer, n)
+
+where the return type is not dependent on the value of an argument, then it simplifies to the Arrow Type, &prod; x: A . B, usually written A &rarr; B, the subset of the cartesian product.
+
+h2. Dependent Sum
+
+This types generalises the cartesian product where the type of the second component depends on the first.  To find the length of an array we might define:
+
+bq. &sum; n: Natural . Array(Integer, n) &rarr; singleton(n)
+
+where singleton(n) is the Singleton Type.
+
+h2. Remarks 
+
+Many programming languages have workarounds for not supporting depedent types.  This can appear as partial functions, metaprogramming and exceptions.  Dependent types allow arbitrary functions to describe a type, this makes type checking as hard as full program verification.  This is why dependent types are usually only found in languages used in program verification.  Due to Goedel's incompleteness theorem, not all functions can be known to be either true or false.
+
+h2. References
+
+[1] "University of Colorado, Fundamentals of Programming Languages slides":http://www.cs.colorado.edu/~bec/courses/csci5535-s09/slides/lecture25.6up.pdf
+[2] Why Dependent Types Matter, Altenkirch et al.
+[3] "Intuitionistic Type Theory":http://en.wikipedia.org/wiki/Intuitionistic_type_theory
+[4] "Coq Proof Assistant":http://coq.inria.fr/
+[5] Types and Programming Languages, section 30.5, Going Further: Dependent Types
+[6] "Howard-Curry Isomorphism":http://en.wikipedia.org/wiki/Curry%E2%80%93Howard_correspondence
+
+
