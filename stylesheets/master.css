@@ -374,3 +374,5 @@ a.machine_tag_toggle.expanded {
   font-size: 90%;
   font-style: italic;
 }
+
+#tableborders td {border:2px solid black;}
