@@ -8,11 +8,11 @@ tags:
 
 I have been using Groovy and Grails for around 2 years now and was consistently frustrated at lacking some fundamental functional programming ideas.  Due to this, one of the first libraries I add in a project is Functional Java (http://functionaljava.org/).  This has proven a good match.
 
-The primary page of functional programming in Groovy seems to be at http://groovy.codehaus.org/Functional+Programming+with+Groovy.  This inclues some basic usage of Functional Java with Groovy but I think it the library needs exposure more widely.  This will also help programmers transition to using functional programming with Java 8 lambdas.  From Functional Java I most commonly use the classes Stream, Option, Either/Validation, Functions and Tuples (Products) and the automated, specification based testing package, fj.test.  
+The primary page of functional programming in Groovy seems to be at http://groovy.codehaus.org/Functional+Programming+with+Groovy.  This inclues some basic usage of Functional Java with Groovy but I think the library needs exposure more widely.  This will also help programmers transition to using functional programming with Java 8 lambdas.  The classes I use most from Functional Java are Stream, Option, Either/Validation, Functions, Tuples (Products) and the automated, specification based testing package, fj.test.  
 
-Let's look at some example code.
+This posts demonstrates lifting a function into the Option class.
 
-Simple Functional Java Examples
+h2. Simple Functional Java Examples
 
 The page http://groovy.codehaus.org/Functional+Programming+with+Groovy first lists some simple List processing using FJ (Functional Java) and Groovy.  This requires meta-programming to add new methods to the existing FJ classes.
 
