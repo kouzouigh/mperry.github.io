@@ -33,7 +33,7 @@ assert evens[3..6] == [6, 8, 10, 12]
 
 </pre>
 
-Note that the code above uses the "as" keyword to reference the asType method on the Object class.
+Note that the code above uses the "as" keyword to reference the asType method on the Object class added by the Groovy JDK.
 
 The metapgromming above begs the question as to where to call the initialisaton code from your program.  However, as of version 2.0, Groovy has a better way of adding methods to existing classes using the Groovy Extension Module mechanism.  This allows us to 
 # add new methods to existing classes directly
@@ -41,7 +41,7 @@ The metapgromming above begs the question as to where to call the initialisaton 
 
 Note that with the release of Groovy 2.2, the first beta of which was available 2013/07/15, Single Abstract Method Coercion (http://docs.codehaus.org/display/GroovyJSR/GEP+12+-+SAM+coercion) should further simplify interaction with libraries using functions as first-class values (e.g. FunctionalJava and Java 8).
 
-My library to facilitate interaction with FunctionalJava is called FunctionalGroovy (of course) and can be download at https://oss.sonatype.org/content/groups/public/com/github/mperry/.  For example, putting this text in test.groovy and running from the command line using "groovy test.groovy".
+My library to facilitate interaction with FunctionalJava is called FunctionalGroovy (of course).  The Github home page is https://github.com/mperry/functionalgroovy and the library is publish to the Sonatype Maven repositorites at https://oss.sonatype.org/content/groups/public/com/github/mperry/.  For example, putting this text in test.groovy and running from the command line using "groovy test.groovy".
 
 <pre class="brush:groovy">
 
@@ -52,12 +52,14 @@ My library to facilitate interaction with FunctionalJava is called FunctionalGro
 import com.github.mperry.fg.*
 
 1.to(5).each {
-     println it
+    println it
 }
 
 </pre>
 
-Note that it appears this will not work from the GroovyConsole or the IntellijIDEA IDE due to existing  issues (likely classpath).
+Note that it appears this will not work from the GroovyConsole or the IntellijIDEA IDE due to existing  issues (likely due to the classpath).
+
+
 
 
 
