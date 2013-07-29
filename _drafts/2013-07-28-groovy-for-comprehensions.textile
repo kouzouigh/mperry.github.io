@@ -59,16 +59,99 @@ import com.github.mperry.fg.*
 
 Note that it appears this will not work from the GroovyConsole or the IntellijIDEA IDE due to existing  issues (likely due to the classpath).
 
+h2. The Problem to Solve
+
+Consider the case of reading values from a Properties file in Java and using the read values in a computation.  Many of the functions to do this need to handle the abnormal case, the Properties file might not be found or any of the keys may not be present or value the correct value.  Let us consider the case where the values should be strings representing integers and we want to perform a function with those integers.
+
+Many Java implementations might implemented (poorly IMNSHO) like so:
 
 
+<pre class="brush:groovy">
+	Integer calculateStandard(Properties p) {
+		def v1 = p.getProperty("lift1")
+		def v2 = p.getProperty("lift2Missing")
+		try {
+			if (v1 == null || v2 == null) {
+				return null
+			} else {
+				def i = Integer.parseInt(v1)
+				def j = Integer.parseInt(v2)
+				return i * j
+			}
+		} catch (Exception e) {
+			return null
+		}
+	}
+</pre>
+
+h2. Implementation Problems
+
+The problems with this implentataton are numerous:
+# duplicate calls to getProperty
+# duplicate null checks
+# duplicate return null statements
+# duplicate parseInt calls
+# clients of this method need to somehow know that the result can be null
+# all clients of this method need to do a null check on the result returned
+
+The worst problem above, by far, is all clients of the method having to do null checks on the result type.  The problem here is:
+# null check is easily forgotten, might cause program abort
+# indicating potential null is not indicated by the types involved
+# comments for null check might get out of sync with the code
+# clients might be overly conservative and do null check for values that cannot be null, cluttering code and muddying semantics
 
 
+h2. Lifting
+
+What is not commonly shown for Functional Programming in Groovy is type-safe nulls which can be handled by lifting into the function into the Option class or using monadic comprehensions.  I intend here to demonstrate lifting functions to handle nulls.
+
+Getting back to our example, lets write a method that returns a String or Integer key in a type-safe manner:
+
+<pre class="brush:groovy">
+	@TypeChecked
+	Option<String> getStringProperty(Properties p, String key) {
+		Option.fromNull(p.getProperty(key))
+	}
+
+	@TypeChecked
+	Option<Integer> getIntProperty(Properties p, String key) {
+		getStringProperty(p, key).bind { String s ->
+			!s.isInteger() ? Option.none() : Option.fromNull(s.toInteger())
+		}
+	}
+</pre>
+
+I encode the null check into the Option return type so that clients do not need to perform null checks, but can call bind, map and other methods over the returned Option.  We've abstracted the null check into the type, a big win.
+
+Now let us get two keys that have that may not exist, may be empty, contain a non-integer string or an integer string, covert to integer and return an Option<Integer> where some value will be within the Option if all the operations have succeeded.
+
+<pre class="brush:groovy">
+
+	Option<Integer> calculateOptionLift(Properties p) {
+		def t = P.p("lift3", "lift4")
+		def t2 = P2.map({ String s -> getIntProperty(p, s)} as F, t)
+		def f2 = {Integer a, Integer b -> a * b} as F2
+		Option.liftM2(f2).f(t2._1(), t2._2())
+	}
+</pre>
+
+We use a type-safe tuple (a FunctionalJava projection, P) for the Property keys and map over the String key to get a tuple containing optional Integer values.  We create a function, f2, taking two normal (not null) integer arguments and use Grooyv's asType method to convert the Closure to a FunctionalJava F2 type.  We then lift the function into the Option class and call the resulting function with the two Option<Integer> values.  The magic here happens with the method liftM2.  The importance of this function can be understood by examining the type signature of liftM2:
+
+<pre class="brush:groovy">
+	static <A, B, C> F2<Option<A>, Option<B>, Option<C>> liftM2(F2<A, B, C> f2) {
+		// TODO: implementation
+	}
+</pre>
+
+We pass liftM2 a two argument function that takes two Integers and returns an Integer and it returns a two arguments function that takes two arguments of type Option<Integer> and returns an Option<Integer>.  This is really convenient, we write a function taking normal Integers and ignore the presence of potential abnormal cases.  When we lift our function into the Option class the function returned already knows how to handle nulls!
+
+We can then extract the value from the Option using the isSome and some methods.
+
+h2. Other
 
 
 This allows us to add various methods to Functional Java to support 
 
-
-h2. Other
 
 The primary pain point in using a FP library is converting a Closure to the underlying abstractions representing a  function type.
 
