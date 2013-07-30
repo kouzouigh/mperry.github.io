@@ -81,7 +81,7 @@ Many Java/Groovy implementations might be done as per below.  This code is writt
 
 h2. Problems with Null
 
-The problems with this implentataton are numerous:
+There are numerous problems with this implementation:
 # duplicate calls to getProperty
 # duplicate null checks
 # duplicate return null statements
@@ -182,7 +182,7 @@ We pass liftM2 a two argument function that takes two Integers and returns an In
 
 h2. Conclusion
 
-There is quite alot of abstraction involved here and despite Groovy's many pain points we have managed to turn some ugly legacy code into quite an elegant solution.
+There is quite alot of abstraction involved here and despite Groovy's many pain points we have managed to turn some ugly legacy code into quite an elegant solution.  When code has to deal with a null from a library, create an abstraction (usually Option) dealing with the null that calls and handles any null parameters and returned values.
 
 h2. References
 
