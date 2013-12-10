@@ -1,0 +1,319 @@
+---
+layout: post
+title: Specification Based Testing
+keywords:
+description:
+tags:
+---
+There are lots of testing frameworks around for Java and Groovy, mostly around Test Driven Development (TDD) [1] and Behaviour Driven Development (BDD) [2].  These frameworks work by creating a specification through examples [3].  Mainstream development needs these techniques due to a lack of expressive type systems in usage, using tests as a substitute for using types.  More sophisticated languages are using types to limit incorrect values and specification based testing as a technique to achieve more rigorous testing and software quality, mostly using various flavours of Quickcheck [5].
+
+"FunctionalJava":http://www.functionaljava.org provides an automated specification testing framework that is well-designed, but a bit clunky to use.  This is due to Java's verbosity when creating functions, although this should be resolved in Java 8.  Using Groovy we can use this library immediately using a simple interface provided by the author's FunctionalGroovy [4] library.  More importantly the technique needs more widespread knowledge and usage.
+
+h2. Example
+
+A simple example demonstrates the technique:
+
+<pre class="brush:groovy">
+	@Test
+	void commutes() {
+		specAssert { Integer a, Integer b ->
+			a + b == b + a
+		}
+	}
+</pre>
+
+Here, the static method specAssert is called from the Specification class and is passed a Groovy closure taking two integers and returns a boolean on whether addition commutes for those arguments (i.e. the argument order on plus can be reversed).  The specAssert method creates a proposition, uses reflection to get the types of the arguments in the closure and uses standard generators for those arguments types to repeatedly test the function.  For n invocations of the closure the proposition will either always be true, or found to be false (if a single invocation is false).  The specAssert method then uses JUnit to assert the proposition is true and prints a summary of the results like so:
+
+<pre>
+OK, passed 100 tests.
+</pre>
+
+Lets change the specification to one that is obviously false and see what happens:
+
+<pre class="brush:groovy">
+	@Test
+	void subtractionDoesNotCommute1() {
+		specAssert { Integer a, Integer b ->
+			a - b == b - a
+		}
+	}
+</pre>
+
+<pre>
+Falsified after 1 passed test with arguments: <0,1>
+
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:92)
+	at org.junit.Assert.assertTrue(Assert.java:43)
+	... rest of the stacktrace ...
+</pre>
+
+This test fails, as expected, but now our entire test suite fails.  This is not what we want.  We want to change the proposition to one that positively asserts that subtraction does not commute, rather than try to show that subtraction commutes.  For anything more than a simple function we create a specification model to pass to the specAssert function.  Here the model describes the function and the truth of that function.
+
+<pre class="brush:groovy">
+	@Test
+	void subtractionDoesNotCommute2() {
+		specAssert new Model(
+				function: { Integer a, Integer b ->
+					a - b == b - a
+				},
+				truth: false
+		)
+	}
+</pre>
+
+Running this test now passes with the output below.
+
+<pre>
+Falsified after 1 passed test with arguments: <1,0>
+</pre>
+
+h2. More Examples
+
+Let's go through more examples to demonstrate different ways one might create propositions about our software.
+
+Let us show that naturals commute using Java Integers.  We use Groovy boolean implication to show we don't care about Integer values that are not naturals.
+
+<pre class="brush:groovy">
+	@Test
+	void naturalsCommute() {
+		specAssert { Integer a, Integer b ->
+			(a >= 0 && b >= 0).implies(a + b == b + a)
+		}
+	}
+</pre>
+
+<pre>
+OK, passed 100 tests.
+</pre>
+
+This is fine, but this test actually cares about the result of the equals method far less than one hundred times because if the first boolean is false, the implication is true.  Let's change this so that we actually care about the result of the equals one hundred times.  In the following example we create a precondition function so that we discard data that does not satisfy the precondition that both a and b be greater than or equal to zero.
+
+<pre class="brush:groovy">
+	@Test
+	void naturalsCommuteDiscardInvalid() {
+		specAssert new Model(
+			pre: some { a, b -> a >= 0 && b >= 0 },
+			function: { Integer a, Integer b ->
+				a + b == b + a
+			}
+		)
+	}
+</pre>
+
+Note that the "some" method here lifts the precondition function into the Option type.  It would be nice to create an interface to remove the need to lift the function into Option, but this is not done yet.
+
+This produces the output.
+
+<pre>
+OK, passed 100 tests (247 discarded).
+</pre>
+
+From this we can see that 247 out of 347 tests were discarded, which is about 71%.  If this proportion reflects what was ignored in the implication above then we actually only tested the equals about 29 times, when the output seems to indicate there were 100 successful tests.
+
+h2. Questions
+
+The two most common questions that I come across after introductory material on this topic is:
+* handling exceptions
+* generating data
+
+h2. Generating Data
+
+FunctionalJava has lots of built in generators, including the basic Java types String, Boolean, Byte, String, Integer, BigInteger, Decimal, BigDecimal, Calendar, Date, Float, Long and others.  Consider generating data for a total Stack, that is, a Stack that does not return exceptions.  The Stack will have the usual methods, isEmpty, push, pop, size and top.  Where an element may not exist for top and pop, the return type will be Option<T> where the return value may contain no value or the actual value.  For illustration purposes we are going to consider two options to generate random stacks of integers:
+ * Generate an integer n and insert n random integers into an empty stack
+ * Generate recursively a stack that is either empty or non-empty
+
+I am going to use the following stack, but the details are not important.
+
+<pre class="brush:groovy">
+package com.github.mperry.fg.test.dbc
+
+import fj.data.Option
+
+import static fj.data.Option.none
+import static fj.data.Option.some
+
+/**
+ * Simple total Stack (returns no exceptions)
+ */
+class TotalStack<T> {
+
+	List<T> elements
+
+	TotalStack() {
+		elements = []
+	}
+
+	boolean isEmpty()  {
+		elements.isEmpty()
+	}
+
+	Option<T> top()  {
+		isEmpty() ? none() : some(elements.last())
+	}
+
+	int size() {
+		elements.size()
+	}
+
+	void push(T item)  {
+		elements.add(item)
+	}
+
+	Option<T> pop()  {
+		isEmpty() ? none() : some(elements.pop())
+	}
+
+	String toString() {
+		elements.toString()
+	}
+
+}
+</pre>
+
+
+h4. Non-Recursive Stack Generator
+
+Firstly we define how to obtain an empty stack:
+
+<pre class="brush:groovy">
+	TotalStack<Integer> empty() {
+		new TotalStack<Integer>()
+	}
+</pre>
+
+To generate the number of integers to insert into the stack we bias a selection so that we choose between 0 and 10 integers to insert, biased equally towards 0, 1 and the interval of [2, 10].  We create a list of generators and convert to a FunctionalJava list fj.data.List, an immutable singly linked list.
+
+<pre class="brush:groovy">
+	Gen<Integer> genStackSize() {
+		Gen.oneOf([Gen.value(0), Gen.value(1), Gen.choose(2, 10)].toFJList())
+	}
+</pre>
+
+To generate a stack we map over the generator for the stack size, Gen<Integer>, creating random integers to insert.  We now have a method to generate random stacks using looping.
+
+<pre class="brush:groovy">
+	Gen<TotalStack<Integer>> genStackLoop() {
+		genStackSize().map({ Integer n ->
+			def s = empty()
+			def r = new Random()
+			for (int i = 0; i < n; i++) {
+				s.push(r.nextInt())
+			}
+			s
+		} as F)
+	}
+</pre>
+
+Note here that we coerce the closure to a FunctionalJava function using "as F".
+
+h4. Recursive Stack Generator
+
+Now consider the recursive case.  We create the base case, generating an empty stack like so:
+
+<pre class="brush:groovy">
+	Gen<TotalStack<Integer>> genEmpty() {
+		Gen.value(empty())
+	}
+</pre>
+
+Then to generate the inductive case of a non-empty stack we use two methods.  One to generate a non-empty stack and one to generate an arbitrary stack.  These methods are mutually recursive, which makes them non-trivial.  Consider the genStackRecursive method first.  We generate either an empty or non-empty stack and create a generator from this list.  For genNonEmpty we use monadic bind over the generator Gen.  We then map over the general recursive generator for stack, mutating the stack with a push of the integer from the integer generator previously used.
+
+<pre class="brush:groovy">
+	Gen<TotalStack<Integer>> genNonEmpty() {
+		Arbitrary.arbInteger.gen.bind({Integer i ->
+			genStackRecursive().map({ TotalStack s ->
+				s.push(i)
+				s
+			} as F)
+		} as F)
+	}
+
+	Gen<TotalStack<Integer>> genStackRecursive() {
+		Gen.oneOf([genEmpty(), genNonEmpty()].toFJList())
+	}
+</pre>
+
+It may help to understand genNonEmpty by considering the type of the bind method for a Gen, as seen below:
+
+<pre class="brush:groovy">
+	// Gen.bind type
+	<B> Gen<B> bind(F<A, Gen<B>> f)
+
+	// concrete type when we call this method
+	Gen<TotalStack<Integer>> bind(F<Integer, Gen<TotalStack<Integer>>)
+</pre>
+
+To test the stack we can then create a test case as seen below. We create a new model, using the default generators producing arbitrary values with the addition of an arbitrary TotalStack.  The function takes a arbitrary stack and arbitrary integer, pushes the integer onto the stack and checks that the value returned by top is as expected.  You may need to check the "Option Javadoc":http://functionaljava.googlecode.com/svn/artifacts/3.0/javadoc/fj/data/Option.html to understand mapping over the Option returned from top.  The line returns true if the value is in the option and has the expected value.
+
+<pre class="brush:groovy">
+	@Test
+	void testPush() {
+		[genStackRecursive(), genStackLoop()].each { g ->
+			specAssert new Model(
+					map: DEFAULT_MAP + [(TotalStack.class): arbitrary(g)],
+					function: { TotalStack<Integer> s, Integer i ->
+						s.push(i)
+						def val = s.top()
+						val.map { it == i }.orSome(false)
+					}
+			)
+		}
+	}
+</pre>
+
+h2. Handling Exceptions
+
+Now considering being able to assert that an exception is thrown given certain input conditions.  Lets go back to considering the commutativity of integers over addition and add the complexity of the integers possibly being null.  We create a value of type Arbitrary of Integer that returns an Integer that is potentially null.
+
+<pre class="brush:groovy">
+	static Arbitrary<Integer> arbNullableInteger() {
+		Arbitrary.arbitrary(Gen.oneOf([Gen.value(null), Arbitrary.arbInteger.gen].toFJList()))
+	}
+</pre>
+
+Then we when we create the mapping of classes to arbitrary values our function will get possibly null integers.  We call plus for the integers, catching the NullPointerException and return true if either integer was null.
+
+<pre class="brush:groovy">
+	@Test
+	void integersCommuteWithNullPointer() {
+		specAssert new Model(
+				map: [(Integer.class): Arbitrary.arbNullableInteger()],
+				function: { Integer a, Integer b ->
+					try {
+						a + b == b + a
+					} catch (NullPointerException e) {
+						(a == null || b == null)
+					}
+				}
+		)
+	}
+</pre>
+
+There are other ways of handling abnormal conditions including adding them to the pre-condition function.  Interestingly, it is easy to add a validator to assert that an exception is of a particular type (with no access to the input values).  This has been useful to show that you can use GContracts for Design By Contract (DbC) and use the post-condition with specification based testing as an oracle.  See the code or contact me for an example, perhaps this is a future blog post.
+
+h2. Other Topics
+
+I could have used some other examples I have done in the code base including:
+* Design By Contract
+* Integer overflow
+* List functor laws
+* Generating arbitrary functions, e.g. from Integer to String.
+
+One interesting question is, can we make this library completely statically typed and convenient?  I think the answer is yes, but my small wrapper library is not at that point yet.  I have some more thinking to do.  It could be the case that adding more methods (combinators) to FunctionalJava will be sufficient to use that interface directly.  Regardless, it is the idea of specification based testing that is of primary importance.
+
+h2. Conclusion
+
+I hope I have raised your awareness of automated specification based testing techniques and how you can write more rigorous tests of your code.  I think the value of Test Driven Development (TDD) is not the tests, but the construction of the specification for the software.  Specification based testing allows one to focus on constructing the specification whilst also giving a more comprehensive test suite.  All the code is up on GitHub, the FunctionalGroovy library is on the sonatype repository at 'https://oss.sonatype.org/content/groups/public' and the gradle dependency is 'com.github.mperry:functionalgroovy-core:0.3-SNAPSHOT'.
+
+h1. References
+
+fn1. "Test Driven Development":https://en.wikipedia.org/wiki/Test-driven_development
+
+fn2. "Behaviour Driven Development":https://en.wikipedia.org/wiki/Behavior-driven_development
+
+fn3. "Specification By Example":https://en.wikipedia.org/wiki/Specification_by_example
+
+fn4. "FunctionalGroovy":https://github.com/mperry/functionalgroovy
+
+fn5. "Quickcheck":https://en.wikipedia.org/wiki/QuickCheck
