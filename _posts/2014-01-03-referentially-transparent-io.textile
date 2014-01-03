@@ -261,7 +261,7 @@ Before explaining this, we need to understand what _sequenceWhile_ does.  The ty
 
 The function _sequenceWhile_ transforms a stream of IO actions into a single IO action containing the stream of input values whilst the function argument _f_ returns true.  We pass in a lazy infinite stream into sequenceWhile and use the function argument _f_ to return an single SimpleIO action with a finite stream of input strings.  The definition of sequenceWhile is beyond the scope of this post.  For more information on a proposal of adding this to the Haskell Control.Monad library see [4].
 
-Now that we have the _interactiveStream_ function returning a single SimpleIO to do the main interactive loop, the entire REPL and main program can be defined as:
+Now that we have the _interactiveStream_ function returning a single SimpleIO to do the main interactive loop, the entire REPL and main program is defined as:
 
 <pre class="brush:groovy">
     SimpleIO<Stream<String>> repl() {
@@ -274,7 +274,102 @@ Now that we have the _interactiveStream_ function returning a single SimpleIO to
 	}
 </pre>
 
+h2. Conclusion
+
 Our REPL consists of a single, referentially transparent SimpleIO action representing IO that does nothing until the main method calls run.  Our entire program is now _almost_ referentially transparent, _main_ is the one method that is not.  If we had an environment that enforced that main returned a single SimpleIO where the runtime environment called _run_ on our behalf we could construct a completely referentially transparent IO program.  Such a language and runtime does exist - Haskell!
+
+h2. The Full Program
+
+The text of the full referentially transparent program is on Github [5], the entire SimpleIODemoFunctional class is:
+
+<pre class="brush:groovy">
+package com.github.mperry.fg
+
+import fj.F
+import fj.Unit
+import fj.data.Option
+import fj.data.Stream
+import groovy.transform.TypeChecked
+
+import static com.github.mperry.fg.IOConstants.stdinReadLine
+import static com.github.mperry.fg.IOConstants.stdoutWriteLine
+import static fj.data.Option.none
+import static fj.data.Option.some
+
+@TypeChecked
+class SimpleIODemoFunctional {
+
+	final String quit = "q"
+	final String help = "The Spectacular Squaring REPL!\nEnter an integer to square or enter $quit to quit"
+	final String prompt = ">"
+
+	Option<Integer> toInt(String s) {
+		s.isInteger() ? some(s.toInteger()) : none()
+	}
+
+	String squareMessage(Integer n) {
+		"square $n = ${n * n}"
+	}
+
+	Option<SimpleIO<Unit>> squareOptionIO(String s) {
+		toInt(s).map { Integer n ->
+			stdoutWriteLine(squareMessage(n))
+		}
+	}
+
+    SimpleIO<Unit> squareIO(String s) {
+        squareOptionIO(s).orSome(IOConstants.empty())
+    }
+
+    Boolean isLoop(String s) {
+        !isQuit(s)
+	}
+
+	Boolean isQuit(String s) {
+        s == quit
+	}
+
+	Boolean validMessage(String s) {
+		(s.isInteger() || isQuit(s))
+	}
+
+	Option<String> invalidMessage(String s) {
+		validMessage(s) ? none() : Option.<String>some("Not an integer: $s")
+	}
+
+	Option<SimpleIO<Unit>> invalidMessageOptionIO(String s) {
+		invalidMessage(s).map { String it -> stdoutWriteLine(it)}
+	}
+
+    SimpleIO<Unit> invalidMessageIO(String s) {
+        invalidMessageOptionIO(s).orSome(IOConstants.empty())
+    }
+
+    SimpleIO<String> interaction() {
+        stdoutWriteLine(prompt).append(stdinReadLine()).flatMap1({ String s ->
+            invalidMessageIO(s).append(squareIO(s))
+        } as F)
+    }
+
+    SimpleIO<Stream<String>> interactionStream() {
+        SimpleIO.sequenceWhile(Stream.repeat(interaction()), { String s -> isLoop(s) } as F)
+    }
+
+    SimpleIO<Stream<String>> interactionStreamAsync() {
+        SimpleIO.sequenceWhile(Stream.repeat(interaction()), { String s -> isLoop(s) } as F)
+    }
+
+    SimpleIO<Stream<String>> repl() {
+        stdoutWriteLine(help).append(interactionStream())
+    }
+
+	static void main(def args) {
+		def d = new SimpleIODemoFunctional()
+		d.repl().run()
+	}
+
+}
+</pre>
 
 h2. References
 
@@ -286,3 +381,6 @@ fn3. "Functional Java":http://functionaljava.org/
 
 fn4. "Proposal to add sequenceWhile to Haskell Monads":http://www.haskell.org/pipermail/libraries/2009-May/011602.html
 
+fn5. "SimpleIODemoFunctional":https://github.com/mperry/functionalgroovy/blob/master/demo/src/main/groovy/com/github/mperry/fg/SimpleIODemoFunctional.groovy in the Github FunctionalGroovy project
+
+fn6. "FunctionalGroovy":https://github.com/mperry/functionalgroovy on Github
