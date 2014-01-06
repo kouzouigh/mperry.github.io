@@ -127,7 +127,7 @@ abstract class SimpleIO<A> {
 }
 </pre>
 
-When run, the BasicIO type will perform the effect and return a value of type A.  For output, we can make this output type be Java Void or Functional Java's Unit type [3].
+When run, the BasicIO type will perform the effect and return a value of type A.  For output, we can make this output type be Java's Void or Functional Java's Unit type [3].  Despite being conceptually similar, I find the Unit type much easier to work with.
 
 Some values that read from and write to standard input and output are as below.  Remind yourself that no IO is done until the _run_ method is called.
 
@@ -261,7 +261,7 @@ Before explaining this, we need to understand what _sequenceWhile_ does.  The ty
 
 The function _sequenceWhile_ transforms a stream of IO actions into a single IO action containing the stream of input values whilst the function argument _f_ returns true.  We pass in a lazy infinite stream into sequenceWhile and use the function argument _f_ to return an single SimpleIO action with a finite stream of input strings.  The definition of sequenceWhile is beyond the scope of this post.  For more information on a proposal of adding this to the Haskell Control.Monad library see [4].
 
-Now that we have the _interactiveStream_ function returning a single SimpleIO to do the main interactive loop, the entire REPL and main program is defined as:
+Now that we have the _interactiveStream_ function returning a single SimpleIO to do the main interactive loop, the repl and main methods are defined as:
 
 <pre class="brush:groovy">
     SimpleIO<Stream<String>> repl() {
@@ -276,9 +276,9 @@ Now that we have the _interactiveStream_ function returning a single SimpleIO to
 
 h2. Conclusion
 
-Our REPL consists of a single, referentially transparent SimpleIO action representing IO that does nothing until the main method calls run.  Our entire program is now _almost_ referentially transparent, _main_ is the one method that is not.  If we had an environment that enforced that main returned a single SimpleIO where the runtime environment called _run_ on our behalf we could construct a completely referentially transparent IO program.  Such a language and runtime does exist - Haskell!
+Our REPL consists of a single, referentially transparent SimpleIO action representing IO that does nothing until the main method calls run.  Our entire program is referentially transparent.  One might suspect that the _main_ method is not referentially transparent, but because it is called just once at "the end of the world", it can be replaced with it's definition without affecting program semantics.  That is, no one can observe the effect. This could be enforced if we had an environment that enforced that main returned a single SimpleIO where the runtime environment called _run_ on our behalf (Haskell!).
 
-h2. The Full Program
+h2. Appendix: The Full Program
 
 The text of the full referentially transparent program is on Github [5], the entire SimpleIODemoFunctional class is:
 
@@ -352,10 +352,6 @@ class SimpleIODemoFunctional {
     }
 
     SimpleIO<Stream<String>> interactionStream() {
-        SimpleIO.sequenceWhile(Stream.repeat(interaction()), { String s -> isLoop(s) } as F)
-    }
-
-    SimpleIO<Stream<String>> interactionStreamAsync() {
         SimpleIO.sequenceWhile(Stream.repeat(interaction()), { String s -> isLoop(s) } as F)
     }
 
