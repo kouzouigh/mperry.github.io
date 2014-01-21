@@ -1,12 +1,12 @@
 ---
 layout: post
 title: Folds and Unfolds
-keywords:
-description:
+keywords: Groovy, Fold, Unfold
+description: Implementation and examples of folds and unfolds in Groovy
 tags:
 ---
 
-Erik Meijer [4] has stated numerous times that "recursion is the _goto_ of functional programming".  In this post I investigate using folds and unfolds as a replacement for recursion.  The work in this post has been added to "FunctionalGroovy":https://github.com/mperry/functionalgroovy [5] as a Groovy extension module.
+Erik Meijer [4] has stated numerous times that "recursion is the *goto* of functional programming".  In this post I investigate using folds and unfolds as a replacement for recursion.  The work in this post has been added to "FunctionalGroovy":https://github.com/mperry/functionalgroovy [5] as a Groovy extension module.
 
 h2. Folding Left
 
@@ -115,6 +115,8 @@ Now calling _foldRight_ over a large list does not blow the stack:
         assertTrue(val == 50005000)
     }
 </pre>
+
+Trampolines have proven useful to me numerous times to avoid overflowing the stack, e.g. when performing "referentially transparent IO":/2014/01/03/referentially-transparent-io.html.
 
 <p>
 
