@@ -1,5 +1,0 @@
----
-layout: nil
-tag: 'ruby'
----
-{% include tag_page.xml %}
