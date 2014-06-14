@@ -3,11 +3,8 @@
           <section>
 
 
-            <div class="panel panel-primary github-repoview">
+            <div class="panel panel-primary">
                 <div class="panel-heading">
-                <!--
-                    <i class="fa fa-github fa-lg panel-title"> ${config.sidebar_github_repoview_title}</i>
-                    -->
                     <i class="fa fa-lg panel-title"> Recent Posts</i>
                 </div>
 

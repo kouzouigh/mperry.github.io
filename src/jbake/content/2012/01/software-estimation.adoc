@@ -5,7 +5,13 @@ Mark Perry
 :jbake-tags: sizing, function points, estimating, pattern matching, Capers Jones
 :jbake-status: published
 
-I recently read the excellent book Software Engineering Best Practices (2010) by Capers Jones and was impressed with the usefulness and practicality of fast software sizing based on pattern matching.  It relies on the many thousands of applications that already have function point size data available.  By categorising these existing applications in a number of properties similar, yet to be constructed, applications can be sized by comparing the intended application to those with similar patterns.  The properties are:
+I recently read the excellent book Software Engineering Best Practices (2010) by Capers Jones and was impressed with the usefulness and practicality of fast software sizing based on pattern matching.  It relies on the many thousands of applications that already have function point size data available.  By categorising these existing applications in a number of properties similar, yet to be constructed, applications can be sized by comparing the intended application to those with similar patterns.
+
++++++
+<!-- more -->
++++++
+
+The properties are:
 
 - nature
 - scope
