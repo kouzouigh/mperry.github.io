@@ -1,0 +1,8 @@
+= My conferences
+Cedric Champeau
+2013-11-22
+:jbake-type: page
+:jbake-tags: groovy, conferences, programming
+:jbake-status: published
+
+I am giving talks to JUGs and conferences, mainly about the http://groovy.codehaus.org[Groovy language] (and related topics like http://gradle.org[Gradle], http://docs.spockframework.org/en/latest/[Spock], DSLs, ...).

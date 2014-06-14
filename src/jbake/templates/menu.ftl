@@ -15,9 +15,11 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-			<li><a href="${config.site_context}pages/docs.html">Docs</a></li>
-			<li><a href="${config.site_context}pages/community.html">Community</a></li>
-			<li><a href="${config.site_context}pages/download.html">Download</a></li>
+			<li><a href="${config.site_context}">Home</a></li>
+			<li><a href="${config.site_context}pages/about.html">About</a></li>
+			<li><a href="${config.site_context}pages/bio.html">Author</a></li>
+			<li><a href="${config.site_context}archive.html">Archive</a></li>
+
           </ul>
         
         <!-- Right navigation -->
@@ -33,9 +35,7 @@
               <li><a href="https://plus.google.com/${config.login_googleplus}" title="Google+"><i class="fa fa-google-plus-square"></i></a></li>
             </#if>
           </#if>
-          <#if config.render_archive?? && config.render_archive == "true">
-          <li><a href="${config.site_context}${config.archive_file}"><i class="fa fa-list"></i> ${config.tr_archive}</a></li>
-          </#if>
+
           <li><a href="${config.site_context}${config.feed_file}" title="Rss"><i class="fa fa-rss"></i> ${config.tr_feed}</a></li>
         </ul>
         <!-- Right navigation end -->

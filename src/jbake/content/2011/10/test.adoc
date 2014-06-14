@@ -1,0 +1,8 @@
+= Initial Test
+Mark Perry
+2011-10-19
+:jbake-type: post
+:jbake-tags:
+:jbake-status: published
+
+This is my first post to test my blog.

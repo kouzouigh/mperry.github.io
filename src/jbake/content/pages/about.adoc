@@ -1,0 +1,15 @@
+= About
+Mark Perry
+2014-06-14
+:jbake-type: page
+:jbake-tags: groovy, conferences, programming
+:jbake-status: published
+
+This page is about the blog, not the link:bio.html[author].
+
+This blog contains the thoughts of Mark Perry on the field of software engineering:
+
+- theory and practice
+- history, evolution, current practice and the future
+- problems and promises
+
