@@ -10,18 +10,22 @@
                     -->
                     <i class="fa fa-lg panel-title"> Recent Posts</i>
                 </div>
-                <!--
-                <div id="repoview" class="panel-body">
-                </div>
 
-				-->
-                  <#list posts[0..0] as post>
-                                <li>
-                                  <p>${post.date?string("yyyy-MM-dd")} - <a href="${post.uri}">${post.title}</a></p>
-                                </li>
-                              </#list>
+                <div id="recent-posts" class="panel-body">
 
-            </div>
+				<ul>
+
+                  <#list posts[0..1] as post>
+
+				 <li><p>${post.date?string("yyyy-MM-dd")} - <a href="${post.uri}">${post.title}</a></p></li>
+
+				  </#list>
+				  </ul>
+				</div>
+
+
+
+			</div>
 
           </section>
         </aside>
