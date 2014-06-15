@@ -5,13 +5,14 @@ Mark Perry
 :jbake-tags: history, dijkstra, teaching, formal methods, verification, people
 :jbake-status: published
 
-+++++
-<!-- more -->
-+++++
 
 image::http://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Edsger_Wybe_Dijkstra.jpg/225px-Edsger_Wybe_Dijkstra.jpg[]
 
 Recently I watched a really interesting video regarding Dijkstra called https://www.youtube.com/watch?v=EL97C8C53ZM[Discipline in Thought].
+
++++++
+<!-- more -->
++++++
 
 video::EL97C8C53ZM[youtube]
 
