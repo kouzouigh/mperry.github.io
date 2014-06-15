@@ -63,7 +63,7 @@ This information can be used well before the applications requirement have begun
 
 Caution should be used when applying pattern matching to size software.  This technique is still fairly experimental and may need tweaking.  Also required is an examination of a large sample of projects already completed with standardised function point counts.  The author examined several hundred projects using this technique.
 
-Regardless, this information can be used to create a rough estimate on the function point size of the application and using a function point to lines of code table (e.g. http://www.qsm.com/resources/function-point-languages-table) one can quickly estimate the size of a proposed application, along with a potential cost (in man months) and schedule.
+Regardless, this information can be used to create a rough estimate on the function point size of the application and using a function point to lines of code table (e.g. http://www.qsm.com/resources/function-point-languages-table[]) one can quickly estimate the size of a proposed application, along with a potential cost (in man months) and schedule.
 
 Related, static analysis tools that produce LOC counts are a source of function point sizing that may confirm these initial estimates.  The open static analysis tool Sonar has a site called Nemo for analysing open source projects (http://nemo.sonarsource.org/).  JDK7 is the largest project analysed with 1.14 million LOC.  Using a Java conversion rate of 53 LOC per function point gives the size of this project as 21.5K function points.  This estimates that JDK7 is around the same size as Skype, the iPhone and Linux.
 
