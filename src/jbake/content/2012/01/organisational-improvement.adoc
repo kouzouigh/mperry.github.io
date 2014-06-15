@@ -1,0 +1,92 @@
+= Making the Case for Organisational Improvement
+Mark Perry
+2012-01-30
+:jbake-type: post
+:jbake-tags: process improvement, software process improvement, SPI, change, strategy, management, proposal
+:jbake-status: published
+
+Many engineers feel debilitated and enfeebled by autocratic managers, lacking the power and authority to make meaningful changes to their development practices.  Assuming you can get some management support for the idea of organisational improvement and get their ear, how do you make the strategic and tactical case for improvement?
+
++++++
+<!-- more -->
++++++
+
+Regardless of the change proposed (process, language, tool, etc) the generic case for improvement of any type consists of:
+
+* Clearly define what you propose.
+* Understand today's business environment.
+* Identify the executive's current hot buttons.
+* Make an initial sanity check.
+* Start the plan with two or three prototypes.
+* Estimate the one-time introduction costs.
+* Determine the likely continuing costs.
+* Document the available experience data.
+* Estimate the expected savings.
+* Decide how to measure the actual benefits.
+* Determine the improvement's likely impact on the executive's current key concerns.
+* Identify any other ways that the proposed improvement could benefit the business.
+* Produce a presentation to give this story clearly and concisely.
+
+== Define the Proposal
+
+Define what you want the manager to do.  Write an implementation plan; this will force you to produce a clear statement of what the intended actions are.  Show the plan to others you trust to spot the defencies and improve the plan.
+
+== Understand the business environment
+
+The case must depend and reflect the business environment and the current priorities.  Learn what is happening in the business.  If the business just lost a major customer, obviously now may not be a good time to propose an expense, regardless of the perceived benefits.
+
+== Identify the hot buttons
+
+What is the manager and their management chain most concerned about?  Check the companies talks, press releases, statements and announcements.  Executives will push at every opportunity their highest priorities.  This could be development time, market growth or profitability.  Make sure their topic of concern is addressed.
+
+== Improvement sanity check
+
+Gather as much data as reasonable about the costs and benefits involved.  Does the improvement addressed the manager's key concerns?  If so, cost may not be the key concern.  If so, cost savings may need to be large enough to justify implementation.  Some numbers I have read, 200% savings is impressive whilst 25% is subject to very close scrutiny.  These ROI percentages may sound high, but proposals usually exaggerate the benefits and have hidden costs.
+
+== Prototype introduction
+
+Start small with a prototype test to minimise costs and maximise the chances of success.  Changes that affect behaviour are unlikely to be easy and will likely need to overcome resistance.  Identify problems before the prototype begins to eliminate missteps before they occur and provide training where necessary.  Be careful that your prototype is not cancelled or redirected.
+
+== Introduction costs
+
+There will be initial introductory costs and ongoing costs.  Don't underexagerate these or your credibility may be damaged.  Identify both the protoype costs and total costs.  Allow both management time and training time for developers; this can be very significant.  Outside consultants or experts may be required and this cost can be very significant.
+
+Your argument will be judged by it's weakest link.  If there is an error or underestimate the assumption will probably be made that other errors exists in your case.  If you don't have the information you need, find someone who does.  Don't make unsupported assumptions; they will be found and you will be discredited.
+
+== Continuing costs
+
+Ongoing costs can include staff turnover, staff growth and expert assistance.  Be completely transparent and honest - hidden costs are usually found and assumed to be even greater than what they will be.
+
+== Benefits
+
+How long will it take to recover costs and how will the improvement address management's concerns?  If the case pays for itself the rest will be gravy.
+
+To make the cost case gather data on the improvement benefits.  This is difficult; costs are easier to prove than savings.  Good managers know this; much of management time is spent justifying changes.  I am told that an ironclad case is not required, as long as there is a logical story that is complete and realistic.
+
+== Improvement experience
+
+It is hard to find good, statistical valid studies on improvement benefits, many rely on anecdotal evidence.  Perhaps someone in the industry has implemented the changes described.  You may be able to emphasise the results achieved by your competitors.
+
+== Savings
+
+Cost savings can be achieved by:
+
+* Eliminating defects early in the process
+* Reducing defects going into test to shorten test time
+
+Savings can be hard to prove, both in advance and after the fact.  Good evidence is if a competitor cut test time by x% or customer reported defects by y%.  From there you can derive the savings involved in your company.
+
+== Benefits
+
+Identify how the prototype(s) will measure improvement benefits.  This may be dificult if you do not currently collect data on your current performance.  The plan may be a raging success, but how will this be demonstrated to others?  Think about how to handle this.
+
+What can you measure if there is no data?  Usually you can find out the development time, the schedule slippage, defects in system or integration test or productivity (dev time / lines of code).  Obtain a number of measures to boost your argument.  You can probably find this data from project management or accounting systems.  Find this data before the proposal to justify your proposal and identify how the benefits will be measured and demonstrated.
+
+== Other benefits
+
+Not all improvement must be cost justified.  Schedule accuracy, schedule predictability or cycle time could make your company more competitive.  Demonstrate it is good for business and will pay for itself.
+
+== Credits
+
+This post was inspired by a discussion at the http://www.bfpg.org[Brisbane Functional Programming Group] on the introduction of functional programming to organisations, the benefits, costs and overcoming resistance.  However the strucuture of improvement proposals are generic.  The structure of this post was taken from the Watts Humphrey column, "Making the Strategic Case for Process Improvement".  Much of the content has been paraphrased and rewritten.
+
