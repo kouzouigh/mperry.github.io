@@ -1,0 +1,58 @@
+= Edsger Dijkstra
+Mark Perry
+2012-01-30
+:jbake-type: post
+:jbake-tags: history, dijkstra, teaching, formal methods, verification, people
+:jbake-status: published
+
++++++
+<!-- more -->
++++++
+
+image::http://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Edsger_Wybe_Dijkstra.jpg/225px-Edsger_Wybe_Dijkstra.jpg[]
+
+Recently I watched a really interesting video regarding Dijkstra called https://www.youtube.com/watch?v=EL97C8C53ZM[Discipline in Thought].
+
+video::EL97C8C53ZM[youtube]
+
+Among the domains in which his scientific contributions are fundamental are:
+
+* algorithm design
+* programming languages
+* program design
+* operating systems
+* distributed processing
+* formal specification and verification
+* design of mathematical arguments
+
+Which got me thinking who perhaps are the greatest computer scientists of all time?  My list would be:
+
+* Charles Babbage, 1791 - 1871
+* Alan Turing, 1912 - 1954
+* John von Neumann, 1903 - 1957
+* Edsger Dijkstra, 1930 - 2002
+* Donald Knuth, 1938 - current
+
+Whilst the first three are responsible for establishing the computer industry, Dijkstra and Knuth are probably the greatest of the industrial era (post World War 2), computer science's founding generation.
+
+I have stated skim reading some of his writings from the University of Texas archive of http://www.cs.utexas.edu/users/EWD/welcome.html[Dijkstra's writings].
+
+Among the great quotes from the video:
+
+* Computer science is no more about computers than astronomy is about telescopes.
+* The competent programmer is fully aware of the limited size of his own skull. He therefore approaches his task in full humility and avoids clever tricks like the plague.
+* We should not introduce errors through sloppiness but systematically keep them out.
+* Program testing can convincingly show the presence of bugs but it is hopelessly inadequate to show their absence.
+* Elegance is not a dispensable luxury but a factor that decides between success and failure.
+
+I am endeavouring to finding the time to read more of his many writings, primarily for clarity of thought, writing style and content.
+
+To contrast what seems to be the hacker culture, I leave you with this quote.
+
+[quote, Dijkstra, EWD 1213: Introducing a course on calculi]
+__
+I mean, if 10 years from now, when you are doing something quick and dirty, you suddenly visualize that I am looking over your shoulders and say to yourself "Dijkstra would not have liked this", well, that would be enough immortality for me.
+__
+
+image::http://lemonodor.com/images/dijkstra-quick-n-dirty-s.jpg[]
+
