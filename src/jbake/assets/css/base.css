@@ -100,6 +100,13 @@ footer {
   display: inline-block;
 }
 
+.recent-posts-class {
+	width: 300px;
+	padding: 5px;
+	font-size: 12px;
+
+}
+
 /* Adjust the widths individually if you like */
 .social .facebook iframe {
   border: none;
