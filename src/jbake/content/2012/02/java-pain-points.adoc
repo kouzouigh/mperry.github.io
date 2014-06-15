@@ -1,0 +1,171 @@
+= Java Pain Points
+Mark Perry
+2012-02-01
+:jbake-type: post
+:jbake-tags: java, verbosity, language, features
+:jbake-status: published
+
+Java has been declared either dead or dying multiple times thoughout it's life.  For Java programmers unaware of the debate, this can be very disconcerting.  I have used Java for the majority of my programming life and from my observations Java programmers are ignorant of other languages.  However, great Java programmers are the languages loudest critics, but what are the harshest Java pain points?
+
++++++
+<!-- more -->
++++++
+
+- Explicit typing
+- Generic type erasure
+- Lambdas
+- Tail recursion
+- Contracts
+- Continuations
+- Meta-programming
+- Limited obvious types
+- Lack of unified type system
+- Immutability
+- Laziness
+- Pattern matching
+- Boilerplate
+- Concurrency
+- Multiple inheritance
+
+== Explicit Typing
+
+Dynamic/static typing and http://en.wikipedia.org/wiki/Type_inference[type inference] are often confused.  Statically typed languages _can_ have type inference (e.g. Scala, Haskell and to a limted extent C#).  We have known about the Hindler-Milner type inference algorithm since 1969 (43 years) yet very few statically typed languages have type inference.  I predict this will gain more attention in the coming years.
+
+== Generic Type Erasure (Reification)
+
+The problem with generic type erasure is shown nicely in Josh Bloch's book http://www.amazon.com/Effective-Java-Programming-Language-Guide/dp/B003D3OFRA[Effective Java] (Chapter 5 - Generics).  Since arrays are erroneously covariant instead of invariant, generics should be used to improve your code for (weak) type safety.  Some problems with generics:
+* Calling a method with a generic argument defaults the type of the argument to Object at runtime, calling a method that the programmer did not expect
+* Cannot create objects of the generic type
+* Others
+
+image::http://ecx.images-amazon.com/images/I/51FKSNAV2GL._BO2,204,203,200_PIsitb-sticker-arrow-click,TopRight,35,-76_AA300_SH20_OU01_.jpg[]
+
+
+== Lambdas
+
+Lambdas are coming to Java in version 8 (as of today, due mid 2013).  This will help ease generic programming in Java and the verbosity when using anonymous inner classes for simple function callbacks.  This is explained reasonably in this InfoQ article http://www.infoq.com/articles/lambdas-java-analysis[Lambas in Java: An In-Depth Analysis].
+
+== Tail Recursion
+
+http://en.wikipedia.org/wiki/Tail_call[Tail recursion] and tail call optimisation (TCO) are critical for functional programming and eliminating the repetition involved in loops (replace with maps and folds).  The Scala compiler converts tail calls to loops using TCO.  I have yet to see plans to include tail recursion in the JVM, but there seems to be some active research into how this can be done.
+
+== Contracts
+
+Java has just the simple assert mechanism.  Support for http://en.wikipedia.org/wiki/Design_by_contract[Design by Contract] used to be in the http://bugs.sun.com/bugdatabase/top25_rfes.do[top 10] (actually second) most requested features, however the http://bugs.sun.com/view_bug.do?bug_id=4449383[request for enhancement 4449383] seems to have been closed.  Thinking broadly; proofs, types, contracts and unit tests have the following relationship to a program:
+
+* Proofs => General and strong theorems produced statically (but hard to prove and expensive to do)
+* Types => General but weak theorems (usually checked statically)
+* Contracts => General and strong theorems, checked at run time for particular instances (can be turned on or off)
+* Unit testing => Specific and strong theorems, checked quasi-statically on interesting cases
+
+These theorems are not well integrated in programming languages (presenting research opportunities).
+
+== Continuations
+
+http://en.wikipedia.org/wiki/Continuation[Continuations] would make web programming dead simple.  Just restore the state and continue the computation.
+
+== Meta-programming
+
+Poorly supported in Java, particularly compared to the dynamically typed languages Lisp, Erlang, Ruby, Groovy, etc.
+
+== Limited obvious types
+
+The Java Date and Time API is a mess.  Sure we can use Joda-Time until JSR 310 gets released (perhaps in Java 8), but this is a fundamental language type and it should be in the core library.
+
+The double type is a poor implmentation of the decimal type http://en.wikipedia.org/wiki/Decimal_floating_point[IEEE 754].  Consider the Java program below which shows mutliples of 0.1.
+
+
+[source,java,numbered]
+----
+package mperry;
+
+public class DoublePrecision {
+
+    public static void main(String[] args) {
+        final int max = 20;
+        final double multiplier = 0.1;
+        final int wrap = 10;
+        for (int i = 0; i < max; i++) {
+            double d = i * multiplier;
+            if (i % wrap == 0) {
+                System.out.println();
+            }
+            System.out.print(i + ": " + d + " ");
+        }
+        System.out.println();
+    }
+}
+----
+
+Which produces the following output:
+
+----
+0: 0.0 1: 0.1 2: 0.2 3: 0.30000000000000004 4: 0.4 5: 0.5 6: 0.6000000000000001 7: 0.7000000000000001 8: 0.8 9: 0.9
+10: 1.0 11: 1.1 12: 1.2000000000000002 13: 1.3 14: 1.4000000000000001 15: 1.5 16: 1.6 17: 1.7000000000000002 18: 1.8 19: 1.9000000000000001
+----
+
+Also missing is simple tuples (see Python) and the Option type (for type safe handling of nulls - no more NullPointerException - *EVER*).
+
+== Unified Type System
+
+The Java type system is a hodge-podge of different abstractions that lacks an elegant, unified model.  You need to work with arrays, classes and primitives.  Compare this to Scala's type system.
+
+image::../../img/scala_classhierarchy.png[]
+
+Java arrays are a pain to work with and are unfortunately covariant.  Primitves have to be boxed and unboxed and interact strangely with var args and generics.  Ugly!
+
+==  Immutability
+
+Java uses the final keyword to indicate immutability.  There are a few problems with this.
+
+* Immutability should be the default.
+* For objects, the immutability only applies to the reference, not the instance variables it contains.
+
+Thus there is no way to indicate this a method is pure (is http://en.wikipedia.org/wiki/Referential_transparency_%28computer_science%29[referentially transparent]).  Even C++ could indicate this with it's const keyword.
+
+== Laziness
+
+Laziness in programming languages is really useful.  From wikipedia on http://en.wikipedia.org/wiki/Lazy_evaluation[lazy evaluation]:
+
+[quote,Wikipedia]
+---
+* Performance increases due to avoiding unnecessary calculations and avoiding error conditions in the evaluation of compound expressions.
+* The capability of constructing potentially infinite data structures
+* The capability of defining control structures as abstractions instead of as primitives.
+---
+
+Without referential transparency, I don't see how it can ever include lazy evaluation without building this into the language primitives, ala http://en.wikipedia.org/wiki/Short-circuit_evaluation[short circuit evaluation].
+
+== Pattern matching
+
+I don't mean regular expression pattern matching, but http://apocalisp.wordpress.com/2009/08/21/structural-pattern-matching-in-java/[structural pattern matching using algebraic data types].  Commonly the Interpreter and Visitor pattern is used to simulate pattern matching, but this gets ugly - fast!
+
+== Boilerplate
+
+This can involve:
+* automatic resource management (see http://www.oracle.com/technetwork/articles/java/trywithresources-401775.html[Better Resource Management with Java SE 7: Beyond Syntactic Sugar])
+* properties (see http://projectlombok.org/[Project Lombok])
+* missing list and map literals (note: this is now available in Java 7)
+* poor data representation that results in reams of XML configuration
+* others?
+
+== Concurrency
+
+The fork/join framework is a step in the right direction, but still dominant is the lock/semaphore/monitor paradigm created in the 60s over 40 years ago.  How many people are sure their concurrent code is correct in all situations?  Software transactional memory implementations look like they http://en.wikipedia.org/wiki/Software_transactional_memory#Java[exist in Java], but I have not tried any myself.
+
+== Multiple inheritance
+
+Eiffel did this right, but C++ created nightmares with diamond inheritance which tainted the entire concept.  Scala seems to be bringing this back in a limited way with traits.
+
+...and I haven't even mentioned the modularity coming in Java 8.
+
+== References
+
+A few references that I thought made good reading:
+
+* http://codemonkeyism.com/java-dead/[Is Java dead?]
+* http://www.25hoursaday.com/CsharpVsJava.html#conclusion2k7[A comparison of Microsoft's c# programming language to Sun Microsystems' Java programming language]
+* http://www.slideshare.net/jeffz/why-java-sucks-and-c-rocks-final[Why Java Sucks & C# Rocks]
+* http://www.amazon.com/Beyond-Java-Bruce-Tate/dp/0596100949[Beyond Java]
+* http://www.cis.upenn.edu/~bcpierce/types/archives/1988/msg00042.html[Hindler email archive on history of type inference algorithm]
+* http://www.enotes.com/topic/Type_inference[Layman's type inference]
