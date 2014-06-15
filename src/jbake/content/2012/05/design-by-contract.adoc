@@ -1,0 +1,29 @@
+= Design By Contract Talk
+Mark Perry
+2012-05-01
+:jbake-type: post
+:jbake-tags: Java, Design by Contract, dbc, Contracts for Java, Cofoja
+:jbake-status: published
+
+
+I gave a talk on http://www.meetup.com/qldjvm/events/55952912/[Design By Contract to the Queensland JVM Group] on April 10 2012.  Here is the summary:
+
+[quote]
+____
+Design by contract (DbC) is an approach for designing software using precise interface specifications for software components. These specifications primarily use preconditions, postconditions and invariants and act as a metaphor for the conditions and obligations of business contracts. In this talk, Mark will use Google's Contracts For Java library to:
+
+* Explain DbC and it's benefits
+* Demonstrate how DbC can be integrated into Java projects
+* Explain DbC's relationship with testing and type theory
+____
+
++++++
+<!-- more -->
++++++
+
+video::40274032[vimeo]
+
+I will endeavour to put the slides up in the next week.
+
+
+
