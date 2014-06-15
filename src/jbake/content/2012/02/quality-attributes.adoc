@@ -59,7 +59,7 @@ Consider an availability general scenario:
 
 General Availability Scenario Generation
 
-[cols="2"]
+[options="header"]
 |===
 | Scenario Part| Possible Values
 
@@ -91,7 +91,8 @@ a|
 
 === Modifiability
 
-The cost of a change, specically
+The cost of a change, specifically:
+
 * What can change?   Functions, platform, environment, system qualities, capacity
 * Who makes the change and when?  This is commonly done to source code during implementation, but an end user or system admin could make a change.  Time phases could be: implementation, compile time, build, configuration, execution.
 
@@ -127,7 +128,7 @@ For much of the history of software engineering, performance has been the domina
 
 The ability to resist unauthorised usage.  Characterised by:
 
-* Nonrepudiation - The property that a transaction cannot be denied by any parties (e.g. disputing internet purchase you did make).
+* Non repudiation - The property that a transaction cannot be denied by any parties (e.g. disputing internet purchase you did make).
 * Confidentiality - Data or services are protected from unauthorised access.
 * Integrity - Data or services delivered as intended (e.g. hacker has changed billing amount)
 * Assurance - Transaction parties are who they claim (e.g. the email from the bank is actually from the back, not a fraudster)
