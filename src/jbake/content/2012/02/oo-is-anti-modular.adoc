@@ -1,0 +1,55 @@
+= OO is anti-modular
+Mark Perry
+2012-02-16
+:jbake-type: post
+:jbake-tags: OO, object-oriented, programming, types, modularity, ML, Java, FP, functional programming, type theory
+:jbake-status: published
+
+Robert Harper, Professor of Computer Science at Carnegie Mellon University, recently posted about http://existentialtype.wordpress.com/2011/03/15/teaching-fp-to-freshmen/[replacing object-oriented (OO) programming with functional programming (FP) for first year students].  He states:
+
+[quote]
+----
+Object-oriented programming is eliminated entirely from the introductory curriculum, because it is both anti-modular and anti-parallel by its very nature, and hence unsuitable for a modern CS curriculum.
+----
+
++++++
+<!-- more -->
++++++
+
+It is widely understood how imperative programming's use of side effects is not suitable to concurrency and parallelism.  His anti-modular views are more interesting.  Note, he is not referring to http://www.jcp.org/en/jsr/detail?id=277[Java modularity in JSR277].  He is referring to ML style module systems; he co-wrote chapter eight "Design Considerations for ML-Style Module Systems" in http://www.amazon.com/Advanced-Topics-Types-Programming-Languages/dp/0262162288[Advanced Topics in Types and Programming Languages].
+
+image::http://ecx.images-amazon.com/images/I/51zsCnON7eL._BO2,204,203,200_PIsitb-sticker-arrow-click,TopRight,35,-76_AA300_SH20_OU01_.jpg[]
+
+In this chapter, the basic modularity mechanisms are:
+
+* modules and signatures
+* namespace management
+* separate compiation
+* inter-module type checking
+* principal signatures
+
+[quote]
+----
+Informally, a module(or structure) is a collection of components, which may include procedure or function definitions, variable declarations, type definitions, and initialization code - specifics will vary from one language to another. Aprogramconsists of a collection of bindings of module names to modules. One module is specified as the root - the main entry point of the program.
+
+One module in a program may refer to another by using the latter's name in an external reference. The occurrences of external references between modules determine a dependency ordering in which the referring module depends on the module to which it refers. (We assume for now that cyclic dependencies between modules are not allowed; 8.9 discusses relaxing this restriction.) The job of a linker is to compose a complete program by resolving external references, creating module bindings for each of the external references in the partial program under construction until no unresolved references remain.
+
+To support separate compilation, the dependency of one module on another is mediated by asignature (or interface) that describes the externally visible components of the latter module. A signature must besufficiently expressive as to enable clients of a module to be compiled without reference to its implementation. This information typically includes type declarations for procedures and variables and the definitions of type variables.
+
+In practice, most languages support modularity through a mixture of linguistic and extra-linguistic mechanisms. For example, modules are often organized as files, and module naming conventions are often tied to file system naming conventions. To avoid such complications, we concentrate on a module language that emphasizes the central concepts, relegating its realization in specific languages and development environments to informal discussions in 8.10.
+----
+
+Note that the use of inheritance is problematic.  To reason about the behaviour of a class you have to know the behaviour of all superclasses and subclasses of the class.  This is because OO expects methods to be overwritten using late binding and subtype polymorphism.  This changes can ripple both up and down the class hierarchy, developers thus need to understand the entire hierarchy to make changes safely.  Thus class hierarchies across modules is anti-modular.
+
+== References
+
+- http://lucacardelli.name/Papers/BadPropertiesOfOO.html[Bad Engineering Properties of Object-Oriented Languages]
+- http://homepages.inf.ed.ac.uk/stg/NOTES/node95.html[Introducing Standard ML Modules]
+- http://openjdk.java.net/projects/modules/[Open JDK Modules]
+- http://www.jcp.org/en/jsr/detail?id=277[JSR 277: JavaTM Module System]
+- http://www.javabeat.net/articles/101-introduction-to-java-module-system-in-java-70-1.html[Introduction to Java Module System in Java 7.0]
+- http://www.javaworld.com/javaworld/jw-08-2008/jw-08-java-modularity.html?page=1[The case for Java modularity]
+- http://www.pps.jussieu.fr/~gc/slides/classes.pdf[Classes vs Modules]
+- http://www.stanford.edu/class/cs242/slides/2007/objects-modules.ppt[Modularity and Object-Oriented Programming]
+- http://gbracha.blogspot.com.au/2011/06/types-are-anti-modular.html[Types are Anti-Modular]
+
