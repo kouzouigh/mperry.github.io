@@ -8,9 +8,9 @@ Mark Perry
 Robert Harper, Professor of Computer Science at Carnegie Mellon University, recently posted about http://existentialtype.wordpress.com/2011/03/15/teaching-fp-to-freshmen/[replacing object-oriented (OO) programming with functional programming (FP) for first year students].  He states:
 
 [quote]
-----
+____
 Object-oriented programming is eliminated entirely from the introductory curriculum, because it is both anti-modular and anti-parallel by its very nature, and hence unsuitable for a modern CS curriculum.
-----
+____
 
 +++++
 <!-- more -->
@@ -28,16 +28,18 @@ In this chapter, the basic modularity mechanisms are:
 * inter-module type checking
 * principal signatures
 
-[quote]
-----
-Informally, a module(or structure) is a collection of components, which may include procedure or function definitions, variable declarations, type definitions, and initialization code - specifics will vary from one language to another. Aprogramconsists of a collection of bindings of module names to modules. One module is specified as the root - the main entry point of the program.
+[quote, Harper and Pierce, Advanced Topics in Types and Programming Languages]
+____
+Informally, a module (or structure) is a collection of components, which may include procedure or function definitions, variable declarations, type definitions, and initialization code - specifics will vary from one language to another. A program consists of a collection of bindings of module names to modules. One module is specified as the root - the main entry point of the program.
+
 
 One module in a program may refer to another by using the latter's name in an external reference. The occurrences of external references between modules determine a dependency ordering in which the referring module depends on the module to which it refers. (We assume for now that cyclic dependencies between modules are not allowed; 8.9 discusses relaxing this restriction.) The job of a linker is to compose a complete program by resolving external references, creating module bindings for each of the external references in the partial program under construction until no unresolved references remain.
 
-To support separate compilation, the dependency of one module on another is mediated by asignature (or interface) that describes the externally visible components of the latter module. A signature must besufficiently expressive as to enable clients of a module to be compiled without reference to its implementation. This information typically includes type declarations for procedures and variables and the definitions of type variables.
+To support separate compilation, the dependency of one module on another is mediated by a signature (or interface) that describes the externally visible components of the latter module. A signature must be sufficiently expressive as to enable clients of a module to be compiled without reference to its implementation. This information typically includes type declarations for procedures and variables and the definitions of type variables.
 
 In practice, most languages support modularity through a mixture of linguistic and extra-linguistic mechanisms. For example, modules are often organized as files, and module naming conventions are often tied to file system naming conventions. To avoid such complications, we concentrate on a module language that emphasizes the central concepts, relegating its realization in specific languages and development environments to informal discussions in 8.10.
-----
+____
+
 
 Note that the use of inheritance is problematic.  To reason about the behaviour of a class you have to know the behaviour of all superclasses and subclasses of the class.  This is because OO expects methods to be overwritten using late binding and subtype polymorphism.  This changes can ripple both up and down the class hierarchy, developers thus need to understand the entire hierarchy to make changes safely.  Thus class hierarchies across modules is anti-modular.
 

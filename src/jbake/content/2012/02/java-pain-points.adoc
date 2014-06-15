@@ -128,11 +128,11 @@ Thus there is no way to indicate this a method is pure (is http://en.wikipedia.o
 Laziness in programming languages is really useful.  From wikipedia on http://en.wikipedia.org/wiki/Lazy_evaluation[lazy evaluation]:
 
 [quote,Wikipedia]
----
+____
 * Performance increases due to avoiding unnecessary calculations and avoiding error conditions in the evaluation of compound expressions.
 * The capability of constructing potentially infinite data structures
 * The capability of defining control structures as abstractions instead of as primitives.
----
+____
 
 Without referential transparency, I don't see how it can ever include lazy evaluation without building this into the language primitives, ala http://en.wikipedia.org/wiki/Short-circuit_evaluation[short circuit evaluation].
 
