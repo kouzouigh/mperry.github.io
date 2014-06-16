@@ -1,8 +1,0 @@
-{% if page.keywords %}
-  {% assign keywords = page.keywords %}
-{% else %}
-  {% assign keywords = 'Mark Perry, tags, machine tags, semantic tags, rails, ruby, github, tagging, outline, tree' %}
-{% endif %}
-{% capture description %}{% if page.description %}{{page.description}}{% else %}{{site.title_full}} - {{page.title }} {% endif %}{% endcapture %}
-<meta name="keywords" content="{{keywords | xml_escape| truncate: 160}}" />
-<meta name="description" content="{{description | strip_html | xml_escape| truncate: 200}}" />

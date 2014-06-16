@@ -1,5 +1,0 @@
----
-layout: nil
-tag: 'tag'
----
-{% include tag_page.xml %}
