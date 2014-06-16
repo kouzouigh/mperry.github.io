@@ -1,0 +1,202 @@
+= Folds and Unfolds
+Mark Perry
+2014-01-21
+:jbake-type: post
+:jbake-tags: Groovy, Fold, Unfold
+:jbake-status: published
+
+Erik Meijer <<4>> has stated numerous times that "recursion is the *goto* of functional programming".  In this post I investigate using folds and unfolds as a replacement for recursion.  The work in this post has been added to https://github.com/mperry/functionalgroovy[FunctionalGroovy] <<5>> as a Groovy extension module.
+
++++++
+<!-- more -->
++++++
+
+== Folding Left
+
+Let's explore some folds in Groovy.  Groovy uses the method _inject_ for _foldLeft_ over Java collections.  Let's explore the definition of _foldLeft_.  A naive implementation using recursion is:
+
+[source,groovy,numbered]
+----
+	// fold left using recursion
+
+    static <A, B> B foldLeftR(List<A> list, B b, F2<B, A, B> f) {
+        foldLeft(list.tail(), f.f(b, list.head()), f)
+    }
+
+    static <A, B> B foldLeftR(List<A> list, B b, Closure<B> f) {
+    	foldLeft(list.tail(), f.f(b, list.head()), f)
+    }
+----
+
+An example of calling the fold method is:
+
+[source,groovy,numbered]
+----
+	assertTrue([1, 2, 3].foldLeftR(0) { Integer acc, Integer i -> acc + i } == 6)
+----
+
+An obvious problem with the definition above is that the method uses stack space of size O(n) which is a problem on
+the Java Virtual Machine (JVM).  We can demonstrate this by folding over a list with 10000 elements.  We write a test
+ to assert that getting the first element of a tuple (a lazy value) that uses the recursive fold left throws a
+ _StackOverflowError_:
+
+[source,groovy,numbered]
+----
+def p = { ->
+	(1..max).toList().foldLeftR(0) { Integer acc, Integer i -> acc + i }
+} as P1
+assertTrue(p.throwsError(StackOverflowError.class))
+----
+
+Fold lefts can be easily rewritten as a for loop to avoid the _StackOverflowError_.
+
+[source,groovy,numbered]
+----
+   static <A, B> B foldLeft(List<A> list, B b, F2<B, A, B> f) {
+        def acc = b
+        for (A a: list) {
+            acc = f.f(acc, a)
+        }
+        acc
+    }
+----
+
+We can now negate the test above to demonstrate that _foldLeft_ now uses constant stack space and can therefore handle large lists.  Note that a Groovy AST transform [3] exists to do tail call optimisation (TCO) which may be integrated in Groovy 2.3.
+
+== Folding Right
+
+Folding right is a trickier beast.  A naive implementation using recursion is:
+
+[source,groovy,numbered]
+----
+    static <A, B> B foldRightR(List<A> list, B b, F2<B, A, B> f) {
+        list.isEmpty() ? b : f.f(foldRightR(list.tail(), b, f), list.head())
+    }
+----
+
+Note that the recursive call _foldRightR_ is not in the tail position (the last expression done).  As a result,
+we can't transform the program by rewriting the function using a loop.  Instead we use a trampoline,
+a data structure which represents what to do next [1] [6].  We use the method _pure_ to indicate that we have completed the computation and _suspend_ to indicate there is more work to be done.
+
+[source,groovy,numbered]
+----
+   static <A, B> Trampoline<B> foldRightTrampoline(List<A> list, B b, F2<A, B, B> f) {
+        Trampoline.suspend({ ->
+            if (list.empty) {
+                Trampoline.pure(b)
+            } else {
+                def t = list.tail()
+                def h = list.head()
+                foldRightTrampoline(t, b, f).map(f.curry().f(h))
+            }
+        } as P1)
+    }
+----
+
+The function returns a trampoline, which when resumed, returns a value of type _Either&lt;P1&lt;Trampoline&lt;A&gt;&gt;, A&gt;_, i.e. either another lazy trampoline or the value A itself.  Note that the recursive call to _foldRightTrampoline_ is now within the suspended trampoline and is not executed with an initial call to _foldRightTrampoline_.  The recursive call also has a structurally smaller data structure by using the tail of the original list.  This guarantees that _foldRightTrampoline_ uses constant stack space and the suspended trampoline will make progress in the recursive case when resumed.
+
+The function _foldRightTrampoline_ returns a Trampoline of B, which we can run to completion with the _Trampoline_ method _run_.  This runs the trampoline in a while loop, repeatedly calling _resume_, until we obtain the pure value when the list is empty.  We then define _foldRightT_ and _foldRight_ as:
+
+[source,groovy,numbered]
+----
+    static <A, B> B foldRightT(List<A> list, B b, F2<B, A, B> f) {
+        // Workaround: g is defined explicitly instead of using f.flip because
+        // using f.flip causes a StackOverflowError, I did not look into what caused this error, but
+        // suspect Closure coercion is the cause
+        def g = { A a2, B b2 ->
+            f.f(b2, a2)
+        } as F2
+        foldRightTrampoline(list, b, g).run()
+    }
+
+    static <A, B> B foldRight(List<A> list, B b, F2<B, A, B> f) {
+    	foldRightT(list, b, f)
+    }
+----
+
+Now calling _foldRight_ over a large list does not blow the stack:
+
+[source,groovy,numbered]
+----
+    @Test
+    void foldRightNoOverflow() {
+        def high = (Integer) 10 ** 4
+        def list = (1..high).toList()
+        def val = list.foldRight(0, { Integer acc, Integer i -> acc + i } as F2)
+        assertTrue(val == 50005000)
+    }
+----
+
+Trampolines have proven useful to me numerous times to avoid overflowing the stack, e.g. when performing link:../../2014/01/referentially-transparent-io.html[referentially transparent IO].
+
+
+== Unfold
+
+The concept of unfolding is closely related to folding: whilst a folding over a list consumes values of the list to produce a single result, unfolding produces a list of values.  Let's compare type signatures using my own Haskell like notation:
+
+[source,groovy,numbered]
+----
+fold:   List<A> -> B -> F2<B, A, B> -> B
+unfold: B -> F<B, Option<P2<A, B>>> -> List<A>
+----
+
+Fold and unfold turn out to be duals <<7>>.  *Folds use recursion over the domain using an inductive data type; unfold produces co-inductively defined co-data over the function's co-domain using co-recursion*.
+
+The Groovy type signature supporting both Groovy Closures and FunctionalJava functions is:
+
+[source,groovy,numbered]
+----
+static <A, B> List<A> unfold(B b, F<B, Option<P2<A, B>>> f)
+static <A, B> List<A> unfold(B b, Closure<Option<P2<A, B>>> f)
+----
+
+A simple example of using unfold to produce a list of integers is:
+
+[source,groovy,numbered]
+----
+	// produce the list from 1 to 10
+    @Test
+    void unfold() {
+        def max = 10
+        def list = List.unfold(1, { Integer seed ->
+            seed > max ? none() : some(P.p(seed, seed + 1))
+        } as F)
+        assertTrue(list == (1..max).toList())
+    }
+----
+
+This example produces a finite list, however this technique works equally well to produce a lazy infinite stream of values.  The example below creates the infinite fibonacci sequence and then takes the first ten elements.
+
+[source,groovy,numbered]
+----
+    @Test
+    void fib() {
+        def s = Stream.unfold(p(1, 1)) { P2<Integer, Integer> p ->
+            def low = p._1()
+            def high = p._2()
+            some(P.p(low, P.p(high, low + high)))
+        }
+        def list = s.take(10).toJavaList()
+        def expected = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
+        assertTrue(list == expected)
+    }
+----
+
+== Conclusion
+
+In this post we have explored the implementation of foldLeft and foldRight, both avoided the use of recursion to ensure the use of constant stack space.  We also looked at unfold, the dual of fold, to produce both finite and infinite data.
+
+== Bibliography
+
+[bibliography]
+* [[[1]]] 'Tail Call Elimination in Scala Monads', http://apocalisp.wordpress.com/2011/10/26/tail-call-elimination-in-scala-monads/.
+* [[[2]]] Unfolds (Anamorphisms) on Wikipedia, https://en.wikipedia.org/wiki/Unfold_(higher-order_function).
+* [[[3]]] Tail Recursion Optimization with Groovy's AST Transformations, http://blog.johanneslink.net/2011/02/11/tail-recursion-optimization-with-groovys-ast-transformations/.
+* [[[4]]] Erik Meijer, https://en.wikipedia.org/wiki/Erik_Meijer_(computer_scientist).
+* [[[5]]] FunctionalGroovy, https://github.com/mperry/functionalgroovy.
+* [[[6]]] FunctionalJava Trampoline implementation, https://github.com/functionaljava/functionaljava/blob/master/core/src/main/java/fj/control/Trampoline.java
+* [[[7]]] Categorical Dual on Wikipedia, https://en.wikipedia.org/wiki/Categorical_dual
+* [[[8]]] Folds and Unfolds All Around Us, http://conal.net/talks/folds-and-unfolds.pdf.
+* [[[9]]] Stackless Scala With Free Monads, http://blog.higher-order.com/assets/trampolines.pdf
+
+
