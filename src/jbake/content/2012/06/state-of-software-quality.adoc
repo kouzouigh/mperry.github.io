@@ -1,0 +1,25 @@
+= State of Software Quality
+Mark Perry
+2012-06-07
+:jbake-type: post
+:jbake-tags: quality, evidence, empirical, data
+:jbake-status: published
+
+Software quality is a key attribute of both successful and failed software projects.  Unfortunately this topic is not well understood by the majority of software engineers due to their education and training.  The video below by Capers Jones covers the factors that influence software quality including methodologies, tools, and staffing levels.  It covers empirical evidence on major quality approaches and other topics that can impact overall quality levels.
+
+[quote]
+____
+Statement of purpose:
+
+* Explain the state of the art of defect prevention and removal
+* Explain pre-test removal such as static analysis and inspections
+* Explain the economic value of achieving > 95% in defect removal efficiency
+* Explain the economic costs of dropping < 85% in defect removal efficiency
+* Explain the ROI of quality excellence
+____
+
++++++
+<!-- more -->
++++++
+
+video::ahArM6TD2F8[youtube]
