@@ -34,7 +34,7 @@ These scenarios address a specific attribute for a requirement.  They include:
 * Response - Activity undertaken after the arrival of the stimulus.
 * Response measure - How to measure the response so that the requirement can be tested.
 
-image::../../img/general_availability_scenario.png[]
+image::../../../img/general_availability_scenario.png[]
 
 === Availability
 
