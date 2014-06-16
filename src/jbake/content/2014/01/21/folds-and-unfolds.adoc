@@ -61,7 +61,7 @@ Fold lefts can be easily rewritten as a for loop to avoid the _StackOverflowErro
     }
 ----
 
-We can now negate the test above to demonstrate that _foldLeft_ now uses constant stack space and can therefore handle large lists.  Note that a Groovy AST transform [3] exists to do tail call optimisation (TCO) which may be integrated in Groovy 2.3.
+We can now negate the test above to demonstrate that _foldLeft_ now uses constant stack space and can therefore handle large lists.  Note that a Groovy AST transform <<3>> exists to do tail call optimisation (TCO) which may be integrated in Groovy 2.3.
 
 == Folding Right
 
@@ -76,7 +76,7 @@ Folding right is a trickier beast.  A naive implementation using recursion is:
 
 Note that the recursive call _foldRightR_ is not in the tail position (the last expression done).  As a result,
 we can't transform the program by rewriting the function using a loop.  Instead we use a trampoline,
-a data structure which represents what to do next [1] [6].  We use the method _pure_ to indicate that we have completed the computation and _suspend_ to indicate there is more work to be done.
+a data structure which represents what to do next <<1>> <<6>>.  We use the method _pure_ to indicate that we have completed the computation and _suspend_ to indicate there is more work to be done.
 
 [source,groovy,numbered]
 ----
@@ -127,7 +127,7 @@ Now calling _foldRight_ over a large list does not blow the stack:
     }
 ----
 
-Trampolines have proven useful to me numerous times to avoid overflowing the stack, e.g. when performing link:../../2014/01/referentially-transparent-io.html[referentially transparent IO].
+Trampolines have proven useful to me numerous times to avoid overflowing the stack, e.g. when performing link:../../../2014/01/03/referentially-transparent-io.html[referentially transparent IO].
 
 
 == Unfold
