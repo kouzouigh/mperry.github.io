@@ -7,6 +7,11 @@ Mark Perry
 
 Software quality is a key attribute of both successful and failed software projects.  Unfortunately this topic is not well understood by the majority of software engineers due to their education and training.  The video below by Capers Jones covers the factors that influence software quality including methodologies, tools, and staffing levels.  It covers empirical evidence on major quality approaches and other topics that can impact overall quality levels.
 
++++++
+<!-- more -->
++++++
+
+
 [quote]
 ____
 Statement of purpose:
@@ -18,8 +23,5 @@ Statement of purpose:
 * Explain the ROI of quality excellence
 ____
 
-+++++
-<!-- more -->
-+++++
 
 video::ahArM6TD2F8[youtube]
