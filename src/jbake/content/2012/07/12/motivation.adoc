@@ -24,7 +24,7 @@ Motivation is an urge to act.  Maslow defines five levels of need:
 
 Self actualisation is required for software engineering which must be consistently satisfied for outstanding work.  For this to occur, each of the lower levels must be satisfied.
 
-image::../../img/motivation_triangle.png[]
+image::../../../img/motivation_triangle.png[]
 
 == Goals
 
@@ -124,7 +124,7 @@ To build a motivated, committed team, ensure the following four factors are sati
 * Credible: They must be back with previous evidence and a plan on how the commitment will be met
 * Owned: Those that do the work must make the plan and negotiate the commitment
 
-image::../../img/motivation_elements.png[]
+image::../../../img/motivation_elements.png[]
 
 == Sustaining Motivation
 
