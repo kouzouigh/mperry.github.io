@@ -1,0 +1,24 @@
+= Project Eueler in Groovy
+Mark Perry
+2012-11-10
+:jbake-type: post
+:jbake-tags: euler, programming, groovy
+:jbake-status: published
+
+http://projecteuler.net/[Project Euler] is a great way to focus your skills on programming languages and techniques.  From the website:
+
+[quote]
+____
+Project Euler is a series of challenging mathematical/computer programming problems that will require more than just mathematical insights to solve. Although mathematics will help you arrive at elegant and efficient methods, the use of a computer and programming skills will be required to solve most problems.
+____
+
++++++
+<!-- more -->
++++++
+
+I used Groovy 2.0.5 to explore type safety in Groovy to solve practical programming problems.  For now, I will post a link to my https://github.com/mperry/euler_groovy/tree/master/src/perry[Grooy Project Eueler GitHub project], with analysis to come in the future.  Currently, I have completed the first ten programming problems.
+
+
+
+
+
