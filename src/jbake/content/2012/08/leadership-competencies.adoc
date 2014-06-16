@@ -1,0 +1,64 @@
+= New Leadership Competencies
+Mark Perry
+2012-08-06
+:jbake-type: post
+:jbake-tags: Deming, leadership, motivation, software, lean, Scholtes
+:jbake-status: published
+
+
+IT managers have an insatiable hunger for fadish, silver bullet, quick fix solutions to complex problems.  This understates and fails to understand the important of systems in accomplishing tasks.  Fighting against broken systems that actively hinder and demotivate teams is poison to highly effective and efficient organisatons.  Great running systems allows teams and individuals to do superb work they can be proud of.
+
+
++++++
+<!-- more -->
++++++
+
+
+Peter Scholtes' book, http://books.google.com.au/books/about/The_Leader_s_Handbook.html?id=_pPd2ssliiUC&redir_esc=y[The Leader's Handbook: Making Things Happen, Getting Things Done] describes the need to transform management and gives practical advice based on the work of Deming's systems thinking.  In this post I summarise chapter 2, "The New Leadership Competencies".
+
+[quote,Scholtes]
+____
+All of the empowered, motivated, teamed-up, self-directed, incentivized, accountable, reengineered, and reinvented people you can muster cannot compensate for a dysfunctional system. When the system is functioning well, these other things are all just foofaraw. When the system is not functioning well, these things are still only empty, meaningless twaddle.
+____
+
+.The Leader's Handbook
+image::http://bks4.books.google.com.au/books?id=_pPd2ssliiUC&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE73NTJkrjl1qYBe68v2oaT-TZUTXXTVwn54AJnhrWDomsnRWLD23g6x6t_0OzIZLPu5zd9TS3XMpAxdSTGBXiaxlTmuTyyJn8PS0_zG0SaPYYPLxKO36MgZgPOoyi45wNGeD_TXy[height="100px"]
+
+
+== Old competencies
+
+Traditionally managers in organisations needed to have the following skills:
+
+* Forcefulness - Control the workforce, make people do the job, get people to respond to directions.
+* Motivation - Inspire people to do great work.  Exhortation and motivation are the traditional carrot and stick.
+* Decisiveness - Make quick decisions in the absence of information.
+* Willfulness - Know what you want and pursue it.
+* Assertiveness - Be outspoken, don't show weakness or ignorance.
+* Result and bottom line oriented - Hold people accountable for quotas, standards and measurable goals.  Maximise profits, decrease costs.
+* Task oriented - Keep everyone busy, no slacking off.  Be the conscience and taskmaster.
+* Integrity and diplomacy - Be honest, fair and respectful.
+
+These skills aren't wrong, just inadequate and less relevant than what they were.
+
+== New Competencies
+
+Deming's "System of Profound Knowledge" describes the new competencies for systems thinking.
+
+* The ability to think in terms of systems and knowing how to lead systems.
+* The ability to understand the variability of work in planning and problem solving.
+* Understanding how we learn, develop, and improve, and leading true learning and improvement.
+* Understanding people and why they behave as they do.
+* Understanding the interdependence and interaction between systems, variation, learning, and human behavior. Knowing how each affects the others.
+* Giving vision, meaning, direction, and focus to the organization.
+
+image::../../img/deming_system.png[]
+
+[quote,Deming]
+____
+The fact is that the system that people work in and the interaction with people may account for 90 or 95 percent of performance.
+____
+
+The work of Deming had a profound influence on Japan afer World War 2.  In the IT world, Deming's work has inspired CMMI, Six Sigma, the PDCA cycle and http://en.wikipedia.org/wiki/Lean_software_development[lean software development].
+
+
+
