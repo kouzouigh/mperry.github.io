@@ -1,0 +1,20 @@
+= Converting to JBake
+Mark Perry
+2014-06-16
+:jbake-type: post
+:jbake-tags: jbake, blog
+:jbake-status: published
+
+
+
+This blog is being converted to JBake to allow easier workflow.  As a result, some of the links will not be working, such as Disqus, the RSS feed and others.
+
+Please keep this in mind as the conversion takes place.  I am expecting this could take a week (around 2014-06-23).
+
+
++++++
+<!-- more -->
++++++
+
+Thanks,
+Mark
