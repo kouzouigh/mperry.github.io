@@ -9,19 +9,10 @@
                 </div>
 
                 <div id="recent-posts" class="panel-body">
-
-
-
-                  <#list posts[0..1] as post>
-
+                  <#list posts[0..(config.index_posts_title_limit?number - 1)] as post>
 				 <p>${post.date?string("yyyy-MM-dd")} - <a href="${post.uri}">${post.title}</a></p>
-
 				  </#list>
-
 				</div>
-
-
-
 			</div>
 
           </section>
