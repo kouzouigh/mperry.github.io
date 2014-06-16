@@ -34,7 +34,7 @@ Hard data can be quantified almost completely objectively.  High accuracy is pos
 
 Note that due to unpaid overtime, costs incurred and hours of effort expended do not directly map.
 
-Granularity must be fine enough to measure the effort for specific activities.  It is common to use the basic activities of requirements, design, code, test and installation.  However, this does not allow cost and benefit analysis of the various other activites and does not handle activities such as document that cross these boundaries.  See my post on link:../../2012/05/development-activities.html[Development Activities] for the various activities and typical effort percentages expended.
+Granularity must be fine enough to measure the effort for specific activities.  It is common to use the basic activities of requirements, design, code, test and installation.  However, this does not allow cost and benefit analysis of the various other activites and does not handle activities such as document that cross these boundaries.  See my post on link:../../../2012/05/31/development-activities.html[Development Activities] for the various activities and typical effort percentages expended.
 
 === Soft Data
 
@@ -83,13 +83,13 @@ To compare how the application type affects productivity consider the following 
 
 Corporate strategy concerns the overall business plan whilst tactics concerns the steps to achieve to strategy.  For measurement, strategic factors affect the entire organisation whilst tactical measurements concern projects.
 
-image::../../img/strategic-tactical-measurements.png[]
+image::../../../img/strategic-tactical-measurements.png[]
 
 == Structure of Full Software Measurement System
 
 A full measurement system will include productivity and quality measurements with monthly and annual reports.
 
-image::../../img/full-measurement-system.png[]
+image::../../../img/full-measurement-system.png[]
 
 == Justification
 

@@ -51,7 +51,7 @@ Deming's "System of Profound Knowledge" describes the new competencies for syste
 * Understanding the interdependence and interaction between systems, variation, learning, and human behavior. Knowing how each affects the others.
 * Giving vision, meaning, direction, and focus to the organization.
 
-image::../../img/deming_system.png[]
+image::../../../img/deming_system.png[]
 
 [quote,Deming]
 ____
