@@ -12,7 +12,7 @@ buildscript {
 apply plugin: 'github-pages'
 
 githubPages {
-    repoUri = "https://github.com/functionaljava/functionaljava.github.io.git"
+    repoUri = "https://github.com/mperry/mperry.github.io.git"
     targetBranch = "master"
     pages {
         from(file('build/jbake')) {
