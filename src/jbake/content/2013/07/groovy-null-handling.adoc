@@ -1,0 +1,227 @@
+= Groovy Null Handling Using Bind, Comprehensions and Lift
+Mark Perry
+2013-07-28
+:jbake-type: post
+:jbake-tags: Groovy, FunctionalJava, Java, null, Monad, FunctionalGroovy, lift, comprehension, Functor, functional programming, FP, bind, comprehension, lift
+:jbake-status: published
+
+
+I have been using Groovy and Grails for around 2 years now and was consistently frustrated at the lack of fundamental functional programming ideas.  Due to this, one of the first libraries I add in a project is http://functionaljava.org/[Functional Java].  This has proven a good match.
+
+The primary page of functional programming in Groovy seems to be at http://groovy.codehaus.org/Functional+Programming+with+Groovy[Functional Programming With Groovy].  This includes some basic usage of Functional Java with Groovy but I think the library needs exposure more widely.  This will also help programmers transition to using functional programming with Java 8 lambdas.  The classes I use most from Functional Java are Stream, Option, Either/Validation, Functions, Tuples (Products) and the automated, specification based testing package, fj.test.
+
+This posts demonstrates using Options instead of nulls, comprehensions and lifting into the Option class.
+
++++++
+<!-- more -->
++++++
+
+== Simple Functional Java Examples
+
+The page http://groovy.codehaus.org/Functional+Programming+with+Groovy[Functional Progamming with Groovy] first lists some simple List processing using FJ (Functional Java) and Groovy.  This requires meta-programming to add new methods to the existing FJ classes.
+
+[source,groovy,numbered]
+----
+
+import fj.data.Stream
+
+// some metaprogramming to make fj mesh well with Groovy
+Stream.metaClass.filter = { Closure c -> delegate.filter(c as fj.F) }
+Stream.metaClass.getAt = { n -> delegate.index(n) }
+Stream.metaClass.getAt = { Range r -> r.collect{ delegate.index(it) } }
+Stream.metaClass.asList = { delegate.toCollection().asList() }
+
+def evens = Stream.range(0).filter{ it % 2 == 0 }
+assert evens.take(5).asList() == [0, 2, 4, 6, 8]
+assert (8..12).collect{ evens[it] } == [16, 18, 20, 22, 24]
+assert evens[3..6] == [6, 8, 10, 12]
+
+----
+
+Note that the code above uses the "as" keyword to reference the asType method on the Object class added by the Groovy JDK.  We also need to think about where the  metaprogramming above is called from your program.  However, as of version 2.0, Groovy has a better way of adding methods to existing classes using the Groovy Extension Module mechanism.  This allows us to:
+
+* add new methods to existing classes directly
+* eliminate the type conversion using asType
+
+Note that with the release of Groovy 2.2, the first beta of which was available 2013/07/15, http://docs.codehaus.org/display/GroovyJSR/GEP+12+-+SAM+coercion[Single Abstract Method Coercion] should further simplify interaction with libraries using functions as first-class values (e.g. FunctionalJava and Java 8).
+
+My library to facilitate interaction with FunctionalJava is called FunctionalGroovy (of course).  The Github home page is https://github.com/mperry/functionalgroovy[Functional Groovy] and the library is publish to the Sonatype Maven repositorites at https://oss.sonatype.org/content/groups/public/com/github/mperry/.  For example, putting this text in test.groovy and running from the command line using "groovy test.groovy".
+
+[source,groovy,numbered]
+----
+@GrabResolver('https://oss.sonatype.org/content/groups/public')
+@Grab('com.github.mperry:functionalgroovy-core:0.2-SNAPSHOT')
+@Grab('org.functionaljava:functionaljava:3.1')
+
+import com.github.mperry.fg.*
+
+1.to(5).each {
+    println it
+}
+----
+
+Note that it appears this will not work from the GroovyConsole or the IntellijIDEA IDE due to existing  issues (likely due to the classpath).
+
+== Coding with Null
+
+Let's write some code to illustrate the problem with null and try to avoid further propagating http://www.infoq.com/presentations/Null-References-The-Billion-Dollar-Mistake-Tony-Hoare[Hoare's billion dollar mistake].  Consider the case of reading values from a Properties file in Java and using the read values in a computation.  The naive and most commmon implementation to do this will need to handle abnormal cases: the Properties file might not be found or any of the keys may not be present or the value of the key may not be convertible to the expected type.  Let us consider the case where the values should be strings representing integers and we want to perform a function with those integers.
+
+Many Java/Groovy implementations might be done as per below.  This code is written in Groovy, but should be understandable for Java progammers as well.
+
+[source,groovy,numbered]
+----
+
+	Integer calculateStandard(Properties p) {
+		def v1 = p.getProperty("var1")
+		def v2 = p.getProperty("var2Missing")
+		try {
+			if (v1 == null || v2 == null) {
+				return null
+			} else {
+				def i = Integer.parseInt(v1)
+				def j = Integer.parseInt(v2)
+				return i * j
+			}
+		} catch (Exception e) {
+			return null
+		}
+	}
+----
+
+== Problems with Null
+
+There are numerous problems with this implementation:
+
+* duplicate calls to getProperty
+* duplicate null checks
+* duplicate return null statements
+* duplicate parseInt calls
+* clients of this method need to somehow know that the result can be null
+* all clients of this method need to do a null check on the result returned, forcing clients to repeat the same code potentially thousands of times!
+
+The worst problem above, by far, is all clients of the method having to do null checks on the result type.  This is problematic because:
+
+* the null check is easily forgotten and if not done might cause program abortion
+* indicating potential null is not indicated by the types involved
+* comments for null check might get out of sync with the code
+* clients might be overly conservative and do null check for values that cannot be null, bloating code, creating unnecessary noise and creating potential confusion
+
+Let's look at how this can be done better.
+
+== Binding through Option
+
+To start with let's change how we get values from a property file to handle the null case in a type-safe way.
+
+[source,groovy,numbered]
+----
+	@TypeChecked
+	Option<String> getStringProperty(Properties p, String key) {
+		Option.fromNull(p.getProperty(key))
+	}
+
+	@TypeChecked
+	Option<Integer> getIntProperty(Properties p, String key) {
+		getStringProperty(p, key).bind { String s ->
+			!s.isInteger() ? Option.none() : Option.fromNull(s.toInteger())
+		}
+	}
+----
+
+Great, now clients clearly know whether the value can be null or not.
+
+We can now use the null aware methods of the Option class, bind and map, whose type signatures are below.
+
+[source,groovy,numbered]
+----
+Option<B> bind(F<A, Option<B>> f)
+Option<B> map(F<A, B> f)
+----
+
+The code to read from the Properties file and then use the resulting values of type Option<Integer> becomes:
+
+[source,groovy,numbered]
+----
+	Option<Integer> calculateWithBind(Properties p) {
+		def t = P.p("var3", "var4")
+		def t2 = P2.map({ String s -> getIntProperty(p, s)} as F, t)
+		def f2 = {Integer a, Integer b -> a * b} as F2
+		t2._1().bind { Integer a ->
+			t2._2().map { Integer b ->
+				f2.f(a, b)
+			}
+		}
+	}
+----
+
+What is happenning here?  The code uses a type-safe tuple (a FunctionalJava product type, P2) constructed using the overloaded static call to P for the Property keys and map over the String key to get a tuple containing optional Integer values.  We create a function, f2, taking two normal (not null) integer arguments and use Groovy's asType method to convert the Closure to a FunctionalJava F2 type.  The code binds the function through the first Option value of the tuple and then maps over the second option structure in the tuple to keep the correct structure for the return type.  If you are new to functional progamming I recommend spending some time understanding the bind and map methods.
+
+This has some important results.  We have removed duplication from the method calculateStandard to calculateWithBind and made it easier for clients of the method to be correct because null is abstracted into the return type.  Clients can extract the value from the Option using the isSome, some, orSome and other methods.
+
+This code can also be written another way using Monadic Comprehensions (those types that support both the bind and map methods above).
+
+[source,groovy,numbered]
+----
+	Option<Integer> calculateWithComprehension(Properties p) {
+		def t = P.p("var3", "var4")
+		def t2 = t.map({ String s -> getIntProperty(p, s)} as F, t)
+		def f2 = {Integer a, Integer b -> a * b} as F2
+		Comprehension.foreach {
+			a << t2._1()
+			b << t2._2()
+			yield { f2.f(a, b) }
+		}
+	}
+----
+
+Only the last few lines here have changed.  Instead of calling bind on the option, the code now has a comprehension to bind over the values in the tuple t2.  We calculate the result in the same way.  The potentially suprising part of this is that the foreach comprehension is implemented in exactly the same way as calculateWithBind above.  That is each leftShift method (<<) except the last is translated to a bind call, with the last << translated to a call to map being passed the function call in the yield.
+
+== Lifting
+
+What is not commonly shown for Functional Programming in Groovy is type-safe nulls which can be handled by lifting the function into the Option type so that we don't need to bind/map over the values for the function.  We use the method liftM2 in Option added by FunctionalGroovy which transforms a function from a two argument function taking A and B and returning a C and returning a new function taking arguments of generic type Option and returning an Option.  It's type signature is:
+
+[source,groovy,numbered]
+----
+	static <A, B, C> F2<Option<A>, Option<B>, Option<C>> liftM2(F2<A, B, C> f2) {
+		null // TODO: implementation
+	}
+----
+
+
+We then call this function with our Option values from the tuple t2 and we are done (as an aside, note that FunctionalJava already has a liftM2 method using a curried, two argument function).
+
+[source,groovy,numbered]
+----
+	Option<Integer> calculateOptionLift(Properties p) {
+		def t = P.p("var3", "var4")
+		def t2 = P2.map({ String s -> getIntProperty(p, s)} as F, t)
+		def f2 = {Integer a, Integer b -> a * b} as F2
+		Option.liftM2(f2).f(t2._1(), t2._2())
+	}
+----
+
+Again, the code has not changed exception for the last line where the function f2 is lifted into the Option class and the resulting function called with the two Option values.  The magic here happens with the method liftM2.  Take a second look at it's type signature below.
+
+[source,groovy,numbered]
+----
+	static <A, B, C> F2<Option<A>, Option<B>, Option<C>> liftM2(F2<A, B, C> f2) {
+		// TODO: implementation
+	}
+----
+
+This is really convenient, we write a function with normal Integers arguments and ignore the presence of potential abnormal cases.  When we lift our function into the Option class the function returned already knows how to handle nulls!
+
+== Conclusion
+
+There is quite alot of abstraction involved here and despite Groovy's many pain points we have managed to turn some ugly legacy code into quite an elegant solution.  When code has to deal with a null from a library, create an abstraction (usually Option) dealing with the null that calls and handles any null parameters and returned values.
+
+== Bibliography
+[bibliography]
+* FunctionalGroovy, https://github.com/mperry/functionalgroovy.
+* FunctionalJava, http://functionaljava.org/.
+* Scala For Comprehension, https://adamwojtuniak.wordpress.com/2010/09/24/scala-for-comprehensions/.
+* Functional Scala, Comprehending Comprehensions, https://gleichmann.wordpress.com/2010/11/21/functional-scala-comprehending-comprehensions/.
+* Haskell List Comprehensions, http://www.haskell.org/haskellwiki/List_comprehension.
+* Null References, The Billion Dollar Mistake, http://www.infoq.com/presentations/Null-References-The-Billion-Dollar-Mistake-Tony-Hoare.
+* Option Type, http://en.wikipedia.org/wiki/Option_type.
+
+
