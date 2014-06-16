@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+    Software Matters!
+        - Groovy Null Handling Using Bind, Comprehensions and Lift
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Mark Perry">
+    <meta name="description" content="Static blog generated with JBake">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/yeti/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" href="/css/base.css">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav icon -->
+    <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  </head>
+  <body>      
+    <nav class="navbar navbar-default navbar-fixed-top " role="navigation">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Software Matters!</a>
+        </div>
+        
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+			<li><a href="/">Home</a></li>
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/pages/bio.html">Author</a></li>
+			<li><a href="/archive.html">Archive</a></li>
+
+          </ul>
+        
+        <!-- Right navigation -->
+        <ul class="nav navbar-nav navbar-right">
+
+          <li><a href="/feed.xml" title="Rss"><i class="fa fa-rss"></i> Feed</a></li>
+        </ul>
+        <!-- Right navigation end -->
+
+      </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav><!-- /.navbar -->
+
+    <!-- Begin page content -->
+    <div class="container">
+      
+      <div class="row">
+        <div class="col-md-12">
+          <article>
+            <div class="page-header"><h1>Groovy Null Handling Using Bind, Comprehensions and Lift</h1>
+              <ol class="breadcrumb tagsbar">
+                <li><a href="/tags/Groovy.html">Groovy</a></li>
+                <li><a href="/tags/FunctionalJava.html">FunctionalJava</a></li>
+                <li><a href="/tags/Java.html">Java</a></li>
+                <li><a href="/tags/null.html">null</a></li>
+                <li><a href="/tags/Monad.html">Monad</a></li>
+                <li><a href="/tags/FunctionalGroovy.html">FunctionalGroovy</a></li>
+                <li><a href="/tags/lift.html">lift</a></li>
+                <li><a href="/tags/comprehension.html">comprehension</a></li>
+                <li><a href="/tags/Functor.html">Functor</a></li>
+                <li><a href="/tags/functional-programming.html">functional-programming</a></li>
+                <li><a href="/tags/FP.html">FP</a></li>
+                <li><a href="/tags/bind.html">bind</a></li>
+                <li><a href="/tags/comprehension.html">comprehension</a></li>
+                <li><a href="/tags/lift.html">lift</a></li>
+              </ol>
+            </div>
+          <p class="post-meta">
+            <i class="fa fa-calendar"></i>&nbsp;28 July 2013&nbsp;&nbsp;
+            <i class="fa fa-user"></i>&nbsp;Mark Perry&nbsp;&nbsp;
+              <i class="fa fa-comment"></i>&nbsp;<span class="badge"><a href="http://mperry.github.io2013/07/28/groovy-null-handling.html#disqus_thread"></a></span>
+          </p>
+              <p><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>I have been using Groovy and Grails for around 2 years now and was consistently frustrated at the lack of fundamental functional programming ideas.  Due to this, one of the first libraries I add in a project is <a href="http://functionaljava.org/">Functional Java</a>.  This has proven a good match.</p>
+</div>
+<div class="paragraph">
+<p>The primary page of functional programming in Groovy seems to be at <a href="http://groovy.codehaus.org/Functional+Programming+with+Groovy">Functional Programming With Groovy</a>.  This includes some basic usage of Functional Java with Groovy but I think the library needs exposure more widely.  This will also help programmers transition to using functional programming with Java 8 lambdas.  The classes I use most from Functional Java are Stream, Option, Either/Validation, Functions, Tuples (Products) and the automated, specification based testing package, fj.test.</p>
+</div>
+<div class="paragraph">
+<p>This posts demonstrates using Options instead of nulls, comprehensions and lifting into the Option class.</p>
+</div>
+<!-- more -->
+</div>
+</div>
+<div class="sect1">
+<h2 id="_simple_functional_java_examples">Simple Functional Java Examples</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The page <a href="http://groovy.codehaus.org/Functional+Programming+with+Groovy">Functional Progamming with Groovy</a> first lists some simple List processing using FJ (Functional Java) and Groovy.  This requires meta-programming to add new methods to the existing FJ classes.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>
+import fj.data.Stream
+
+// some metaprogramming to make fj mesh well with Groovy
+Stream.metaClass.filter = { Closure c -&gt; delegate.filter(c as fj.F) }
+Stream.metaClass.getAt = { n -&gt; delegate.index(n) }
+Stream.metaClass.getAt = { Range r -&gt; r.collect{ delegate.index(it) } }
+Stream.metaClass.asList = { delegate.toCollection().asList() }
+
+def evens = Stream.range(0).filter{ it % 2 == 0 }
+assert evens.take(5).asList() == [0, 2, 4, 6, 8]
+assert (8..12).collect{ evens[it] } == [16, 18, 20, 22, 24]
+assert evens[3..6] == [6, 8, 10, 12]
+</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the code above uses the "as" keyword to reference the asType method on the Object class added by the Groovy JDK.  We also need to think about where the  metaprogramming above is called from your program.  However, as of version 2.0, Groovy has a better way of adding methods to existing classes using the Groovy Extension Module mechanism.  This allows us to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>add new methods to existing classes directly</p>
+</li>
+<li>
+<p>eliminate the type conversion using asType</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Note that with the release of Groovy 2.2, the first beta of which was available 2013/07/15, <a href="http://docs.codehaus.org/display/GroovyJSR/GEP+12+-+SAM+coercion">Single Abstract Method Coercion</a> should further simplify interaction with libraries using functions as first-class values (e.g. FunctionalJava and Java 8).</p>
+</div>
+<div class="paragraph">
+<p>My library to facilitate interaction with FunctionalJava is called FunctionalGroovy (of course).  The Github home page is <a href="https://github.com/mperry/functionalgroovy">Functional Groovy</a> and the library is publish to the Sonatype Maven repositorites at <a href="https://oss.sonatype.org/content/groups/public/com/github/mperry/">https://oss.sonatype.org/content/groups/public/com/github/mperry/</a>.  For example, putting this text in test.groovy and running from the command line using "groovy test.groovy".</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>@GrabResolver('https://oss.sonatype.org/content/groups/public')
+@Grab('com.github.mperry:functionalgroovy-core:0.2-SNAPSHOT')
+@Grab('org.functionaljava:functionaljava:3.1')
+
+import com.github.mperry.fg.*
+
+1.to(5).each {
+    println it
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that it appears this will not work from the GroovyConsole or the IntellijIDEA IDE due to existing  issues (likely due to the classpath).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_coding_with_null">Coding with Null</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s write some code to illustrate the problem with null and try to avoid further propagating <a href="http://www.infoq.com/presentations/Null-References-The-Billion-Dollar-Mistake-Tony-Hoare">Hoare&#8217;s billion dollar mistake</a>.  Consider the case of reading values from a Properties file in Java and using the read values in a computation.  The naive and most commmon implementation to do this will need to handle abnormal cases: the Properties file might not be found or any of the keys may not be present or the value of the key may not be convertible to the expected type.  Let us consider the case where the values should be strings representing integers and we want to perform a function with those integers.</p>
+</div>
+<div class="paragraph">
+<p>Many Java/Groovy implementations might be done as per below.  This code is written in Groovy, but should be understandable for Java progammers as well.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>
+	Integer calculateStandard(Properties p) {
+		def v1 = p.getProperty("var1")
+		def v2 = p.getProperty("var2Missing")
+		try {
+			if (v1 == null || v2 == null) {
+				return null
+			} else {
+				def i = Integer.parseInt(v1)
+				def j = Integer.parseInt(v2)
+				return i * j
+			}
+		} catch (Exception e) {
+			return null
+		}
+	}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_problems_with_null">Problems with Null</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There are numerous problems with this implementation:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>duplicate calls to getProperty</p>
+</li>
+<li>
+<p>duplicate null checks</p>
+</li>
+<li>
+<p>duplicate return null statements</p>
+</li>
+<li>
+<p>duplicate parseInt calls</p>
+</li>
+<li>
+<p>clients of this method need to somehow know that the result can be null</p>
+</li>
+<li>
+<p>all clients of this method need to do a null check on the result returned, forcing clients to repeat the same code potentially thousands of times!</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The worst problem above, by far, is all clients of the method having to do null checks on the result type.  This is problematic because:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the null check is easily forgotten and if not done might cause program abortion</p>
+</li>
+<li>
+<p>indicating potential null is not indicated by the types involved</p>
+</li>
+<li>
+<p>comments for null check might get out of sync with the code</p>
+</li>
+<li>
+<p>clients might be overly conservative and do null check for values that cannot be null, bloating code, creating unnecessary noise and creating potential confusion</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s look at how this can be done better.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_binding_through_option">Binding through Option</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To start with let&#8217;s change how we get values from a property file to handle the null case in a type-safe way.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>	@TypeChecked
+	Option&lt;String&gt; getStringProperty(Properties p, String key) {
+		Option.fromNull(p.getProperty(key))
+	}
+
+	@TypeChecked
+	Option&lt;Integer&gt; getIntProperty(Properties p, String key) {
+		getStringProperty(p, key).bind { String s -&gt;
+			!s.isInteger() ? Option.none() : Option.fromNull(s.toInteger())
+		}
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Great, now clients clearly know whether the value can be null or not.</p>
+</div>
+<div class="paragraph">
+<p>We can now use the null aware methods of the Option class, bind and map, whose type signatures are below.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>Option&lt;B&gt; bind(F&lt;A, Option&lt;B&gt;&gt; f)
+Option&lt;B&gt; map(F&lt;A, B&gt; f)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The code to read from the Properties file and then use the resulting values of type Option&lt;Integer&gt; becomes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>	Option&lt;Integer&gt; calculateWithBind(Properties p) {
+		def t = P.p("var3", "var4")
+		def t2 = P2.map({ String s -&gt; getIntProperty(p, s)} as F, t)
+		def f2 = {Integer a, Integer b -&gt; a * b} as F2
+		t2._1().bind { Integer a -&gt;
+			t2._2().map { Integer b -&gt;
+				f2.f(a, b)
+			}
+		}
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>What is happenning here?  The code uses a type-safe tuple (a FunctionalJava product type, P2) constructed using the overloaded static call to P for the Property keys and map over the String key to get a tuple containing optional Integer values.  We create a function, f2, taking two normal (not null) integer arguments and use Groovy&#8217;s asType method to convert the Closure to a FunctionalJava F2 type.  The code binds the function through the first Option value of the tuple and then maps over the second option structure in the tuple to keep the correct structure for the return type.  If you are new to functional progamming I recommend spending some time understanding the bind and map methods.</p>
+</div>
+<div class="paragraph">
+<p>This has some important results.  We have removed duplication from the method calculateStandard to calculateWithBind and made it easier for clients of the method to be correct because null is abstracted into the return type.  Clients can extract the value from the Option using the isSome, some, orSome and other methods.</p>
+</div>
+<div class="paragraph">
+<p>This code can also be written another way using Monadic Comprehensions (those types that support both the bind and map methods above).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>	Option&lt;Integer&gt; calculateWithComprehension(Properties p) {
+		def t = P.p("var3", "var4")
+		def t2 = t.map({ String s -&gt; getIntProperty(p, s)} as F, t)
+		def f2 = {Integer a, Integer b -&gt; a * b} as F2
+		Comprehension.foreach {
+			a &lt;&lt; t2._1()
+			b &lt;&lt; t2._2()
+			yield { f2.f(a, b) }
+		}
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Only the last few lines here have changed.  Instead of calling bind on the option, the code now has a comprehension to bind over the values in the tuple t2.  We calculate the result in the same way.  The potentially suprising part of this is that the foreach comprehension is implemented in exactly the same way as calculateWithBind above.  That is each leftShift method (&lt;&lt;) except the last is translated to a bind call, with the last &lt;&lt; translated to a call to map being passed the function call in the yield.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_lifting">Lifting</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>What is not commonly shown for Functional Programming in Groovy is type-safe nulls which can be handled by lifting the function into the Option type so that we don&#8217;t need to bind/map over the values for the function.  We use the method liftM2 in Option added by FunctionalGroovy which transforms a function from a two argument function taking A and B and returning a C and returning a new function taking arguments of generic type Option and returning an Option.  It&#8217;s type signature is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>	static &lt;A, B, C&gt; F2&lt;Option&lt;A&gt;, Option&lt;B&gt;, Option&lt;C&gt;&gt; liftM2(F2&lt;A, B, C&gt; f2) {
+		null // TODO: implementation
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We then call this function with our Option values from the tuple t2 and we are done (as an aside, note that FunctionalJava already has a liftM2 method using a curried, two argument function).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>	Option&lt;Integer&gt; calculateOptionLift(Properties p) {
+		def t = P.p("var3", "var4")
+		def t2 = P2.map({ String s -&gt; getIntProperty(p, s)} as F, t)
+		def f2 = {Integer a, Integer b -&gt; a * b} as F2
+		Option.liftM2(f2).f(t2._1(), t2._2())
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Again, the code has not changed exception for the last line where the function f2 is lifted into the Option class and the resulting function called with the two Option values.  The magic here happens with the method liftM2.  Take a second look at it&#8217;s type signature below.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>	static &lt;A, B, C&gt; F2&lt;Option&lt;A&gt;, Option&lt;B&gt;, Option&lt;C&gt;&gt; liftM2(F2&lt;A, B, C&gt; f2) {
+		// TODO: implementation
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is really convenient, we write a function with normal Integers arguments and ignore the presence of potential abnormal cases.  When we lift our function into the Option class the function returned already knows how to handle nulls!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There is quite alot of abstraction involved here and despite Groovy&#8217;s many pain points we have managed to turn some ugly legacy code into quite an elegant solution.  When code has to deal with a null from a library, create an abstraction (usually Option) dealing with the null that calls and handles any null parameters and returned values.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bibliography">Bibliography</h2>
+<div class="sectionbody">
+<div class="ulist bibliography">
+<ul class="bibliography">
+<li>
+<p>FunctionalGroovy, <a href="https://github.com/mperry/functionalgroovy">https://github.com/mperry/functionalgroovy</a>.</p>
+</li>
+<li>
+<p>FunctionalJava, <a href="http://functionaljava.org/">http://functionaljava.org/</a>.</p>
+</li>
+<li>
+<p>Scala For Comprehension, <a href="https://adamwojtuniak.wordpress.com/2010/09/24/scala-for-comprehensions/">https://adamwojtuniak.wordpress.com/2010/09/24/scala-for-comprehensions/</a>.</p>
+</li>
+<li>
+<p>Functional Scala, Comprehending Comprehensions, <a href="https://gleichmann.wordpress.com/2010/11/21/functional-scala-comprehending-comprehensions/">https://gleichmann.wordpress.com/2010/11/21/functional-scala-comprehending-comprehensions/</a>.</p>
+</li>
+<li>
+<p>Haskell List Comprehensions, <a href="http://www.haskell.org/haskellwiki/List_comprehension">http://www.haskell.org/haskellwiki/List_comprehension</a>.</p>
+</li>
+<li>
+<p>Null References, The Billion Dollar Mistake, <a href="http://www.infoq.com/presentations/Null-References-The-Billion-Dollar-Mistake-Tony-Hoare">http://www.infoq.com/presentations/Null-References-The-Billion-Dollar-Mistake-Tony-Hoare</a>.</p>
+</li>
+<li>
+<p>Option Type, <a href="http://en.wikipedia.org/wiki/Option_type">http://en.wikipedia.org/wiki/Option_type</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div></p>
+      <div class="share">
+  <!-- Facebook -->
+          <a href="http://www.facebook.com/sharer.php?u=http://mperry.github.io2013/07/28/groovy-null-handling.html" target="_blank"><img src="/img/sharebuttons/facebook.png" alt="Facebook" /></a>
+  <!-- Google+ -->
+          <a href="https://plus.google.com/share?url=http://mperry.github.io2013/07/28/groovy-null-handling.html" target="_blank"><img src="/img/sharebuttons/google_plus.png" alt="Google" /></a>
+  <!-- Twitter -->
+          <a href="http://twitter.com/share?url=http://mperry.github.io2013/07/28/groovy-null-handling.html&text=Groovy Null Handling Using Bind, Comprehensions and Lift mperry.github.io2013/07/28/groovy-null-handling.html" target="_blank"><img src="/img/sharebuttons/twitter.png" alt="Twitter" /></a>
+      </div>
+<hr>
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'maperry78'; // required: replace example with your forum shortname
+  
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>            </article>
+        </div> <!-- /.col-md-12 -->
+      </div> <!-- /.row -->
+        
+      </div><!-- /.container -->
+
+    <footer>
+      <div class="container">
+        <hr>
+        <div class="row">
+          <div class="col-xs-10">
+            <p class="text-muted credit">&copy;  2014 | Mixed with <a href="http://getbootstrap.com/">Bootstrap v3.1.1</a> | Baked with <a href="http://jbake.org">JBake v2.3.0</a> | <i title="Linux" class="fa fa-linux"></i></p>
+          </div>
+          <div class="col-xs-2 gotop">
+            <a href="#"><i class="fa fa-arrow-circle-up"> top</i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/gist-embed/1.6/gist-embed.min.js"></script>
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+      <!-- load prettify only when needed -->
+      $(document).ready(function(){
+        var prettify = false;
+        var classToAdd = 'prettyprint snippet';
+        $("pre > code").each(function() {
+          $("pre > code").parent().addClass(classToAdd);
+          prettify = true;
+        });
+        if(prettify) {
+          prettyPrint();
+        }
+      });
+    </script>
+
+    <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'maperry78'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+    </script>
+
+        </body>
+</html>

@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+    Software Matters!
+        - Referentially Transparent Input/Output in Groovy
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Mark Perry">
+    <meta name="description" content="Static blog generated with JBake">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/yeti/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" href="/css/base.css">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav icon -->
+    <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  </head>
+  <body>      
+    <nav class="navbar navbar-default navbar-fixed-top " role="navigation">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Software Matters!</a>
+        </div>
+        
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+			<li><a href="/">Home</a></li>
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/pages/bio.html">Author</a></li>
+			<li><a href="/archive.html">Archive</a></li>
+
+          </ul>
+        
+        <!-- Right navigation -->
+        <ul class="nav navbar-nav navbar-right">
+
+          <li><a href="/feed.xml" title="Rss"><i class="fa fa-rss"></i> Feed</a></li>
+        </ul>
+        <!-- Right navigation end -->
+
+      </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav><!-- /.navbar -->
+
+    <!-- Begin page content -->
+    <div class="container">
+      
+      <div class="row">
+        <div class="col-md-12">
+          <article>
+            <div class="page-header"><h1>Referentially Transparent Input/Output in Groovy</h1>
+              <ol class="breadcrumb tagsbar">
+                <li><a href="/tags/.html"></a></li>
+              </ol>
+            </div>
+          <p class="post-meta">
+            <i class="fa fa-calendar"></i>&nbsp;03 January 2014&nbsp;&nbsp;
+            <i class="fa fa-user"></i>&nbsp;Mark Perry&nbsp;&nbsp;
+              <i class="fa fa-comment"></i>&nbsp;<span class="badge"><a href="http://mperry.github.io2014/01/03/referentially-transparent-io.html#disqus_thread"></a></span>
+          </p>
+              <p><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>When learning functional programming, a difficult concept to grasp is how any "actual work" gets done.  That is, if all functions are referentially transparent, then how does the program perform IO (input/output), which is not typically referentially transparent?  Are our functional programs locked out of IO, consigned to calculations without doing useful things like reading from the keyboard, printing to the screen, saving to disk or communicating over a network?</p>
+</div>
+<div class="paragraph">
+<p>The answer, of course, is no. We create programs so that our entire program is a single IO action that, when run, can perform IO.  Ideally, the program we write never actually runs any IO action, we rely on the runtime environment to run the single IO action representing our program.  Most languages don&#8217;t have this environment; we compromise by making our main method run the single IO action representing the program.</p>
+</div>
+<!-- more -->
+<div class="paragraph">
+<p>This is stated eloquently at "Haskell/Simple input and output":https://en.wikibooks.org/wiki/Haskell/Simple_input_and_output,</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>The question immediately arises: "how do you <em>run</em> an action?". This is something that is left up to the compiler. You cannot actually run an action yourself; instead, a program is, itself, a single action that is run when the compiled program is executed. Thus, the compiler requires that the main  function have type IO (), which means that it is an IO action that returns nothing. The compiled code then executes this action.</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>There are lots of good resources for further information on this topic, including <a href="#1">[1]</a> and <a href="#2">[2]</a>.  Let&#8217;s investigate how this works in practice with an example in a typically impure language like Groovy.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_simple_input_output_program">Simple Input/Output Program</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I am going to implement a simple REPL (Read, Eval, Print, Loop) that reads an integer from standard input and prints the square of that integer.  If the line of input is <em>q</em> the program will quit, if the input is not an integer or <em>q</em> then an error is printed and we accept further input.  This example was inspired from <a href="#2">[2]</a>, which has a similar program in Scala (Chapter 13, External Effects and I/O).</p>
+</div>
+<div class="paragraph">
+<p>A simple, typical, imperative solution might be:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>package com.github.mperry.fg
+
+import groovy.transform.TypeChecked
+
+@TypeChecked
+class SimpleIODemoImperative {
+
+	String quit = "q"
+	String help = "Squaring REPL\nEnter $quit to quit"
+	String prompt = "&gt;"
+
+    static void main(def args) {
+        def d = new SimpleIODemoImperative()
+        d.repl()
+    }
+
+    void repl() {
+        println(help)
+        System.in.withReader { Reader r -&gt;
+            def doLoop = true
+            while (doLoop) {
+                println(prompt)
+                def s = r.readLine()
+                process(s)
+                doLoop = continueLoop(s)
+            }
+        }
+    }
+
+    String squareMessage(Integer n) {
+		"square $n = ${n * n}"
+	}
+
+	String invalidMessage(String s) {
+		"Not an integer: $s"
+	}
+
+	Boolean continueLoop(String s) {
+		s != quit
+	}
+
+	Boolean isQuit(String s) {
+		!continueLoop(s)
+	}
+
+	Boolean validInput(String s) {
+		s.isInteger() || isQuit(s)
+	}
+
+	void process(String s) {
+		if (!validInput(s)) {
+			println(invalidMessage(s))
+		}
+		if (s.isInteger()) {
+			println(squareMessage(s.toInteger()))
+		}
+	}
+
+}
+</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A program run (interactive session) might proceed as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Squaring REPL
+Enter q to quit
+&gt;
+5
+square 5 = 25
+&gt;
+3
+square 3 = 9
+&gt;
+abc
+Not an integer: abc
+&gt;
+q</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The main method in this program instantiates the SimpleIODemoImperative class and calls the repl method.  The repl method prints a help message and then enters a loop where the loop:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>prints a prompt</p>
+</li>
+<li>
+<p>reads a line of input</p>
+</li>
+<li>
+<p>processes the input, printing the result or an error (or nothing if quitting)</p>
+</li>
+<li>
+<p>checks whether the loop should continue</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s transform this program to do referentially transparent IO.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_a_simple_io_type">A Simple IO Type</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Instead of reading from or writing to standard input directly, we introduce a type that, when run, will perform this IO effect. When we write output we discard the value we output; for input we represent the type of the input value directly in the SimpleIO type to make the value accessible to other parts of the program.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>import groovy.transform.TypeChecked
+
+@TypeChecked
+abstract class SimpleIO&lt;A&gt; {
+    abstract A run()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When run, the BasicIO type will perform the effect and return a value of type A.  For output, we can make this output type be Java&#8217;s Void or Functional Java&#8217;s Unit type <a href="#3">[3]</a>.  Despite being conceptually similar, I find the Unit type much easier to work with.</p>
+</div>
+<div class="paragraph">
+<p>Some values that read from and write to standard input and output are as below.  Remind yourself that no IO is done until the <em>run</em> method is called.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>import fj.Unit
+import fj.data.Option
+import groovy.transform.TypeChecked;
+
+@TypeChecked
+class IOConstants {
+
+	static SimpleIO&lt;String&gt; stdinReadLine() {
+		new SimpleIO&lt;String&gt;() {
+			String run() {
+				System.in.newReader().readLine()
+			}
+		}
+	}
+
+	static SimpleIO&lt;Unit&gt; stdoutWriteLine(final String msg) {
+		new SimpleIO&lt;Unit&gt;() {
+			Unit run() {
+				println(msg)
+				Unit.unit()
+			}
+		}
+	}
+
+    static SimpleIO&lt;Unit&gt; empty() {
+        new SimpleIO&lt;Unit&gt;() {
+            Unit run() {
+                Unit.unit()
+            }
+        }
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An essential method for SimpleIO is to combine two SimpleIO instances that, when run, will perform each sequentially.  Unfortunately the obvious implementation in Groovy does not compile.  When I try to add this to the Groovy SimpleIO class as per below the Groovy compiler gives the error "<em>Groovyc unable to resolve class B</em>".</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>  def &lt;B&gt; SimpleIO&lt;B&gt; append(final SimpleIO&lt;B&gt; io) {
+        new SimpleIO&lt;B&gt;() {
+            @Override
+            B run() {
+                SimpleIO.this.run()
+                return io.run()
+            }
+        }
+    }
+&lt;/pre&gt;
+
+I was not happy with the suggested solution to workaround this problem with the Groovy compiler, so switched this class from Groovy to Java.  The _append_ method then becomes:
+
+&lt;pre class="brush:java"&gt;
+    public &lt;B&gt; SimpleIO&lt;B&gt; append(final SimpleIO&lt;B&gt; io) {
+        return new SimpleIO&lt;B&gt;() {
+            @Override
+            public B run() {
+                SimpleIO.this.run();
+                return io.run();
+            }
+        };
+    }</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_constructing_the_referentially_transparent_program">Constructing the Referentially Transparent Program</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We now have the knowledge to write our program.  We create a SimpleIO action to output the initial help message and a stream of actions representing each loop iteration of our program.  These are then combined to form a single SimpleIO action.  The main method creates this single SimpleIO action and runs it.</p>
+</div>
+<div class="paragraph">
+<p>The sample interactive session shown above (with a slightly enhanced help message) is duplicated below for reference:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>The Spectacular Squaring REPL!
+Enter an integer to square or enter q to quit
+&gt;
+5
+square 5 = 25
+&gt;
+3
+square 3 = 9
+&gt;
+abc
+Not an integer: abc
+&gt;
+q</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We create the initial help message using "<em>IOConstants.stdoutWriteLine(help)</em>" where <em>help</em> is a user help message.  An action representing a single interaction loop is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>    SimpleIO&lt;String&gt; interaction() {
+        stdoutWriteLine(prompt).append(stdinReadLine()).flatMap1({ String s -&gt;
+            invalidMessageIO(s).append(squareIO(s))
+        } as F)
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <em>interaction</em> function creates an object that will write the prompt("&gt;") to standard output and appends the standard input read line action; the resulting expression has the type SimpleIO&lt;String&gt;.  The function to flatMap1 takes the input line as a String and creates a SimpleIO for a (possibly empty) invalid message and appends an action for the squaring message (which could also be empty).  The function <em>flatMap1</em> is defined as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums java language-java"><code>    public &lt;B&gt; SimpleIO&lt;A&gt; flatMap1(final F&lt;A, SimpleIO&lt;B&gt;&gt; f) {
+        return new SimpleIO&lt;A&gt;() {
+            public A run() {
+                A a = SimpleIO.this.run();
+                f.f(a).run();
+                return a;
+            }
+        };
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <em>flatMap1</em> function creates a SimpleIO action that, when run, runs the first SimpleIO&lt;A&gt;, then uses the function argument <em>f</em> to create a SimpleIO&lt;B&gt; and runs this action, then returns the result of the first action of type A.  By using <em>flatMap1</em> in the <em>interaction</em> function in this way we create a SimpleIO&lt;String&gt; where the String is the value read from standard input.</p>
+</div>
+<div class="paragraph">
+<p>We now have a single IO action for a single loop of interaction, however we need to create a single SimpleIO to represent a sequence of interaction loops.  The following codes does exactly this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>    SimpleIO&lt;Stream&lt;String&gt;&gt; interactionStream() {
+        SimpleIO.sequenceWhile(Stream.repeat(interaction()), { String s -&gt; isLoop(s) } as F)
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Before explaining this, we need to understand what <em>sequenceWhile</em> does.  The type signature of <em>sequenceWhile</em> is interesting:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>    static &lt;A&gt; SimpleIO&lt;Stream&lt;A&gt;&gt; sequenceWhile(final Stream&lt;SimpleIO&lt;A&gt;&gt; stream, final F&lt;A, Boolean&gt; f)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The function <em>sequenceWhile</em> transforms a stream of IO actions into a single IO action containing the stream of input values whilst the function argument <em>f</em> returns true.  We pass in a lazy infinite stream into sequenceWhile and use the function argument <em>f</em> to return an single SimpleIO action with a finite stream of input strings.  The definition of sequenceWhile is beyond the scope of this post.  For more information on a proposal of adding this to the Haskell Control.Monad library see <a href="#4">[4]</a>.</p>
+</div>
+<div class="paragraph">
+<p>Now that we have the <em>interactiveStream</em> function returning a single SimpleIO to do the main interactive loop, the repl and main methods are defined as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>    SimpleIO&lt;Stream&lt;String&gt;&gt; repl() {
+        stdoutWriteLine(help).append(interactionStream())
+    }
+
+	static void main(def args) {
+		def d = new SimpleIODemoFunctional()
+		d.repl().run()
+	}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Our REPL consists of a single, referentially transparent SimpleIO action representing IO that does nothing until the main method calls run.  Our entire program is referentially transparent.  One might suspect that the <em>main</em> method is not referentially transparent, but because it is called just once at "the end of the world", it can be replaced with it&#8217;s definition without affecting program semantics.  That is, no one can observe the effect. This could be enforced if we had an environment that enforced that main returned a single SimpleIO where the runtime environment called <em>run</em> on our behalf (Haskell!).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_appendix_the_full_program">Appendix: The Full Program</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The text of the full referentially transparent program is on Github <a href="#5">[5]</a>, the entire SimpleIODemoFunctional class is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>package com.github.mperry.fg
+
+import fj.F
+import fj.Unit
+import fj.data.Option
+import fj.data.Stream
+import groovy.transform.TypeChecked
+
+import static com.github.mperry.fg.IOConstants.stdinReadLine
+import static com.github.mperry.fg.IOConstants.stdoutWriteLine
+import static fj.data.Option.none
+import static fj.data.Option.some
+
+@TypeChecked
+class SimpleIODemoFunctional {
+
+	final String quit = "q"
+	final String help = "The Spectacular Squaring REPL!\nEnter an integer to square or enter $quit to quit"
+	final String prompt = "&gt;"
+
+	Option&lt;Integer&gt; toInt(String s) {
+		s.isInteger() ? some(s.toInteger()) : none()
+	}
+
+	String squareMessage(Integer n) {
+		"square $n = ${n * n}"
+	}
+
+	Option&lt;SimpleIO&lt;Unit&gt;&gt; squareOptionIO(String s) {
+		toInt(s).map { Integer n -&gt;
+			stdoutWriteLine(squareMessage(n))
+		}
+	}
+
+    SimpleIO&lt;Unit&gt; squareIO(String s) {
+        squareOptionIO(s).orSome(IOConstants.empty())
+    }
+
+    Boolean isLoop(String s) {
+        !isQuit(s)
+	}
+
+	Boolean isQuit(String s) {
+        s == quit
+	}
+
+	Boolean validMessage(String s) {
+		(s.isInteger() || isQuit(s))
+	}
+
+	Option&lt;String&gt; invalidMessage(String s) {
+		validMessage(s) ? none() : Option.&lt;String&gt;some("Not an integer: $s")
+	}
+
+	Option&lt;SimpleIO&lt;Unit&gt;&gt; invalidMessageOptionIO(String s) {
+		invalidMessage(s).map { String it -&gt; stdoutWriteLine(it)}
+	}
+
+    SimpleIO&lt;Unit&gt; invalidMessageIO(String s) {
+        invalidMessageOptionIO(s).orSome(IOConstants.empty())
+    }
+
+    SimpleIO&lt;String&gt; interaction() {
+        stdoutWriteLine(prompt).append(stdinReadLine()).flatMap1({ String s -&gt;
+            invalidMessageIO(s).append(squareIO(s))
+        } as F)
+    }
+
+    SimpleIO&lt;Stream&lt;String&gt;&gt; interactionStream() {
+        SimpleIO.sequenceWhile(Stream.repeat(interaction()), { String s -&gt; isLoop(s) } as F)
+    }
+
+    SimpleIO&lt;Stream&lt;String&gt;&gt; repl() {
+        stdoutWriteLine(help).append(interactionStream())
+    }
+
+	static void main(def args) {
+		def d = new SimpleIODemoFunctional()
+		d.repl().run()
+	}
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bibliography">Bibliography</h2>
+<div class="sectionbody">
+<div class="ulist bibliography">
+<ul class="bibliography">
+<li>
+<p><a id="1"></a>[1] <em>Tackling the Awkward Squad: monadic input/output, concurrency, exception, and foreign-language calls in Haskell</em>, <a href="https://research.microsoft.com/en-us/um/people/simonpj/papers/marktoberdorf/mark.pdf">https://research.microsoft.com/en-us/um/people/simonpj/papers/marktoberdorf/mark.pdf</a>, Peyton-Jones, 2010.</p>
+</li>
+<li>
+<p><a id="2"></a>[2] <em>Functional Programming in Scala</em>, <a href="http://www.manning.com/bjarnason/">http://www.manning.com/bjarnason/</a>, Chiusano and Bjarnason, Early Access Edition.</p>
+</li>
+<li>
+<p><a id="3"></a>[3] Functional Java, <a href="http://functionaljava.org/">http://functionaljava.org/</a>.</p>
+</li>
+<li>
+<p><a id="4"></a>[4] Proposal to add sequenceWhile to Haskell Monads, <a href="http://www.haskell.org/pipermail/libraries/2009-May/011602.html">http://www.haskell.org/pipermail/libraries/2009-May/011602.html</a>.</p>
+</li>
+<li>
+<p><a id="5"></a>[5] SimpleIODemoFunctional, <a href="https://github.com/mperry/functionalgroovy/blob/master/demo/src/main/groovy/com/github/mperry/fg/SimpleIODemoFunctional.groovy">https://github.com/mperry/functionalgroovy/blob/master/demo/src/main/groovy/com/github/mperry/fg/SimpleIODemoFunctional.groovy</a> in the Github FunctionalGroovy project.</p>
+</li>
+<li>
+<p><a id="6"></a>[6] FunctionalGroovy, <a href="https://github.com/mperry/functionalgroovy">https://github.com/mperry/functionalgroovy</a> on Github.</p>
+</li>
+</ul>
+</div>
+</div>
+</div></p>
+      <div class="share">
+  <!-- Facebook -->
+          <a href="http://www.facebook.com/sharer.php?u=http://mperry.github.io2014/01/03/referentially-transparent-io.html" target="_blank"><img src="/img/sharebuttons/facebook.png" alt="Facebook" /></a>
+  <!-- Google+ -->
+          <a href="https://plus.google.com/share?url=http://mperry.github.io2014/01/03/referentially-transparent-io.html" target="_blank"><img src="/img/sharebuttons/google_plus.png" alt="Google" /></a>
+  <!-- Twitter -->
+          <a href="http://twitter.com/share?url=http://mperry.github.io2014/01/03/referentially-transparent-io.html&text=Referentially Transparent Input/Output in Groovy mperry.github.io2014/01/03/referentially-transparent-io.html" target="_blank"><img src="/img/sharebuttons/twitter.png" alt="Twitter" /></a>
+      </div>
+<hr>
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'maperry78'; // required: replace example with your forum shortname
+  
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>            </article>
+        </div> <!-- /.col-md-12 -->
+      </div> <!-- /.row -->
+        
+      </div><!-- /.container -->
+
+    <footer>
+      <div class="container">
+        <hr>
+        <div class="row">
+          <div class="col-xs-10">
+            <p class="text-muted credit">&copy;  2014 | Mixed with <a href="http://getbootstrap.com/">Bootstrap v3.1.1</a> | Baked with <a href="http://jbake.org">JBake v2.3.0</a> | <i title="Linux" class="fa fa-linux"></i></p>
+          </div>
+          <div class="col-xs-2 gotop">
+            <a href="#"><i class="fa fa-arrow-circle-up"> top</i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/gist-embed/1.6/gist-embed.min.js"></script>
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+      <!-- load prettify only when needed -->
+      $(document).ready(function(){
+        var prettify = false;
+        var classToAdd = 'prettyprint snippet';
+        $("pre > code").each(function() {
+          $("pre > code").parent().addClass(classToAdd);
+          prettify = true;
+        });
+        if(prettify) {
+          prettyPrint();
+        }
+      });
+    </script>
+
+    <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'maperry78'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+    </script>
+
+        </body>
+</html>

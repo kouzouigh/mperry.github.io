@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+    Software Matters!
+        - OO is anti-modular
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Mark Perry">
+    <meta name="description" content="Static blog generated with JBake">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/yeti/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" href="/css/base.css">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav icon -->
+    <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  </head>
+  <body>      
+    <nav class="navbar navbar-default navbar-fixed-top " role="navigation">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Software Matters!</a>
+        </div>
+        
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+			<li><a href="/">Home</a></li>
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/pages/bio.html">Author</a></li>
+			<li><a href="/archive.html">Archive</a></li>
+
+          </ul>
+        
+        <!-- Right navigation -->
+        <ul class="nav navbar-nav navbar-right">
+
+          <li><a href="/feed.xml" title="Rss"><i class="fa fa-rss"></i> Feed</a></li>
+        </ul>
+        <!-- Right navigation end -->
+
+      </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav><!-- /.navbar -->
+
+    <!-- Begin page content -->
+    <div class="container">
+      
+      <div class="row">
+        <div class="col-md-12">
+          <article>
+            <div class="page-header"><h1>OO is anti-modular</h1>
+              <ol class="breadcrumb tagsbar">
+                <li><a href="/tags/OO.html">OO</a></li>
+                <li><a href="/tags/object-oriented.html">object-oriented</a></li>
+                <li><a href="/tags/programming.html">programming</a></li>
+                <li><a href="/tags/types.html">types</a></li>
+                <li><a href="/tags/modularity.html">modularity</a></li>
+                <li><a href="/tags/ML.html">ML</a></li>
+                <li><a href="/tags/Java.html">Java</a></li>
+                <li><a href="/tags/FP.html">FP</a></li>
+                <li><a href="/tags/functional-programming.html">functional-programming</a></li>
+                <li><a href="/tags/type-theory.html">type-theory</a></li>
+              </ol>
+            </div>
+          <p class="post-meta">
+            <i class="fa fa-calendar"></i>&nbsp;16 February 2012&nbsp;&nbsp;
+            <i class="fa fa-user"></i>&nbsp;Mark Perry&nbsp;&nbsp;
+              <i class="fa fa-comment"></i>&nbsp;<span class="badge"><a href="http://mperry.github.io2012/02/16/oo-is-anti-modular.html#disqus_thread"></a></span>
+          </p>
+              <p><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Robert Harper, Professor of Computer Science at Carnegie Mellon University, recently posted about <a href="http://existentialtype.wordpress.com/2011/03/15/teaching-fp-to-freshmen/">replacing object-oriented (OO) programming with functional programming (FP) for first year students</a>.  He states:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>Object-oriented programming is eliminated entirely from the introductory curriculum, because it is both anti-modular and anti-parallel by its very nature, and hence unsuitable for a modern CS curriculum.</p>
+</div>
+</blockquote>
+</div>
+<!-- more -->
+<div class="paragraph">
+<p>It is widely understood how imperative programming&#8217;s use of side effects is not suitable to concurrency and parallelism.  His anti-modular views are more interesting.  Note, he is not referring to <a href="http://www.jcp.org/en/jsr/detail?id=277">Java modularity in JSR277</a>.  He is referring to ML style module systems; he co-wrote chapter eight "Design Considerations for ML-Style Module Systems" in <a href="http://www.amazon.com/Advanced-Topics-Types-Programming-Languages/dp/0262162288">Advanced Topics in Types and Programming Languages</a>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://ecx.images-amazon.com/images/I/51zsCnON7eL._BO2,204,203,200_PIsitb-sticker-arrow-click,TopRight,35,-76_AA300_SH20_OU01_.jpg" alt="51zsCnON7eL. BO2,204,203,200 PIsitb sticker arrow click,TopRight,35, 76 AA300 SH20 OU01 ">
+</div>
+</div>
+<div class="paragraph">
+<p>In this chapter, the basic modularity mechanisms are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>modules and signatures</p>
+</li>
+<li>
+<p>namespace management</p>
+</li>
+<li>
+<p>separate compiation</p>
+</li>
+<li>
+<p>inter-module type checking</p>
+</li>
+<li>
+<p>principal signatures</p>
+</li>
+</ul>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>Informally, a module (or structure) is a collection of components, which may include procedure or function definitions, variable declarations, type definitions, and initialization code - specifics will vary from one language to another. A program consists of a collection of bindings of module names to modules. One module is specified as the root - the main entry point of the program.</p>
+</div>
+<div class="paragraph">
+<p>One module in a program may refer to another by using the latter&#8217;s name in an external reference. The occurrences of external references between modules determine a dependency ordering in which the referring module depends on the module to which it refers. (We assume for now that cyclic dependencies between modules are not allowed; 8.9 discusses relaxing this restriction.) The job of a linker is to compose a complete program by resolving external references, creating module bindings for each of the external references in the partial program under construction until no unresolved references remain.</p>
+</div>
+<div class="paragraph">
+<p>To support separate compilation, the dependency of one module on another is mediated by a signature (or interface) that describes the externally visible components of the latter module. A signature must be sufficiently expressive as to enable clients of a module to be compiled without reference to its implementation. This information typically includes type declarations for procedures and variables and the definitions of type variables.</p>
+</div>
+<div class="paragraph">
+<p>In practice, most languages support modularity through a mixture of linguistic and extra-linguistic mechanisms. For example, modules are often organized as files, and module naming conventions are often tied to file system naming conventions. To avoid such complications, we concentrate on a module language that emphasizes the central concepts, relegating its realization in specific languages and development environments to informal discussions in 8.10.</p>
+</div>
+</blockquote>
+<div class="attribution">
+<cite>Advanced Topics in Types and Programming Languages</cite><br>
+&#8212; Harper and Pierce
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the use of inheritance is problematic.  To reason about the behaviour of a class you have to know the behaviour of all superclasses and subclasses of the class.  This is because OO expects methods to be overwritten using late binding and subtype polymorphism.  This changes can ripple both up and down the class hierarchy, developers thus need to understand the entire hierarchy to make changes safely.  Thus class hierarchies across modules is anti-modular.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://lucacardelli.name/Papers/BadPropertiesOfOO.html">Bad Engineering Properties of Object-Oriented Languages</a></p>
+</li>
+<li>
+<p><a href="http://homepages.inf.ed.ac.uk/stg/NOTES/node95.html">Introducing Standard ML Modules</a></p>
+</li>
+<li>
+<p><a href="http://openjdk.java.net/projects/modules/">Open JDK Modules</a></p>
+</li>
+<li>
+<p><a href="http://www.jcp.org/en/jsr/detail?id=277">JSR 277: JavaTM Module System</a></p>
+</li>
+<li>
+<p><a href="http://www.javabeat.net/articles/101-introduction-to-java-module-system-in-java-70-1.html">Introduction to Java Module System in Java 7.0</a></p>
+</li>
+<li>
+<p><a href="http://www.javaworld.com/javaworld/jw-08-2008/jw-08-java-modularity.html?page=1">The case for Java modularity</a></p>
+</li>
+<li>
+<p><a href="http://www.pps.jussieu.fr/~gc/slides/classes.pdf">Classes vs Modules</a></p>
+</li>
+<li>
+<p><a href="http://www.stanford.edu/class/cs242/slides/2007/objects-modules.ppt">Modularity and Object-Oriented Programming</a></p>
+</li>
+<li>
+<p><a href="http://gbracha.blogspot.com.au/2011/06/types-are-anti-modular.html">Types are Anti-Modular</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div></p>
+      <div class="share">
+  <!-- Facebook -->
+          <a href="http://www.facebook.com/sharer.php?u=http://mperry.github.io2012/02/16/oo-is-anti-modular.html" target="_blank"><img src="/img/sharebuttons/facebook.png" alt="Facebook" /></a>
+  <!-- Google+ -->
+          <a href="https://plus.google.com/share?url=http://mperry.github.io2012/02/16/oo-is-anti-modular.html" target="_blank"><img src="/img/sharebuttons/google_plus.png" alt="Google" /></a>
+  <!-- Twitter -->
+          <a href="http://twitter.com/share?url=http://mperry.github.io2012/02/16/oo-is-anti-modular.html&text=OO is anti-modular mperry.github.io2012/02/16/oo-is-anti-modular.html" target="_blank"><img src="/img/sharebuttons/twitter.png" alt="Twitter" /></a>
+      </div>
+<hr>
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'maperry78'; // required: replace example with your forum shortname
+  
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>            </article>
+        </div> <!-- /.col-md-12 -->
+      </div> <!-- /.row -->
+        
+      </div><!-- /.container -->
+
+    <footer>
+      <div class="container">
+        <hr>
+        <div class="row">
+          <div class="col-xs-10">
+            <p class="text-muted credit">&copy;  2014 | Mixed with <a href="http://getbootstrap.com/">Bootstrap v3.1.1</a> | Baked with <a href="http://jbake.org">JBake v2.3.0</a> | <i title="Linux" class="fa fa-linux"></i></p>
+          </div>
+          <div class="col-xs-2 gotop">
+            <a href="#"><i class="fa fa-arrow-circle-up"> top</i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/gist-embed/1.6/gist-embed.min.js"></script>
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+      <!-- load prettify only when needed -->
+      $(document).ready(function(){
+        var prettify = false;
+        var classToAdd = 'prettyprint snippet';
+        $("pre > code").each(function() {
+          $("pre > code").parent().addClass(classToAdd);
+          prettify = true;
+        });
+        if(prettify) {
+          prettyPrint();
+        }
+      });
+    </script>
+
+    <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'maperry78'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+    </script>
+
+        </body>
+</html>

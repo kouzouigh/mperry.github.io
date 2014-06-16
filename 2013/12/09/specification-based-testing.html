@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+    Software Matters!
+        - Specification Based Testing
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Mark Perry">
+    <meta name="description" content="Static blog generated with JBake">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/yeti/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" href="/css/base.css">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav icon -->
+    <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  </head>
+  <body>      
+    <nav class="navbar navbar-default navbar-fixed-top " role="navigation">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Software Matters!</a>
+        </div>
+        
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+			<li><a href="/">Home</a></li>
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/pages/bio.html">Author</a></li>
+			<li><a href="/archive.html">Archive</a></li>
+
+          </ul>
+        
+        <!-- Right navigation -->
+        <ul class="nav navbar-nav navbar-right">
+
+          <li><a href="/feed.xml" title="Rss"><i class="fa fa-rss"></i> Feed</a></li>
+        </ul>
+        <!-- Right navigation end -->
+
+      </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav><!-- /.navbar -->
+
+    <!-- Begin page content -->
+    <div class="container">
+      
+      <div class="row">
+        <div class="col-md-12">
+          <article>
+            <div class="page-header"><h1>Specification Based Testing</h1>
+              <ol class="breadcrumb tagsbar">
+                <li><a href="/tags/.html"></a></li>
+              </ol>
+            </div>
+          <p class="post-meta">
+            <i class="fa fa-calendar"></i>&nbsp;09 December 2013&nbsp;&nbsp;
+            <i class="fa fa-user"></i>&nbsp;Mark Perry&nbsp;&nbsp;
+              <i class="fa fa-comment"></i>&nbsp;<span class="badge"><a href="http://mperry.github.io2013/12/09/specification-based-testing.html#disqus_thread"></a></span>
+          </p>
+              <p><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>There are lots of testing frameworks around for Java and Groovy, mostly around Test Driven Development (TDD) <a href="#1">[1]</a> and Behaviour Driven Development (BDD) <a href="#2">[2]</a>.  These frameworks work by creating a specification through examples [3].  Mainstream development needs these techniques due to a lack of expressive type systems in usage, using tests as a substitute for using types.  More sophisticated languages are using types to limit incorrect values and specification based testing as a technique to achieve more rigorous testing and software quality, mostly using various flavours of Quickcheck <a href="#5">[5]</a>.</p>
+</div>
+<!-- more -->
+<div class="paragraph">
+<p><a href="http://www.functionaljava.org">FunctionalJava</a> provides an automated specification testing framework that is well-designed, but a bit clunky to use.  This is due to Java&#8217;s verbosity when creating functions, although this should be resolved in Java 8.  Using Groovy we can use this library immediately using a simple interface provided by the author&#8217;s FunctionalGroovy <a href="#4">[4]</a> library.  More importantly the technique needs more widespread knowledge and usage.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example">Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A simple example demonstrates the technique:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>	@Test
+	void commutes() {
+		specAssert { Integer a, Integer b -&gt;
+			a + b == b + a
+		}
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here, the static method specAssert is called from the Specification class and is passed a Groovy closure taking two integers and returns a boolean on whether addition commutes for those arguments (i.e. the argument order on plus can be reversed).  The specAssert method creates a proposition, uses reflection to get the types of the arguments in the closure and uses standard generators for those arguments types to repeatedly test the function.  For n invocations of the closure the proposition will either always be true, or found to be false (if a single invocation is false).  The specAssert method then uses JUnit to assert the proposition is true and prints a summary of the results like so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>OK, passed 100 tests.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Lets change the specification to one that is obviously false and see what happens:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>	@Test
+	void subtractionDoesNotCommute1() {
+		specAssert { Integer a, Integer b -&gt;
+			a - b == b - a
+		}
+	}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Falsified after 1 passed test with arguments: &lt;0,1&gt;
+
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:92)
+	at org.junit.Assert.assertTrue(Assert.java:43)
+	... rest of the stacktrace ...</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This test fails, as expected, but now our entire test suite fails.  This is not what we want.  We want to change the proposition to one that positively asserts that subtraction does not commute, rather than try to show that subtraction commutes.  For anything more than a simple function we create a specification model to pass to the specAssert function.  Here the model describes the function and the truth of that function.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>	@Test
+	void subtractionDoesNotCommute2() {
+		specAssert new Model(
+				function: { Integer a, Integer b -&gt;
+					a - b == b - a
+				},
+				truth: false
+		)
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Running this test now passes with the output below.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Falsified after 1 passed test with arguments: &lt;1,0&gt;</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_more_examples">More Examples</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s go through more examples to demonstrate different ways one might create propositions about our software.</p>
+</div>
+<div class="paragraph">
+<p>Let us show that naturals commute using Java Integers.  We use Groovy boolean implication to show we don&#8217;t care about Integer values that are not naturals.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>	@Test
+	void naturalsCommute() {
+		specAssert { Integer a, Integer b -&gt;
+			(a &gt;= 0 &amp;&amp; b &gt;= 0).implies(a + b == b + a)
+		}
+	}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>OK, passed 100 tests.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is fine, but this test actually cares about the result of the equals method far less than one hundred times because if the first boolean is false, the implication is true.  Let&#8217;s change this so that we actually care about the result of the equals one hundred times.  In the following example we create a precondition function so that we discard data that does not satisfy the precondition that both a and b be greater than or equal to zero.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>	@Test
+	void naturalsCommuteDiscardInvalid() {
+		specAssert new Model(
+			pre: some { a, b -&gt; a &gt;= 0 &amp;&amp; b &gt;= 0 },
+			function: { Integer a, Integer b -&gt;
+				a + b == b + a
+			}
+		)
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the "some" method here lifts the precondition function into the Option type.  It would be nice to create an interface to remove the need to lift the function into Option, but this is not done yet.</p>
+</div>
+<div class="paragraph">
+<p>This produces the output.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>OK, passed 100 tests (247 discarded).</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>From this we can see that 247 out of 347 tests were discarded, which is about 71%.  If this proportion reflects what was ignored in the implication above then we actually only tested the equals about 29 times, when the output seems to indicate there were 100 successful tests.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_questions">Questions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The two most common questions that I come across after introductory material on this topic is:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>handling exceptions</p>
+</li>
+<li>
+<p>generating data</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_generating_data">Generating Data</h3>
+<div class="paragraph">
+<p>FunctionalJava has lots of built in generators, including the basic Java types String, Boolean, Byte, String, Integer, BigInteger, Decimal, BigDecimal, Calendar, Date, Float, Long and others.  Consider generating data for a total Stack, that is, a Stack that does not return exceptions.  The Stack will have the usual methods, isEmpty, push, pop, size and top.  Where an element may not exist for top and pop, the return type will be Option&lt;T&gt; where the return value may contain no value or the actual value.  For illustration purposes we are going to consider two options to generate random stacks of integers:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Generate an integer n and insert n random integers into an empty stack</p>
+</li>
+<li>
+<p>Generate recursively a stack that is either empty or non-empty</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>I am going to use the following stack, but the details are not important.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>package com.github.mperry.fg.test.dbc
+
+import fj.data.Option
+
+import static fj.data.Option.none
+import static fj.data.Option.some
+
+/**
+ * Simple total Stack (returns no exceptions)
+ */
+class TotalStack&lt;T&gt; {
+
+	List&lt;T&gt; elements
+
+	TotalStack() {
+		elements = []
+	}
+
+	boolean isEmpty()  {
+		elements.isEmpty()
+	}
+
+	Option&lt;T&gt; top()  {
+		isEmpty() ? none() : some(elements.last())
+	}
+
+	int size() {
+		elements.size()
+	}
+
+	void push(T item)  {
+		elements.add(item)
+	}
+
+	Option&lt;T&gt; pop()  {
+		isEmpty() ? none() : some(elements.pop())
+	}
+
+	String toString() {
+		elements.toString()
+	}
+
+}</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_non_recursive_stack_generator">Non-Recursive Stack Generator</h4>
+<div class="paragraph">
+<p>Firstly we define how to obtain an empty stack:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>	TotalStack&lt;Integer&gt; empty() {
+		new TotalStack&lt;Integer&gt;()
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To generate the number of integers to insert into the stack we bias a selection so that we choose between 0 and 10 integers to insert, biased equally towards 0, 1 and the interval of [2, 10].  We create a list of generators and convert to a FunctionalJava list fj.data.List, an immutable singly linked list.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>	Gen&lt;Integer&gt; genStackSize() {
+		Gen.oneOf([Gen.value(0), Gen.value(1), Gen.choose(2, 10)].toFJList())
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To generate a stack we map over the generator for the stack size, Gen&lt;Integer&gt;, creating random integers to insert.  We now have a method to generate random stacks using looping.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>	Gen&lt;TotalStack&lt;Integer&gt;&gt; genStackLoop() {
+		genStackSize().map({ Integer n -&gt;
+			def s = empty()
+			def r = new Random()
+			for (int i = 0; i &lt; n; i++) {
+				s.push(r.nextInt())
+			}
+			s
+		} as F)
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note here that we coerce the closure to a FunctionalJava function using "as F".</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_recursive_stack_generator">Recursive Stack Generator</h4>
+<div class="paragraph">
+<p>Now consider the recursive case.  We create the base case, generating an empty stack like so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>	Gen&lt;TotalStack&lt;Integer&gt;&gt; genEmpty() {
+		Gen.value(empty())
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then to generate the inductive case of a non-empty stack we use two methods.  One to generate a non-empty stack and one to generate an arbitrary stack.  These methods are mutually recursive, which makes them non-trivial.  Consider the genStackRecursive method first.  We generate either an empty or non-empty stack and create a generator from this list.  For genNonEmpty we use monadic bind over the generator Gen.  We then map over the general recursive generator for stack, mutating the stack with a push of the integer from the integer generator previously used.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>	Gen&lt;TotalStack&lt;Integer&gt;&gt; genNonEmpty() {
+		Arbitrary.arbInteger.gen.bind({Integer i -&gt;
+			genStackRecursive().map({ TotalStack s -&gt;
+				s.push(i)
+				s
+			} as F)
+		} as F)
+	}
+
+	Gen&lt;TotalStack&lt;Integer&gt;&gt; genStackRecursive() {
+		Gen.oneOf([genEmpty(), genNonEmpty()].toFJList())
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It may help to understand genNonEmpty by considering the type of the bind method for a Gen, as seen below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>	// Gen.bind type
+	&lt;B&gt; Gen&lt;B&gt; bind(F&lt;A, Gen&lt;B&gt;&gt; f)
+
+	// concrete type when we call this method
+	Gen&lt;TotalStack&lt;Integer&gt;&gt; bind(F&lt;Integer, Gen&lt;TotalStack&lt;Integer&gt;&gt;)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To test the stack we can then create a test case as seen below. We create a new model, using the default generators producing arbitrary values with the addition of an arbitrary TotalStack.  The function takes a arbitrary stack and arbitrary integer, pushes the integer onto the stack and checks that the value returned by top is as expected.  You may need to check the "Option Javadoc":http://functionaljava.googlecode.com/svn/artifacts/3.0/javadoc/fj/data/Option.html to understand mapping over the Option returned from top.  The line returns true if the value is in the option and has the expected value.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>	@Test
+	void testPush() {
+		[genStackRecursive(), genStackLoop()].each { g -&gt;
+			specAssert new Model(
+					map: DEFAULT_MAP + [(TotalStack.class): arbitrary(g)],
+					function: { TotalStack&lt;Integer&gt; s, Integer i -&gt;
+						s.push(i)
+						def val = s.top()
+						val.map { it == i }.orSome(false)
+					}
+			)
+		}
+	}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_handling_exceptions">Handling Exceptions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now considering being able to assert that an exception is thrown given certain input conditions.  Lets go back to considering the commutativity of integers over addition and add the complexity of the integers possibly being null.  We create a value of type Arbitrary of Integer that returns an Integer that is potentially null.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>	static Arbitrary&lt;Integer&gt; arbNullableInteger() {
+		Arbitrary.arbitrary(Gen.oneOf([Gen.value(null), Arbitrary.arbInteger.gen].toFJList()))
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then we when we create the mapping of classes to arbitrary values our function will get possibly null integers.  We call plus for the integers, catching the NullPointerException and return true if either integer was null.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>	@Test
+	void integersCommuteWithNullPointer() {
+		specAssert new Model(
+				map: [(Integer.class): Arbitrary.arbNullableInteger()],
+				function: { Integer a, Integer b -&gt;
+					try {
+						a + b == b + a
+					} catch (NullPointerException e) {
+						(a == null || b == null)
+					}
+				}
+		)
+	}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are other ways of handling abnormal conditions including adding them to the pre-condition function.  Interestingly, it is easy to add a validator to assert that an exception is of a particular type (with no access to the input values).  This has been useful to show that you can use GContracts for Design By Contract (DbC) and use the post-condition with specification based testing as an oracle.  See the code or contact me for an example, perhaps this is a future blog post.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_other_topics">Other Topics</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I could have used some other examples I have done in the code base including:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Design By Contract</p>
+</li>
+<li>
+<p>Integer overflow</p>
+</li>
+<li>
+<p>List functor laws</p>
+</li>
+<li>
+<p>Generating arbitrary functions, e.g. from Integer to String.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>One interesting question is, can we make this library completely statically typed and convenient?  I think the answer is yes, but my small wrapper library is not at that point yet.  I have some more thinking to do.  It could be the case that adding more methods (combinators) to FunctionalJava will be sufficient to use that interface directly.  Regardless, it is the idea of specification based testing that is of primary importance.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I hope I have raised your awareness of automated specification based testing techniques and how you can write more rigorous tests of your code.  I think the value of Test Driven Development (TDD) is not the tests, but the construction of the specification for the software.  Specification based testing allows one to focus on constructing the specification whilst also giving a more comprehensive test suite.  All the code is up on GitHub, the FunctionalGroovy library is on the sonatype repository at <a href="https://oss.sonatype.org/content/groups/public">https://oss.sonatype.org/content/groups/public</a> and the gradle dependency is <em>com.github.mperry:functionalgroovy-core:0.3-SNAPSHOT</em>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bibliography">Bibliography</h2>
+<div class="sectionbody">
+<div class="ulist bibiography">
+<ul class="bibiography">
+<li>
+<p><a id="1"></a>[1] Test Driven Development, <a href="https://en.wikipedia.org/wiki/Test-driven_development">https://en.wikipedia.org/wiki/Test-driven_development</a>.</p>
+</li>
+<li>
+<p><a id="2"></a>[2] Behaviour Driven Development, <a href="https://en.wikipedia.org/wiki/Behavior-driven_development">https://en.wikipedia.org/wiki/Behavior-driven_development</a>.</p>
+</li>
+<li>
+<p><a id="3"></a>[3] Specification By Example, <a href="https://en.wikipedia.org/wiki/Specification_by_example">https://en.wikipedia.org/wiki/Specification_by_example</a>.</p>
+</li>
+<li>
+<p><a id="4"></a>[4] FunctionalGroovy, <a href="https://github.com/mperry/functionalgroovy">https://github.com/mperry/functionalgroovy</a>.</p>
+</li>
+<li>
+<p><a id="5"></a>[5] Quickcheck, <a href="https://en.wikipedia.org/wiki/QuickCheck">https://en.wikipedia.org/wiki/QuickCheck</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div></p>
+      <div class="share">
+  <!-- Facebook -->
+          <a href="http://www.facebook.com/sharer.php?u=http://mperry.github.io2013/12/09/specification-based-testing.html" target="_blank"><img src="/img/sharebuttons/facebook.png" alt="Facebook" /></a>
+  <!-- Google+ -->
+          <a href="https://plus.google.com/share?url=http://mperry.github.io2013/12/09/specification-based-testing.html" target="_blank"><img src="/img/sharebuttons/google_plus.png" alt="Google" /></a>
+  <!-- Twitter -->
+          <a href="http://twitter.com/share?url=http://mperry.github.io2013/12/09/specification-based-testing.html&text=Specification Based Testing mperry.github.io2013/12/09/specification-based-testing.html" target="_blank"><img src="/img/sharebuttons/twitter.png" alt="Twitter" /></a>
+      </div>
+<hr>
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'maperry78'; // required: replace example with your forum shortname
+  
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>            </article>
+        </div> <!-- /.col-md-12 -->
+      </div> <!-- /.row -->
+        
+      </div><!-- /.container -->
+
+    <footer>
+      <div class="container">
+        <hr>
+        <div class="row">
+          <div class="col-xs-10">
+            <p class="text-muted credit">&copy;  2014 | Mixed with <a href="http://getbootstrap.com/">Bootstrap v3.1.1</a> | Baked with <a href="http://jbake.org">JBake v2.3.0</a> | <i title="Linux" class="fa fa-linux"></i></p>
+          </div>
+          <div class="col-xs-2 gotop">
+            <a href="#"><i class="fa fa-arrow-circle-up"> top</i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/gist-embed/1.6/gist-embed.min.js"></script>
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+      <!-- load prettify only when needed -->
+      $(document).ready(function(){
+        var prettify = false;
+        var classToAdd = 'prettyprint snippet';
+        $("pre > code").each(function() {
+          $("pre > code").parent().addClass(classToAdd);
+          prettify = true;
+        });
+        if(prettify) {
+          prettyPrint();
+        }
+      });
+    </script>
+
+    <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'maperry78'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+    </script>
+
+        </body>
+</html>

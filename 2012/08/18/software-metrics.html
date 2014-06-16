@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+    Software Matters!
+        - Software Metrics
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Mark Perry">
+    <meta name="description" content="Static blog generated with JBake">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/yeti/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" href="/css/base.css">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav icon -->
+    <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  </head>
+  <body>      
+    <nav class="navbar navbar-default navbar-fixed-top " role="navigation">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Software Matters!</a>
+        </div>
+        
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+			<li><a href="/">Home</a></li>
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/pages/bio.html">Author</a></li>
+			<li><a href="/archive.html">Archive</a></li>
+
+          </ul>
+        
+        <!-- Right navigation -->
+        <ul class="nav navbar-nav navbar-right">
+
+          <li><a href="/feed.xml" title="Rss"><i class="fa fa-rss"></i> Feed</a></li>
+        </ul>
+        <!-- Right navigation end -->
+
+      </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav><!-- /.navbar -->
+
+    <!-- Begin page content -->
+    <div class="container">
+      
+      <div class="row">
+        <div class="col-md-12">
+          <article>
+            <div class="page-header"><h1>Software Metrics</h1>
+              <ol class="breadcrumb tagsbar">
+                <li><a href="/tags/.html"></a></li>
+              </ol>
+            </div>
+          <p class="post-meta">
+            <i class="fa fa-calendar"></i>&nbsp;18 August 2012&nbsp;&nbsp;
+            <i class="fa fa-user"></i>&nbsp;Mark Perry&nbsp;&nbsp;
+              <i class="fa fa-comment"></i>&nbsp;<span class="badge"><a href="http://mperry.github.io2012/08/18/software-metrics.html#disqus_thread"></a></span>
+          </p>
+              <p><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Capers Jones wrote the great book Applied Software Measurement.  This comprehensive book contains a wealth of information for the importance and use of metrics for estimation, project management, implementation, quality and customer satisfaction.  In this post I summarise a small number of important points he makes in chapter one (Introduction).  Full details can be found in the book with detailed exploration of the issues in later chapters.</p>
+</div>
+<!-- more -->
+</div>
+</div>
+<div class="sect1">
+<h2 id="_data_types">Data Types</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Software measurement deals with three kinds of essential information:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Hard data</p>
+</li>
+<li>
+<p>Soft data</p>
+</li>
+<li>
+<p>Normalised data</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_hard_data">Hard data</h3>
+<div class="paragraph">
+<p>Hard data can be quantified almost completely objectively.  High accuracy is possible and desirable.  Key metrics include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Project personnel</p>
+</li>
+<li>
+<p>Effort on project tasks</p>
+</li>
+<li>
+<p>Schedule elapsed time of tasks</p>
+</li>
+<li>
+<p>Project documentation, code and test cases volume</p>
+</li>
+<li>
+<p>Defects found</p>
+</li>
+<li>
+<p>Cost expended for each activity</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Note that due to unpaid overtime, costs incurred and hours of effort expended do not directly map.</p>
+</div>
+<div class="paragraph">
+<p>Granularity must be fine enough to measure the effort for specific activities.  It is common to use the basic activities of requirements, design, code, test and installation.  However, this does not allow cost and benefit analysis of the various other activites and does not handle activities such as document that cross these boundaries.  See my post on <a href="../../../2012/05/31/development-activities.html">Development Activities</a> for the various activities and typical effort percentages expended.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_soft_data">Soft Data</h3>
+<div class="paragraph">
+<p>This category includes data where judgement is required, therefore perfect accuracy is not necessary.  This includes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Skill and experience of team</p>
+</li>
+<li>
+<p>Schedule pressures</p>
+</li>
+<li>
+<p>Requirements stability over time</p>
+</li>
+<li>
+<p>User satisfaction</p>
+</li>
+<li>
+<p>Expertise and co-operation of users</p>
+</li>
+<li>
+<p>Adequacy of project tools and methods</p>
+</li>
+<li>
+<p>Office space of team</p>
+</li>
+<li>
+<p>Business value to the organisation</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Soft data can be extremely useful to explain the differences in productivity and quality, leading to insights and possible improvements.  Care must be given to choosing the right factors and data collection mechanism.  This is the most technically difficult task of metrics.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_normalised_data">Normalised Data</h3>
+<div class="paragraph">
+<p>Standardised metrics used to compare projects' productivity and quality.  This was formerly a longtime industry problem.  Lines of code (LOC) measurements typically ignored the different abstraction mechanisms available in programming languages and were therefore unsuitable for productivity measurements defined by the good or service produced per unit of expense.  Albrecht first produced function points at IBM and have largely replaced LOC as the preferred unit of measurement.  Function points are constant regardless of language used.</p>
+</div>
+<div class="paragraph">
+<p>The major factors that contribute to software productivity are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Size of applications</p>
+</li>
+<li>
+<p>Activities performed</p>
+</li>
+<li>
+<p>Variations in the soft factors</p>
+</li>
+<li>
+<p>The type of software developed</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To compare how the application type affects productivity consider the following data on the US productivity per application type in function points per staff month.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width:50%; ">
+<colgroup>
+<col style="width:25%;">
+<col style="width:25%;">
+<col style="width:25%;">
+<col style="width:25%;"> 
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application Type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1990</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1995</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2005</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">End-user</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">47.00</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">52.00</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">52.00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Web</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NA</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">12.00</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">23.00</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MIS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7.20</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7.80</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9.40</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Outsourced</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8.00</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8.40</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9.70</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Systems</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.00</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.20</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6.80</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Commercial</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5.10</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5.30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7.20</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Military</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.00</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.80</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.75</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Average</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.47</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">13.07</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">15.98</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Average without end-user software</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.38</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6.58</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9.98</p></td>
+</tr>
+</tbody>
+</table>
+
+</div>
+<div class="sect2">
+<h3 id="_strategic_and_tactical_software_measurement">Strategic and Tactical Software Measurement</h3>
+<div class="paragraph">
+<p>Corporate strategy concerns the overall business plan whilst tactics concerns the steps to achieve to strategy.  For measurement, strategic factors affect the entire organisation whilst tactical measurements concern projects.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../../../img/strategic-tactical-measurements.png" alt="strategic tactical measurements">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_structure_of_full_software_measurement_system">Structure of Full Software Measurement System</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A full measurement system will include productivity and quality measurements with monthly and annual reports.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../../../img/full-measurement-system.png" alt="full measurement system">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_justification">Justification</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For most companies that are not leading edge (e.g. Micrsoft, Google, IBM, etc.) measurements programs are exotic concepts.</p>
+</div>
+<div class="sect2">
+<h3 id="_value">Value</h3>
+<div class="paragraph">
+<p>Many project managers in organisations that do not measure productivity have a vested interest in not performing measurements.  They may suspect they performance will not be shown favourably and can obstruct progress.  Software measurement is a powerful defect prevention and removal activity.  Given quality is a significant factor is productivity it is perhaps not suprising that typical ROI is 17:1.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_costs">Costs</h3>
+<div class="paragraph">
+<p>Annual costs for a large programme can be 4-6% of the software budget (2% for productivity, 2-3% for quality), certainly a significant budget expense.  However, the large sophisticated companies have the best record for project completion, user satisfaction, employee morale and employee satisfaction.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_typical_programme_sequence">Typical Programme Sequence</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Operational measures - record key computer utilisation, downtime and response time.</p>
+</li>
+<li>
+<p>Ongoing project measures - Monthly status reports on milestones and planned vs actual expenditure.</p>
+</li>
+<li>
+<p>Production library and backlog measures - The organisation&#8217;s software investment.</p>
+</li>
+<li>
+<p>User satisfaction measures - Interviews with users.  Forms and questionairres are also used, but less useful.</p>
+</li>
+<li>
+<p>Completed project measures - Function points of completed projects.</p>
+</li>
+<li>
+<p>Soft factors - The right and wrong way a company does business.  Survey the methods, tools, skill, etc. on a project basis.</p>
+</li>
+<li>
+<p>Defect measures - Defect rates.  Rate of finding and fixing defects.</p>
+</li>
+<li>
+<p>Demographic measures - Annual demographic surveys of skills in the company relevant to company goals.</p>
+</li>
+<li>
+<p>Opinion survey - Staff opinion surveys, the greatest change to corporate culture.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The scientific method is the best method we know of to progress scientific and engineering work.  This requires measurement of current performance, performing a change and measuring the new, hopefully improved, performance.  Companies trying to improve without measurement fall prey to the typical fads and fortune of the software industry.  To progress software engineering as a true engineering discipline the software industry must learn to make and utilise measurements.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bibliography">Bibliography</h2>
+<div class="sectionbody">
+<div class="ulist bibliography">
+<ul class="bibliography">
+<li>
+<p>Jones, <em>Applied Software Measurement: Global Analysis of Productivity and Quality</em>, Third Edition, 2008.</p>
+</li>
+</ul>
+</div>
+</div>
+</div></p>
+      <div class="share">
+  <!-- Facebook -->
+          <a href="http://www.facebook.com/sharer.php?u=http://mperry.github.io2012/08/18/software-metrics.html" target="_blank"><img src="/img/sharebuttons/facebook.png" alt="Facebook" /></a>
+  <!-- Google+ -->
+          <a href="https://plus.google.com/share?url=http://mperry.github.io2012/08/18/software-metrics.html" target="_blank"><img src="/img/sharebuttons/google_plus.png" alt="Google" /></a>
+  <!-- Twitter -->
+          <a href="http://twitter.com/share?url=http://mperry.github.io2012/08/18/software-metrics.html&text=Software Metrics mperry.github.io2012/08/18/software-metrics.html" target="_blank"><img src="/img/sharebuttons/twitter.png" alt="Twitter" /></a>
+      </div>
+<hr>
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'maperry78'; // required: replace example with your forum shortname
+  
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>            </article>
+        </div> <!-- /.col-md-12 -->
+      </div> <!-- /.row -->
+        
+      </div><!-- /.container -->
+
+    <footer>
+      <div class="container">
+        <hr>
+        <div class="row">
+          <div class="col-xs-10">
+            <p class="text-muted credit">&copy;  2014 | Mixed with <a href="http://getbootstrap.com/">Bootstrap v3.1.1</a> | Baked with <a href="http://jbake.org">JBake v2.3.0</a> | <i title="Linux" class="fa fa-linux"></i></p>
+          </div>
+          <div class="col-xs-2 gotop">
+            <a href="#"><i class="fa fa-arrow-circle-up"> top</i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/gist-embed/1.6/gist-embed.min.js"></script>
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+      <!-- load prettify only when needed -->
+      $(document).ready(function(){
+        var prettify = false;
+        var classToAdd = 'prettyprint snippet';
+        $("pre > code").each(function() {
+          $("pre > code").parent().addClass(classToAdd);
+          prettify = true;
+        });
+        if(prettify) {
+          prettyPrint();
+        }
+      });
+    </script>
+
+    <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'maperry78'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+    </script>
+
+        </body>
+</html>

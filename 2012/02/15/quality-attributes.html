@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+    Software Matters!
+        - Quality Attributes
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Mark Perry">
+    <meta name="description" content="Static blog generated with JBake">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/yeti/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" href="/css/base.css">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav icon -->
+    <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  </head>
+  <body>      
+    <nav class="navbar navbar-default navbar-fixed-top " role="navigation">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Software Matters!</a>
+        </div>
+        
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+			<li><a href="/">Home</a></li>
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/pages/bio.html">Author</a></li>
+			<li><a href="/archive.html">Archive</a></li>
+
+          </ul>
+        
+        <!-- Right navigation -->
+        <ul class="nav navbar-nav navbar-right">
+
+          <li><a href="/feed.xml" title="Rss"><i class="fa fa-rss"></i> Feed</a></li>
+        </ul>
+        <!-- Right navigation end -->
+
+      </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav><!-- /.navbar -->
+
+    <!-- Begin page content -->
+    <div class="container">
+      
+      <div class="row">
+        <div class="col-md-12">
+          <article>
+            <div class="page-header"><h1>Quality Attributes</h1>
+              <ol class="breadcrumb tagsbar">
+                <li><a href="/tags/architecture.html">architecture</a></li>
+                <li><a href="/tags/quality-attributes.html">quality-attributes</a></li>
+                <li><a href="/tags/system-attributes.html">system-attributes</a></li>
+                <li><a href="/tags/architectural-attributes.html">architectural-attributes</a></li>
+                <li><a href="/tags/quality-scenarios.html">quality-scenarios</a></li>
+                <li><a href="/tags/system-quality-attributes.html">system-quality-attributes</a></li>
+              </ol>
+            </div>
+          <p class="post-meta">
+            <i class="fa fa-calendar"></i>&nbsp;15 February 2012&nbsp;&nbsp;
+            <i class="fa fa-user"></i>&nbsp;Mark Perry&nbsp;&nbsp;
+              <i class="fa fa-comment"></i>&nbsp;<span class="badge"><a href="http://mperry.github.io2012/02/15/quality-attributes.html#disqus_thread"></a></span>
+          </p>
+              <p><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Software Quality Attributes are the benchmarks that describe a systems behavior within an environment. The quality attributes provide the means for measuring the fitness and suitability of a product. Software architecture has a profound affect on most qualities in one way or another and software quality attributes affect architecture.</p>
+</div>
+<div class="paragraph">
+<p>Architecture is critical to the realization of many qualities of interest in a system, and these qualities should be designed in and can be evaluated at the architectural level.  Architecture, by itself, is unable to achieve qualities. It provides the foundation for achieving quality, but this foundation will be to no avail if attention is not paid to the details.</p>
+</div>
+<!-- more -->
+</div>
+</div>
+<div class="sect1">
+<h2 id="_typical_qualities">Typical Qualities</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Typical quality attributes include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>System qualities: availability, modifiability, performance, security, testability and usability.</p>
+</li>
+<li>
+<p>Business qualities:  e.g. time to market.</p>
+</li>
+<li>
+<p>Architectural qualities: e.g. conceptual integrity</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Other qualities not covered here include scalability, portability and interoperability.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_quality_attribute_scenarios">Quality Attribute Scenarios</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>These scenarios address a specific attribute for a requirement.  They include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Source of stimulus - the entity (human, computer system, etc.) that generated the stimulus.</p>
+</li>
+<li>
+<p>Stimulus - a condition that needs to be considered when it arrives at a system.</p>
+</li>
+<li>
+<p>Environment - Condition of the system, e.g. running.</p>
+</li>
+<li>
+<p>Artifact - The part of the system that is stimulated.</p>
+</li>
+<li>
+<p>Response - Activity undertaken after the arrival of the stimulus.</p>
+</li>
+<li>
+<p>Response measure - How to measure the response so that the requirement can be tested.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../../../img/general_availability_scenario.png" alt="general availability scenario">
+</div>
+</div>
+<div class="sect2">
+<h3 id="_availability">Availability</h3>
+<div class="paragraph">
+<p>Availability addresses system failure and the subsequent consequences.  This may involve how the system failure is detected, the frequency of failure, failure symptoms, system downtime, when failures may occur safely, failure prevention and failure notifications.</p>
+</div>
+<div class="paragraph">
+<p>System availability is the probability a system is operational, defined by:</p>
+</div>
+<div class="paragraph">
+<p>mean time to failure / (mean time to failure + mean repair time)</p>
+</div>
+<div class="paragraph">
+<p>Consider an availability general scenario:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Stimulus source.  Differentiate between internal and external symptoms</p>
+</li>
+<li>
+<p>Stimulus</p>
+<div class="ulist">
+<ul>
+<li>
+<p>omission - A component fails to respond.</p>
+</li>
+<li>
+<p>crash - The component repeatedly suffers omission faults</p>
+</li>
+<li>
+<p>timing - A component responds early or late.</p>
+</li>
+<li>
+<p>response - Responds with incorrect value.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Artifact - The resource required to be highly available, e.g. processor, process, disk, etc.</p>
+</li>
+<li>
+<p>Environment - The state of the system may affect the system response, e.g. after repeated faults, shutdown system</p>
+</li>
+<li>
+<p>Response - Reactions to stimulus, e.g. logging, notification, switch to degraded mode, etc.</p>
+</li>
+<li>
+<p>Response measure - How to measure the response, e.g. time to repair, availability percentage, etc.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>General Availability Scenario Generation</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width:100%; ">
+<colgroup>
+<col style="width:50%;">
+<col style="width:50%;"> 
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Scenario Part</th>
+<th class="tableblock halign-left valign-top">Possible Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Source</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">internal or external</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stimulus</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">omission, crash, timing, response</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Artifact</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">System processors, communications channels, storage, processes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Environment</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Normal, degraded</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Response</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Detect event then one or more of:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>record event</p>
+</li>
+<li>
+<p>notify user or other systems</p>
+</li>
+<li>
+<p>disable sources according to rules</p>
+</li>
+<li>
+<p>make unavailable for period</p>
+</li>
+<li>
+<p>continue operation in normal or degraded mode</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Response Measure</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p>Interval that the system must become available</p>
+</li>
+<li>
+<p>Availability time</p>
+</li>
+<li>
+<p>Degraded mode interval</p>
+</li>
+<li>
+<p>Repair time</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+
+</div>
+<div class="sect2">
+<h3 id="_modifiability">Modifiability</h3>
+<div class="paragraph">
+<p>The cost of a change, specifically:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>What can change?   Functions, platform, environment, system qualities, capacity</p>
+</li>
+<li>
+<p>Who makes the change and when?  This is commonly done to source code during implementation, but an end user or system admin could make a change.  Time phases could be: implementation, compile time, build, configuration, execution.</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all" style="width:100%; ">
+<colgroup>
+<col style="width:50%;">
+<col style="width:50%;"> 
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Scenario Part</th>
+<th class="tableblock halign-left valign-top">Possible Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Source</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">End user, developer, system admin</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stimulus</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add/delete/modify/vary functionality, quality attribute or capacity</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Artifact</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User interface, platform, environment, other system</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Environment</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Runtime, compile time, build time, design time, setup, configuration</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Response</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Places to be modified without other effect, test change, deployment</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Response Measure</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cost in number of elements, effort, duration, money.  Extent the change affects other functionality or quality attributes</p></td>
+</tr>
+</tbody>
+</table>
+
+</div>
+<div class="sect2">
+<h3 id="_performance">Performance</h3>
+<div class="paragraph">
+<p>The timing of events, interrupts, messages, user requests or the passage of time and the system response.  How long does this take?</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width:100%; ">
+<colgroup>
+<col style="width:50%;">
+<col style="width:50%;"> 
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Scenario Part</th>
+<th class="tableblock halign-left valign-top">Possible Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Source</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One of multitude independent sources or within system</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stimulus</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Perdioc event, sporadic events, non-deterministic (stochastic) events</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Artifact</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">System</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Environment</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Normal or overloaded mode</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Response</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Processes stimuli, changes to level of service</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Response Measure</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Latency, deadline, throughput, jitter, miss rate, data loss</p></td>
+</tr>
+</tbody>
+</table>
+
+<div class="paragraph">
+<p>For much of the history of software engineering, performance has been the dominant factor in system architecture, often at the expense of other qualities.  The commoditisation of hardware has meant other qualities are now serious competitors.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_security">Security</h3>
+<div class="paragraph">
+<p>The ability to resist unauthorised usage.  Characterised by:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Non repudiation - The property that a transaction cannot be denied by any parties (e.g. disputing internet purchase you did make).</p>
+</li>
+<li>
+<p>Confidentiality - Data or services are protected from unauthorised access.</p>
+</li>
+<li>
+<p>Integrity - Data or services delivered as intended (e.g. hacker has changed billing amount)</p>
+</li>
+<li>
+<p>Assurance - Transaction parties are who they claim (e.g. the email from the bank is actually from the back, not a fraudster)</p>
+</li>
+<li>
+<p>Availability - The system is available for genuine use (e.g. denial of service brings down website)</p>
+</li>
+<li>
+<p>Auditing - tracking of activities to later reconstruct them.</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all" style="width:100%; ">
+<colgroup>
+<col style="width:50%;">
+<col style="width:50%;"> 
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Scenario Part</th>
+<th class="tableblock halign-left valign-top">Possible Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Source</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Individual or system that is:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>correctly identified, identified incorrectly, unknown identity
+who is:</p>
+</li>
+<li>
+<p>internal/external, authorised/unauthorised
+with access to:</p>
+</li>
+<li>
+<p>limited or vast resources</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stimulus</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Display data, change/delete data, access service, reduce availability</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Artifact</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">System services, data</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Environment</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Online or offline, connected or disconnected, firewalled or open</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Response</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Authenticate user, hide identity, block access, allow access, grant/withdraw permission, record access, store data in format, unexplainable high demand, informs user or system, restricts availability</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Response Measure</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time, effort or resources to circumvent with probability, probability of detecting attack, probability of identifying responsible party, services available in DOS attack, extent of damage, percentage of legitimate access denied</p></td>
+</tr>
+</tbody>
+</table>
+
+</div>
+<div class="sect2">
+<h3 id="_testability">Testability</h3>
+<div class="paragraph">
+<p>The extent of the ease the software faults can be demonstrated.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width:100%; ">
+<colgroup>
+<col style="width:50%;">
+<col style="width:50%;"> 
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Scenario Part</th>
+<th class="tableblock halign-left valign-top">Possible Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Source</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unit tester, integration tester, system tester, client acceptance tester, user</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stimulus</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Analysis, architecture, design, class, integration, delivery</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Artifact</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Design, code, application</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Environment</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Development time, design time, compile time, deploy time</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Response</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access state values, computes values, prepare test environment</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Response Measure</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p>Percent of statements executed</p>
+</li>
+<li>
+<p>Probability of failure if a fault exists</p>
+</li>
+<li>
+<p>Time to perform tests</p>
+</li>
+<li>
+<p>Time to prepare test environment</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+
+</div>
+<div class="sect2">
+<h3 id="_usability">Usability</h3>
+<div class="paragraph">
+<p>The ease to perform a task and user support:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Time to learn</p>
+</li>
+<li>
+<p>Time to perform task efficiently</p>
+</li>
+<li>
+<p>Impact of errors</p>
+</li>
+<li>
+<p>User customisation</p>
+</li>
+<li>
+<p>Confidence that correct action was taken</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all" style="width:100%; ">
+<colgroup>
+<col style="width:50%;">
+<col style="width:50%;"> 
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Scenario Part</th>
+<th class="tableblock halign-left valign-top">Possible Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Source</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">End user</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stimulus</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Learn system features, use system efficiently, minimise error impact, adapt system, feel comfortable</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Artifact</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">System</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Environment</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Runtime or configuration time</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Response</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p>Learn features - context sensitive help, familiar interface, usable interface in unfamiliar context</p>
+</li>
+<li>
+<p>Use system efficiently - Aggregation of data or commands, reuse of data/commands, interface navigation, distinct views with consistent operations, searching, simultaneous tasks</p>
+</li>
+<li>
+<p>Minimise error impace - undo, cancel, recover, correct user error, retrieve password, verify resources</p>
+</li>
+<li>
+<p>Comfort - Display system state, work at users pace</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Response Measure</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Task time, number of errors, number of problems solved, user satisfaction, gain of user knowledge, ratio of successful operations, amount of time/data lost</p></td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_business_qualities">Business qualities</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Often business qualities goals can affect a system architecture:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Time to market</p>
+</li>
+<li>
+<p>Cost and benefit</p>
+</li>
+<li>
+<p>System lifetime</p>
+</li>
+<li>
+<p>Target market</p>
+</li>
+<li>
+<p>Rollout schedule - base functionality of first release, enhancements</p>
+</li>
+<li>
+<p>Integration with other systems</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_architectural_qualities">Architectural Qualities</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Qualities that related directly to the architecture:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Conceptual integrity - the architecture should do similar things in similar ways</p>
+</li>
+<li>
+<p>Correctness and completeness</p>
+</li>
+<li>
+<p>Buildability - can be made by the team in a timely manner</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_summary">Summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The system quality attributes described are those commonly addressed by software architecture.  By using attribute scenarios one can understand the way these attributes can affect the architecture.</p>
+</div>
+</div>
+</div></p>
+      <div class="share">
+  <!-- Facebook -->
+          <a href="http://www.facebook.com/sharer.php?u=http://mperry.github.io2012/02/15/quality-attributes.html" target="_blank"><img src="/img/sharebuttons/facebook.png" alt="Facebook" /></a>
+  <!-- Google+ -->
+          <a href="https://plus.google.com/share?url=http://mperry.github.io2012/02/15/quality-attributes.html" target="_blank"><img src="/img/sharebuttons/google_plus.png" alt="Google" /></a>
+  <!-- Twitter -->
+          <a href="http://twitter.com/share?url=http://mperry.github.io2012/02/15/quality-attributes.html&text=Quality Attributes mperry.github.io2012/02/15/quality-attributes.html" target="_blank"><img src="/img/sharebuttons/twitter.png" alt="Twitter" /></a>
+      </div>
+<hr>
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'maperry78'; // required: replace example with your forum shortname
+  
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>            </article>
+        </div> <!-- /.col-md-12 -->
+      </div> <!-- /.row -->
+        
+      </div><!-- /.container -->
+
+    <footer>
+      <div class="container">
+        <hr>
+        <div class="row">
+          <div class="col-xs-10">
+            <p class="text-muted credit">&copy;  2014 | Mixed with <a href="http://getbootstrap.com/">Bootstrap v3.1.1</a> | Baked with <a href="http://jbake.org">JBake v2.3.0</a> | <i title="Linux" class="fa fa-linux"></i></p>
+          </div>
+          <div class="col-xs-2 gotop">
+            <a href="#"><i class="fa fa-arrow-circle-up"> top</i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/gist-embed/1.6/gist-embed.min.js"></script>
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+      <!-- load prettify only when needed -->
+      $(document).ready(function(){
+        var prettify = false;
+        var classToAdd = 'prettyprint snippet';
+        $("pre > code").each(function() {
+          $("pre > code").parent().addClass(classToAdd);
+          prettify = true;
+        });
+        if(prettify) {
+          prettyPrint();
+        }
+      });
+    </script>
+
+    <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'maperry78'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+    </script>
+
+        </body>
+</html>
