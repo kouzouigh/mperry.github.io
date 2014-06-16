@@ -1,6 +1,6 @@
 = Bugs vs Defects
 Mark Perry
-2012-01-02
+2012-01-28
 :jbake-type: post
 :jbake-tags: defects, bugs, PSP, Watts, Humphrey, quality
 :jbake-status: published
