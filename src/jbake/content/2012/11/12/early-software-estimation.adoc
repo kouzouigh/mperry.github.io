@@ -51,7 +51,7 @@ image::http://www.construx.com/uploadedImages/Construx/Construx_Content/Resource
 
 == Sizing
 
-Initial software size can be performed by category or analogy.  See my previous post on link:../../2012/01/software-estimation.html[Fast Software Sizing]
+Initial software size can be performed by category or analogy.  See my previous post on link:../../../2012/01/02/software-estimation.html[Fast Software Sizing]
 
 == Effort and Schedule
 
