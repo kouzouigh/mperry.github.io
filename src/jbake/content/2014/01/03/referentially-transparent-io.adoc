@@ -14,7 +14,7 @@ The answer, of course, is no. We create programs so that our entire program is a
 <!-- more -->
 +++++
 
-This is stated eloquently at "Haskell/Simple input and output":https://en.wikibooks.org/wiki/Haskell/Simple_input_and_output,
+This is stated eloquently at https://en.wikibooks.org/wiki/Haskell/Simple_input_and_output[Haskell/Simple input and output],
 
 [quote]
 ____
