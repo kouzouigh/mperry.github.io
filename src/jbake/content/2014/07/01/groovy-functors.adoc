@@ -1,0 +1,123 @@
+= Groovy Functors
+Mark Perry
+2014-07-01
+:jbake-type: post
+:jbake-tags:
+:jbake-status: published
+
+Groovy and Java both provide abstractions that allow programmers to transform values within that abstraction.  For example, Groovy provides the collect method on Collections and Java 8 provides the map method on the Stream class.  This pattern is more widely applicable than these classes, however the simple Java type system prevents this idea from being expressed within Java.
+
+If Java allowed this idea to be expressed it might be expressed as:
+[source,java,numbered]
+----
+public interface Mappable<M<Z>> {
+	public M<B> map(M<A> m, F<A, B> f);
+}
+----
+
++++++
+<!-- more -->
++++++
+
+Here the Mappable interface takes a single generic type parameter M.  The generic type M itself takes a single generic type parameter Z.  However Java does not allow this because Java does not have kinds <<2>> that express the constraint that a generic type parameter requires a generic type parameter.  The Java compiler rejects this code with the error message:
+ ----
+Error:(6, 28) java: > expected
+Error:(6, 30) java: <identifier> expected
+Error:(6, 32) java: ';' expected
+----
+
+You might try to change the definition of Mappable to remove the type parameter Z:
+[source,java,numbered]
+----
+public interface Mappable2<M> {
+	public M<B> map(M<A> m, F<A, B> f);
+}
+----
+
+The compiler rejects this too because a type parameter cannot be applied to the generic type M:
+----
+Error:(10, 32) java: unexpected type
+  required: class
+  found:    type parameter M
+Error:(10, 23) java: unexpected type
+  required: class
+  found:    type parameter M
+----
+One might simplify this definition further by removing the type parameter to M in map:
+[source,java,numbered]
+----
+public interface Mappable3<M> {
+	public <A, B> M map(M m, F<A, B> f);
+}
+----
+This interface can then be implemented (below), losing much of the generic type information:
+[source,java,numbered]
+----
+public class MappableList implements Mappable3<List> {
+	@Override
+	public <A, B> List map(List list, F<A, B> f) {
+		return null;
+	}
+}
+----
+You could try to keep the type information on the map method:
+[source,java,numbered]
+----
+public class MappableList implements Mappable3<List> {
+	@Override
+	public <A, B> List<B> map(List<A> list, F<A, B> f) {
+		return null;
+	}
+}
+----
+But the compiler rejects this as not implementing the map method in Mappable3 as the compiler error shows:
+----
+Error:(9, 8) java: MappableList is not abstract and does not override abstract method <A,B>map(java.util.List,fj.F<A,B>) in com.github.mperry.Mappable3
+Error:(11, 9) java: method does not override or implement a method from a supertype
+----
+Groovy allows us to get closer to what we want to express.  Here I use the Functor interface as a synonym for the Mappable interface above.  The term Functor is already established to represent the Mappable interface (inspired from category theory and Haskell).  Groovy 2.3.3 allows us to define the Functor interface as:
+[source,groovy,numbered]
+----
+@TypeChecked
+interface Functor<T> {
+    abstract <A, B> T<B> map(F<A, B> f, T<A> fa)
+}
+----
+Significantly, the Groovy compiler (incorrectly) allows the generic type parameter to be applied to the type T, e.g. T<A>.
+
+Using Intellij to implement the methods of a class implementing the Functor interface allows us to define a List functor to be mapped over:
+[source,groovy,numbered]
+----
+@TypeChecked
+class ListFunctor implements Functor<List> {
+	@Override
+	def <A, B> List map(F<A, B> f, List fa) {
+		// TODO
+		null
+	}
+}
+----
+The Groovy compiler, however, also allows type parameters to be added to List in the definition of map, whilst also overriding the definition of Functor's map (unlike the Java compiler above):
+[source,groovy,numbered]
+----
+@TypeChecked
+class ListFunctor implements Functor<List> {
+	@Override
+	def <A, B> List<B> map(F<A, B> f, List<A> list)
+		// TODO
+		null
+	}
+}
+----
+
+This allows client code to map over lists in a reusable type safe way.  But this does not get us much more than what using the collect method of List gives us (it gives type safety which Groovy Closures do not).  It has shown that Groovy has a workaround for Java's lack of kinds (aka higher order types) as implemented in Haskell, Scala, ML and various dependently typed languages (and others).
+
+The presence of this abstraction allows us to build further abstractions based on Functor, in particular Applicative and Monad.  I have implemented this in FunctionalGroovy <<1>> and will be exploring this further in the next blog post.
+
+== Bibliography
+
+[bibliography]
+* [[[1]]] FunctionalGroovy, https://github.com/mperry/functionalgroovy
+* [[[2]]] Kinds (higher order types), http://en.wikipedia.org/wiki/Kind_(type_theory)
+* [[[3]]] Scalaz Functor definition, https://github.com/scalaz/scalaz/blob/v7.0.1/core/src/main/scala/scalaz/Functor.scala
+* [[[4]]] Haskell Functor definition, https://hackage.haskell.org/package/base-4.7.0.0/docs/Data-Functor.html
