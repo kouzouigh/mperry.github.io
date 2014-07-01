@@ -6,9 +6,179 @@
     <atom:link href="http://mperry.github.io/feed.xml" rel="self" type="application/rss+xml" />
     <description>Thoughts on the discipline of software engineering</description>
     <language>en</language>
-    <pubDate>16/06/2014 11:32:34 PM</pubDate>
-    <lastBuildDate>16/06/2014 11:32:34 PM</lastBuildDate>
+    <pubDate>02/07/2014 1:11:14 AM</pubDate>
+    <lastBuildDate>02/07/2014 1:11:14 AM</lastBuildDate>
 
+      <item>
+        <title>Groovy Functors</title>
+        <author>Mark Perry</author>
+        <link>http://mperry.github.io2014/07/01/groovy-functors.html</link>
+        <pubDate>01/07/2014 12:00:00 AM</pubDate>
+        <guid isPermaLink="false">2014/07/01/groovy-functors.html</guid>
+        <description>
+          &lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Groovy and Java both provide abstractions that allow programmers to transform values within that abstraction.  For example, Groovy provides the collect method on Collections and Java 8 provides the map method on the Stream class.  This pattern is more widely applicable than these classes, however the simple Java type system prevents this idea from being expressed within Java.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;If Java allowed this idea to be expressed it might be expressed as:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint linenums java language-java&quot;&gt;&lt;code&gt;public interface Mappable&amp;lt;M&amp;lt;Z&amp;gt;&amp;gt; {
+	public M&amp;lt;B&amp;gt; map(M&amp;lt;A&amp;gt; m, F&amp;lt;A, B&amp;gt; f);
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- more --&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Here the Mappable interface takes a single generic type parameter M.  The generic type M itself takes a single generic type parameter Z.  However Java does not allow this because Java does not have kinds &lt;a href=&quot;#2&quot;&gt;[2]&lt;/a&gt; that express the constraint that a generic type parameter requires a generic type parameter.  The Java compiler rejects this code with the error message:
+ ----
+Error:(6, 28) java: &amp;gt; expected
+Error:(6, 30) java: &amp;lt;identifier&amp;gt; expected
+Error:(6, 32) java: &lt;em&gt;;&lt;/em&gt; expected&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre&gt;
+You might try to change the definition of Mappable to remove the type parameter Z:
+[source,java,numbered]&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;public interface Mappable2&amp;lt;M&amp;gt; {
+	public M&amp;lt;B&amp;gt; map(M&amp;lt;A&amp;gt; m, F&amp;lt;A, B&amp;gt; f);
+}&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre&gt;
+The compiler rejects this too because a type parameter cannot be applied to the generic type M:&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Error:(10, 32) java: unexpected type
+  required: class
+  found:    type parameter M
+Error:(10, 23) java: unexpected type
+  required: class
+  found:    type parameter M&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre&gt;One might simplify this definition further by removing the type parameter to M in map:
+[source,java,numbered]&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;public interface Mappable3&amp;lt;M&amp;gt; {
+	public &amp;lt;A, B&amp;gt; M map(M m, F&amp;lt;A, B&amp;gt; f);
+}&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre&gt;This interface can then be implemented (below), losing much of the generic type information:
+[source,java,numbered]&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;public class MappableList implements Mappable3&amp;lt;List&amp;gt; {
+	@Override
+	public &amp;lt;A, B&amp;gt; List map(List list, F&amp;lt;A, B&amp;gt; f) {
+		return null;
+	}
+}&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre&gt;You could try to keep the type information on the map method:
+[source,java,numbered]&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;public class MappableList implements Mappable3&amp;lt;List&amp;gt; {
+	@Override
+	public &amp;lt;A, B&amp;gt; List&amp;lt;B&amp;gt; map(List&amp;lt;A&amp;gt; list, F&amp;lt;A, B&amp;gt; f) {
+		return null;
+	}
+}&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre&gt;But the compiler rejects this as not implementing the map method in Mappable3 as the compiler error shows:&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Error:(9, 8) java: MappableList is not abstract and does not override abstract method &amp;lt;A,B&amp;gt;map(java.util.List,fj.F&amp;lt;A,B&amp;gt;) in com.github.mperry.Mappable3
+Error:(11, 9) java: method does not override or implement a method from a supertype&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre&gt;Groovy allows us to get closer to what we want to express.  Here I use the Functor interface as a synonym for the Mappable interface above.  The term Functor is already established to represent the Mappable interface (inspired from category theory and Haskell).  Groovy 2.3.3 allows us to define the Functor interface as:
+[source,groovy,numbered]&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;@TypeChecked
+interface Functor&amp;lt;T&amp;gt; {
+    abstract &amp;lt;A, B&amp;gt; T&amp;lt;B&amp;gt; map(F&amp;lt;A, B&amp;gt; f, T&amp;lt;A&amp;gt; fa)
+}&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre&gt;Significantly, the Groovy compiler (incorrectly) allows the generic type parameter to be applied to the type T, e.g. T&amp;lt;A&amp;gt;.
+
+Using Intellij to implement the methods of a class implementing the Functor interface allows us to define a List functor to be mapped over:
+[source,groovy,numbered]&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;@TypeChecked
+class ListFunctor implements Functor&amp;lt;List&amp;gt; {
+	@Override
+	def &amp;lt;A, B&amp;gt; List map(F&amp;lt;A, B&amp;gt; f, List fa) {
+		// TODO
+		null
+	}
+}&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre&gt;The Groovy compiler, however, also allows type parameters to be added to List in the definition of map, whilst also overriding the definition of Functor&apos;s map (unlike the Java compiler above):
+[source,groovy,numbered]&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;@TypeChecked
+class ListFunctor implements Functor&amp;lt;List&amp;gt; {
+	@Override
+	def &amp;lt;A, B&amp;gt; List&amp;lt;B&amp;gt; map(F&amp;lt;A, B&amp;gt; f, List&amp;lt;A&amp;gt; list)
+		// TODO
+		null
+	}
+}&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre&gt;
+This allows client code to map over lists in a reusable type safe way.  But this does not get us much more than what using the collect method of List gives us (it gives type safety which Groovy Closures do not).  It has shown that Groovy has a workaround for Java&apos;s lack of kinds (aka higher order types) as implemented in Haskell, Scala, ML and various dependently typed languages (and others).
+
+The presence of this abstraction allows us to build further abstractions based on Functor, in particular Applicative and Monad.  I have implemented this in FunctionalGroovy &amp;lt;&amp;lt;1&amp;gt;&amp;gt; and will be exploring this further in the next blog post.
+
+== Bibliography
+
+[bibliography]
+* [[[1]]] FunctionalGroovy, https://github.com/mperry/functionalgroovy
+* [[[2]]] Kinds (higher order types), http://en.wikipedia.org/wiki/Kind_(type_theory)
+* [[[3]]] Scalaz Functor definition, https://github.com/scalaz/scalaz/blob/v7.0.1/core/src/main/scala/scalaz/Functor.scala
+* [[[4]]] Haskell Functor definition, https://hackage.haskell.org/package/base-4.7.0.0/docs/Data-Functor.html&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+        </description>
+      </item>
       <item>
         <title>Converting to JBake</title>
         <author>Mark Perry</author>

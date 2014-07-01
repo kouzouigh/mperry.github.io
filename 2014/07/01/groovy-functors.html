@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+    Software Matters!
+        - Groovy Functors
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Mark Perry">
+    <meta name="description" content="Static blog generated with JBake">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/yeti/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" href="/css/base.css">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav icon -->
+    <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  </head>
+  <body>      
+    <nav class="navbar navbar-default navbar-fixed-top " role="navigation">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Software Matters!</a>
+        </div>
+        
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+			<li><a href="/">Home</a></li>
+			<li><a href="/pages/about.html">About</a></li>
+			<li><a href="/pages/bio.html">Author</a></li>
+			<li><a href="/archive.html">Archive</a></li>
+
+          </ul>
+        
+        <!-- Right navigation -->
+        <ul class="nav navbar-nav navbar-right">
+
+          <li><a href="/feed.xml" title="Rss"><i class="fa fa-rss"></i> Feed</a></li>
+        </ul>
+        <!-- Right navigation end -->
+
+      </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav><!-- /.navbar -->
+
+    <!-- Begin page content -->
+    <div class="container">
+      
+      <div class="row">
+        <div class="col-md-12">
+          <article>
+            <div class="page-header"><h1>Groovy Functors</h1>
+              <ol class="breadcrumb tagsbar">
+                <li><a href="/tags/.html"></a></li>
+              </ol>
+            </div>
+          <p class="post-meta">
+            <i class="fa fa-calendar"></i>&nbsp;01 July 2014&nbsp;&nbsp;
+            <i class="fa fa-user"></i>&nbsp;Mark Perry&nbsp;&nbsp;
+              <i class="fa fa-comment"></i>&nbsp;<span class="badge"><a href="http://mperry.github.io2014/07/01/groovy-functors.html#disqus_thread"></a></span>
+          </p>
+              <p><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy and Java both provide abstractions that allow programmers to transform values within that abstraction.  For example, Groovy provides the collect method on Collections and Java 8 provides the map method on the Stream class.  This pattern is more widely applicable than these classes, however the simple Java type system prevents this idea from being expressed within Java.</p>
+</div>
+<div class="paragraph">
+<p>If Java allowed this idea to be expressed it might be expressed as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums java language-java"><code>public interface Mappable&lt;M&lt;Z&gt;&gt; {
+	public M&lt;B&gt; map(M&lt;A&gt; m, F&lt;A, B&gt; f);
+}</code></pre>
+</div>
+</div>
+<!-- more -->
+<div class="paragraph">
+<p>Here the Mappable interface takes a single generic type parameter M.  The generic type M itself takes a single generic type parameter Z.  However Java does not allow this because Java does not have kinds <a href="#2">[2]</a> that express the constraint that a generic type parameter requires a generic type parameter.  The Java compiler rejects this code with the error message:
+ ----
+Error:(6, 28) java: &gt; expected
+Error:(6, 30) java: &lt;identifier&gt; expected
+Error:(6, 32) java: <em>;</em> expected</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>
+You might try to change the definition of Mappable to remove the type parameter Z:
+[source,java,numbered]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>public interface Mappable2&lt;M&gt; {
+	public M&lt;B&gt; map(M&lt;A&gt; m, F&lt;A, B&gt; f);
+}</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>
+The compiler rejects this too because a type parameter cannot be applied to the generic type M:</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Error:(10, 32) java: unexpected type
+  required: class
+  found:    type parameter M
+Error:(10, 23) java: unexpected type
+  required: class
+  found:    type parameter M</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>One might simplify this definition further by removing the type parameter to M in map:
+[source,java,numbered]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>public interface Mappable3&lt;M&gt; {
+	public &lt;A, B&gt; M map(M m, F&lt;A, B&gt; f);
+}</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>This interface can then be implemented (below), losing much of the generic type information:
+[source,java,numbered]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>public class MappableList implements Mappable3&lt;List&gt; {
+	@Override
+	public &lt;A, B&gt; List map(List list, F&lt;A, B&gt; f) {
+		return null;
+	}
+}</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>You could try to keep the type information on the map method:
+[source,java,numbered]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>public class MappableList implements Mappable3&lt;List&gt; {
+	@Override
+	public &lt;A, B&gt; List&lt;B&gt; map(List&lt;A&gt; list, F&lt;A, B&gt; f) {
+		return null;
+	}
+}</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>But the compiler rejects this as not implementing the map method in Mappable3 as the compiler error shows:</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Error:(9, 8) java: MappableList is not abstract and does not override abstract method &lt;A,B&gt;map(java.util.List,fj.F&lt;A,B&gt;) in com.github.mperry.Mappable3
+Error:(11, 9) java: method does not override or implement a method from a supertype</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Groovy allows us to get closer to what we want to express.  Here I use the Functor interface as a synonym for the Mappable interface above.  The term Functor is already established to represent the Mappable interface (inspired from category theory and Haskell).  Groovy 2.3.3 allows us to define the Functor interface as:
+[source,groovy,numbered]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>@TypeChecked
+interface Functor&lt;T&gt; {
+    abstract &lt;A, B&gt; T&lt;B&gt; map(F&lt;A, B&gt; f, T&lt;A&gt; fa)
+}</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Significantly, the Groovy compiler (incorrectly) allows the generic type parameter to be applied to the type T, e.g. T&lt;A&gt;.
+
+Using Intellij to implement the methods of a class implementing the Functor interface allows us to define a List functor to be mapped over:
+[source,groovy,numbered]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>@TypeChecked
+class ListFunctor implements Functor&lt;List&gt; {
+	@Override
+	def &lt;A, B&gt; List map(F&lt;A, B&gt; f, List fa) {
+		// TODO
+		null
+	}
+}</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>The Groovy compiler, however, also allows type parameters to be added to List in the definition of map, whilst also overriding the definition of Functor's map (unlike the Java compiler above):
+[source,groovy,numbered]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>@TypeChecked
+class ListFunctor implements Functor&lt;List&gt; {
+	@Override
+	def &lt;A, B&gt; List&lt;B&gt; map(F&lt;A, B&gt; f, List&lt;A&gt; list)
+		// TODO
+		null
+	}
+}</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>
+This allows client code to map over lists in a reusable type safe way.  But this does not get us much more than what using the collect method of List gives us (it gives type safety which Groovy Closures do not).  It has shown that Groovy has a workaround for Java's lack of kinds (aka higher order types) as implemented in Haskell, Scala, ML and various dependently typed languages (and others).
+
+The presence of this abstraction allows us to build further abstractions based on Functor, in particular Applicative and Monad.  I have implemented this in FunctionalGroovy &lt;&lt;1&gt;&gt; and will be exploring this further in the next blog post.
+
+== Bibliography
+
+[bibliography]
+* [[[1]]] FunctionalGroovy, https://github.com/mperry/functionalgroovy
+* [[[2]]] Kinds (higher order types), http://en.wikipedia.org/wiki/Kind_(type_theory)
+* [[[3]]] Scalaz Functor definition, https://github.com/scalaz/scalaz/blob/v7.0.1/core/src/main/scala/scalaz/Functor.scala
+* [[[4]]] Haskell Functor definition, https://hackage.haskell.org/package/base-4.7.0.0/docs/Data-Functor.html</pre>
+</div>
+</div>
+</div>
+</div></p>
+      <div class="share">
+  <!-- Facebook -->
+          <a href="http://www.facebook.com/sharer.php?u=http://mperry.github.io2014/07/01/groovy-functors.html" target="_blank"><img src="/img/sharebuttons/facebook.png" alt="Facebook" /></a>
+  <!-- Google+ -->
+          <a href="https://plus.google.com/share?url=http://mperry.github.io2014/07/01/groovy-functors.html" target="_blank"><img src="/img/sharebuttons/google_plus.png" alt="Google" /></a>
+  <!-- Twitter -->
+          <a href="http://twitter.com/share?url=http://mperry.github.io2014/07/01/groovy-functors.html&text=Groovy Functors mperry.github.io2014/07/01/groovy-functors.html" target="_blank"><img src="/img/sharebuttons/twitter.png" alt="Twitter" /></a>
+      </div>
+<hr>
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'mperry'; // required: replace example with your forum shortname
+  
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>            </article>
+        </div> <!-- /.col-md-12 -->
+      </div> <!-- /.row -->
+        
+      </div><!-- /.container -->
+
+    <footer>
+      <div class="container">
+        <hr>
+        <div class="row">
+          <div class="col-xs-10">
+            <p class="text-muted credit">&copy;  2014 | Mixed with <a href="http://getbootstrap.com/">Bootstrap v3.1.1</a> | Baked with <a href="http://jbake.org">JBake v2.3.0</a> | <i title="Linux" class="fa fa-linux"></i></p>
+          </div>
+          <div class="col-xs-2 gotop">
+            <a href="#"><i class="fa fa-arrow-circle-up"> top</i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/gist-embed/1.6/gist-embed.min.js"></script>
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+    <script type="text/javascript">
+      <!-- load prettify only when needed -->
+      $(document).ready(function(){
+        var prettify = false;
+        var classToAdd = 'prettyprint snippet';
+        $("pre > code").each(function() {
+          $("pre > code").parent().addClass(classToAdd);
+          prettify = true;
+        });
+        if(prettify) {
+          prettyPrint();
+        }
+      });
+    </script>
+
+    <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'mperry'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
+    </script>
+
+        </body>
+</html>

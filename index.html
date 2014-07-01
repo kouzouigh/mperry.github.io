@@ -65,6 +65,32 @@
         <div class="row">
           <div class="col-md-9">
             <article>
+              <h2><a href="2014/07/01/groovy-functors.html">Groovy Functors</a></h2>
+          <p class="post-meta">
+            <i class="fa fa-calendar"></i>&nbsp;01 July 2014&nbsp;&nbsp;
+            <i class="fa fa-user"></i>&nbsp;Mark Perry&nbsp;&nbsp;
+              <i class="fa fa-comment"></i>&nbsp;<span class="badge"><a href="http://mperry.github.io2014/07/01/groovy-functors.html#disqus_thread"></a></span>
+          </p>
+              <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy and Java both provide abstractions that allow programmers to transform values within that abstraction.  For example, Groovy provides the collect method on Collections and Java 8 provides the map method on the Stream class.  This pattern is more widely applicable than these classes, however the simple Java type system prevents this idea from being expressed within Java.</p>
+</div>
+<div class="paragraph">
+<p>If Java allowed this idea to be expressed it might be expressed as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums java language-java"><code>public interface Mappable&lt;M&lt;Z&gt;&gt; {
+	public M&lt;B&gt; map(M&lt;A&gt; m, F&lt;A, B&gt; f);
+}</code></pre>
+</div>
+</div>
+
+              <a href="2014/07/01/groovy-functors.html" class="btn btn-success btn-sm read-more">Read <i class="fa fa-arrow-right"></i></a>
+              <br>
+            </article>
+            <article>
               <h2><a href="2014/06/16/converting-to-jbake.html">Converting to JBake</a></h2>
           <p class="post-meta">
             <i class="fa fa-calendar"></i>&nbsp;16 June 2014&nbsp;&nbsp;
@@ -134,28 +160,6 @@
               <a href="2013/12/09/specification-based-testing.html" class="btn btn-success btn-sm read-more">Read <i class="fa fa-arrow-right"></i></a>
               <br>
             </article>
-            <article>
-              <h2><a href="2013/07/28/groovy-null-handling.html">Groovy Null Handling Using Bind, Comprehensions and Lift</a></h2>
-          <p class="post-meta">
-            <i class="fa fa-calendar"></i>&nbsp;28 July 2013&nbsp;&nbsp;
-            <i class="fa fa-user"></i>&nbsp;Mark Perry&nbsp;&nbsp;
-              <i class="fa fa-comment"></i>&nbsp;<span class="badge"><a href="http://mperry.github.io2013/07/28/groovy-null-handling.html#disqus_thread"></a></span>
-          </p>
-              <div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>I have been using Groovy and Grails for around 2 years now and was consistently frustrated at the lack of fundamental functional programming ideas.  Due to this, one of the first libraries I add in a project is <a href="http://functionaljava.org/">Functional Java</a>.  This has proven a good match.</p>
-</div>
-<div class="paragraph">
-<p>The primary page of functional programming in Groovy seems to be at <a href="http://groovy.codehaus.org/Functional+Programming+with+Groovy">Functional Programming With Groovy</a>.  This includes some basic usage of Functional Java with Groovy but I think the library needs exposure more widely.  This will also help programmers transition to using functional programming with Java 8 lambdas.  The classes I use most from Functional Java are Stream, Option, Either/Validation, Functions, Tuples (Products) and the automated, specification based testing package, fj.test.</p>
-</div>
-<div class="paragraph">
-<p>This posts demonstrates using Options instead of nulls, comprehensions and lifting into the Option class.</p>
-</div>
-
-              <a href="2013/07/28/groovy-null-handling.html" class="btn btn-success btn-sm read-more">Read <i class="fa fa-arrow-right"></i></a>
-              <br>
-            </article>
               <br>
               <ul class="pager">
                 Older posts can be found in <li><a href="/archive.html"> Archive</a></li>
@@ -172,7 +176,8 @@
                 </div>
 
                 <div id="recent-posts" class="panel-body">
-                  				 <p>2014-06-16 - <a href="2014/06/16/converting-to-jbake.html">Converting to JBake</a></p>
+                  				 <p>2014-07-01 - <a href="2014/07/01/groovy-functors.html">Groovy Functors</a></p>
+				 <p>2014-06-16 - <a href="2014/06/16/converting-to-jbake.html">Converting to JBake</a></p>
 				 <p>2014-01-21 - <a href="2014/01/21/folds-and-unfolds.html">Folds and Unfolds</a></p>
 				 <p>2014-01-03 - <a href="2014/01/03/referentially-transparent-io.html">Referentially Transparent Input/Output in Groovy</a></p>
 				 <p>2013-12-09 - <a href="2013/12/09/specification-based-testing.html">Specification Based Testing</a></p>
@@ -181,7 +186,6 @@
 				 <p>2012-11-10 - <a href="2012/11/10/groovy-project-euler.html">Project Eueler in Groovy</a></p>
 				 <p>2012-11-09 - <a href="2012/11/09/dependent-types.html">Introduction to Dependent Types</a></p>
 				 <p>2012-08-18 - <a href="2012/08/18/software-metrics.html">Software Metrics</a></p>
-				 <p>2012-08-06 - <a href="2012/08/06/leadership-competencies.html">New Leadership Competencies</a></p>
 				</div>
 			</div>
 
