@@ -20,13 +20,14 @@ public interface Mappable<M<Z>> {
 +++++
 
 Here the Mappable interface takes a single generic type parameter M.  The generic type M itself takes a single generic type parameter Z.  However Java does not allow this because Java does not have kinds <<2>> that express the constraint that a generic type parameter requires a generic type parameter.  The Java compiler rejects this code with the error message:
- ----
+
+----
 Error:(6, 28) java: > expected
 Error:(6, 30) java: <identifier> expected
 Error:(6, 32) java: ';' expected
 ----
-
 You might try to change the definition of Mappable to remove the type parameter Z:
+
 [source,java,numbered]
 ----
 public interface Mappable2<M> {
@@ -35,6 +36,7 @@ public interface Mappable2<M> {
 ----
 
 The compiler rejects this too because a type parameter cannot be applied to the generic type M:
+
 ----
 Error:(10, 32) java: unexpected type
   required: class
@@ -43,14 +45,18 @@ Error:(10, 23) java: unexpected type
   required: class
   found:    type parameter M
 ----
+
 One might simplify this definition further by removing the type parameter to M in map:
+
 [source,java,numbered]
 ----
 public interface Mappable3<M> {
 	public <A, B> M map(M m, F<A, B> f);
 }
 ----
+
 This interface can then be implemented (below), losing much of the generic type information:
+
 [source,java,numbered]
 ----
 public class MappableList implements Mappable3<List> {
@@ -60,7 +66,9 @@ public class MappableList implements Mappable3<List> {
 	}
 }
 ----
+
 You could try to keep the type information on the map method:
+
 [source,java,numbered]
 ----
 public class MappableList implements Mappable3<List> {
@@ -70,12 +78,16 @@ public class MappableList implements Mappable3<List> {
 	}
 }
 ----
+
 But the compiler rejects this as not implementing the map method in Mappable3 as the compiler error shows:
+
 ----
 Error:(9, 8) java: MappableList is not abstract and does not override abstract method <A,B>map(java.util.List,fj.F<A,B>) in com.github.mperry.Mappable3
 Error:(11, 9) java: method does not override or implement a method from a supertype
 ----
+
 Groovy allows us to get closer to what we want to express.  Here I use the Functor interface as a synonym for the Mappable interface above.  The term Functor is already established to represent the Mappable interface (inspired from category theory and Haskell).  Groovy 2.3.3 allows us to define the Functor interface as:
+
 [source,groovy,numbered]
 ----
 @TypeChecked
@@ -83,9 +95,11 @@ interface Functor<T> {
     abstract <A, B> T<B> map(F<A, B> f, T<A> fa)
 }
 ----
+
 Significantly, the Groovy compiler (incorrectly) allows the generic type parameter to be applied to the type T, e.g. T<A>.
 
 Using Intellij to implement the methods of a class implementing the Functor interface allows us to define a List functor to be mapped over:
+
 [source,groovy,numbered]
 ----
 @TypeChecked
@@ -97,7 +111,9 @@ class ListFunctor implements Functor<List> {
 	}
 }
 ----
+
 The Groovy compiler, however, also allows type parameters to be added to List in the definition of map, whilst also overriding the definition of Functor's map (unlike the Java compiler above):
+
 [source,groovy,numbered]
 ----
 @TypeChecked
