@@ -1,0 +1,215 @@
+= Groovy Applicatives
+Mark Perry
+2014-07-02
+:jbake-type: post
+:jbake-tags:
+:jbake-status: published
+
+test1
+
+My last post discussed creating https://mperry.github.io/2014/07/01/groovy-functors.html[Functors in Groovy] <<5>>.  I demonstrated how to create a list functor.  Before we start creating the applicative abstraction, let's create a functor based on the rich https://github.com/functionaljava/functionaljava[FunctionalJava] https://functionaljava.ci.cloudbees.com/job/master/javadoc/[Option] type to review functors and to later demonstrate applicatives.
+
++++++
+<!-- more -->
++++++
+
+[source,groovy,numbered]
+----
+@TypeChecked
+class OptionFunctor implements Functor<Option> {
+    @Override
+    def <A, B> Option<B> map(Option<A> fa, F<A, B> f) {
+        fa.map(f)
+    }
+}
+----
+
+Note that I swapped the traditional order of the parameters to map to match Groovy's convention of putting the closure as the last parameter of a method.
+
+
+To motivate the example, I will be converting some of the code from the excellent book, Learn You A Haskell <<2>>.  When we map over functors, the function we are mapping with takes a single parameter.  Consider the case where a function takes multiple parameters, e.g. multiplication of integers takes two parameters.  To use this to map over a list of integers we curry the multiply function and map the curried function over the list.  This creates a list of functions (list1) where each function takes a single integer parameter and returns an integer.  We can then map over this list with another function that takes the function from the list and applies it to multiply by a number, say three.
+
+[source,groovy,numbered]
+----
+    @Test
+    void test1() {
+        def listFunctor = new ListFunctor()
+        def list1 = listFunctor.map([1, 2, 3], curry({ Integer a, Integer b -> a * b }))
+        def list2 = listFunctor.map(list1, { F<Integer, Integer> f -> f.f(3) })
+        println list1
+        println list2
+    }
+----
+
+This produces the output:
+
+----
+[fj.F2Functions$2$1@4e91d63f, fj.F2Functions$2$1@d4342c2, fj.F2Functions$2$1@2bbf180e]
+[3, 6, 9]
+----
+
+With functors, we can't combine two functors together.  Consider having a functor of List<F<Integer, Integer>> and a functor of List<Integer> and taking the integer value from the second functor and applying it to the function in the first functor.  However, functors only support mapping over functors with normal functions.  We need to construct a new abstraction that allows us to combine these two abstractions.  This abstraction, called an applicative (or applicative functor), was first described in <<3>>.  It will take practice to learn the intuition of the abstraction, so focus on the definition and examples and build intuition through usage.  The Applicative class has two abstract methods (with concrete methods omitted here):
+
+[source,groovy,numbered]
+----
+@TypeChecked
+abstract class Applicative<App> implements Functor<App> {
+    abstract <A> App<A> pure(A a)
+    abstract <A, B> App<B> apply(App<F<A, B>> t1, App<A> t2)
+}
+----
+
+This could be expressed as a Groovy trait, but the current implementation of Groovy (2.3.3) does not allow this <<4>>.
+
+We define a List applicative to allow us to try our example which we couldn't do with functors.
+
+[source,groovy,numbered]
+----
+
+@TypeChecked
+class ListApplicative extends Applicative<List> {
+
+    @Override
+    def <A> List<A> pure(A a) {
+        [a]
+    }
+
+    @Override
+    def <A, B> List<B> apply(List<F<A, B>> fs, List<A> list) {
+        list.zip(fs).collect { P2<A, F<A, B>> p ->
+            p._2().f(p._1())
+        }
+    }
+
+    @Override
+    def <A, B> List<B> map(List<A> list, F<A, B> f) {
+        list.collect(f)
+    }
+
+}
+----
+
+We use the Groovy trick (abuse?) of applying type parameters to the generic type to keep type information as documented in my post on functors <<5>>.  Don't concern yourself too much with the implementation here, the type signature is the important part of each method.  We can now use the applicative to combine a List<F<Integer,Integer>> and List<Integer>, which we could not do with functors.
+
+[source,groovy,numbered]
+----
+  @TypeChecked
+  class ListApplicativeTest {
+
+      @Test
+      void test1() {
+          def listFunctor = new ListFunctor()
+          def list1 = listFunctor.map([1, 2, 3], F2Functions.curry({ Integer a, Integer b -> a * b }))
+          def app = new ListApplicative()
+          def list2 = app.apply(list1, [1, 2, 3])
+          println list1
+          println list2
+      }
+----
+
+Which produces the output:
+
+----
+[fj.F2Functions$2$1@7995092a, fj.F2Functions$2$1@7fc2413d, fj.F2Functions$2$1@f8c1ddd]
+[1, 4, 9]
+----
+
+Let's define an option applicative to further investigate the applicative abstraction.
+
+[source,groovy,numbered]
+----
+@TypeChecked
+class OptionApplicative extends Applicative<Option> {
+
+    @Override
+    def <A> Option<A> pure(A a) {
+        Option.some(a)
+    }
+
+    @Override
+    def <A, B> Option<B> apply(Option<F<A, B>> optF, Option<A> o) {
+        o.flatMap { A a ->
+            optF.map { F<A, B> f ->
+                f.f(a)
+            }
+        }
+    }
+
+    @Override
+    def <A, B> Option<B> map(Option<A> o, F<A, B> f) {
+        o.map(f)
+    }
+}
+----
+
+In the code below we play with simple, one argument functions with the option applicative.  I then include a more complicated example, where I curry a 3 argument function to produce a single function F<A, F<B, F<C, D>>> and gradually apply options until the final result is obtained.  Note that this can be written more neatly using infix operators.
+
+[source,groovy,numbered]
+----
+    @Test
+    void test1() {
+        def app = new OptionApplicative()
+        F<Integer, Integer> f = { Integer a -> 3 + a } as F
+        def o1 = app.apply(some(f), some(10)) // Some(13)
+        def o2 = app.apply(some({ Integer a -> 3 + a } as F), some(10)) // Some(13)
+        def o3 = app.apply(some(f), none()) // None
+
+        // use the discriminate for quadratic equations: b^2 - 4ac
+        F3<Integer, Integer, Integer, Integer> f3 = { Integer a, Integer b, Integer c -> b * b - 4 * a * c } as F3
+        def o4 = app.apply(app.apply(app.apply(app.pure(Function.curry(f3)), some(4)), some(5)), some(3)) // Some(-23)
+        // note, with infix methods we could have written:
+        // app.pure(Function.curry(f3)) app.apply some(4) app.apply some(5) app.apply some(3)
+
+        println o1
+        println o2
+        println o3
+        println o4
+    }
+----
+
+----
+Some(13)
+Some(13)
+None
+Some(-23)
+Some(-23)
+----
+
+Instead of gradually applying applicatives, we can lift the function through the applicative using the method liftA3, defined on Applicative with the type signature
+
+----
+def <A, B, C, D> App<D> liftA3(F3<A, B, C, D> f, App<A> apa, App<B> apb, App<C> apc)
+----
+
+We could add a line to the code above to use this method:
+
+[source,groovy,numbered]
+----
+    def o5 = app.liftA3(f3, some(4), some(5), some(3)) // some(-23)
+----
+
+Once you see the pattern you start seeing applicatives everywhere.  All monads are also applicatives, so all the monad classes you might be familiar with are applicatives including:
+* IO
+* List
+* Option
+* Software transactional memory (STM)
+* Arrows
+* Either (right biased)
+
+
+
+
+
+
+
+== Bibliography
+
+[bibliography]
+* [[[1]]] FunctionalGroovy, https://github.com/mperry/functionalgroovy
+* [[[2]]] Learn You A Haskell, http://learnyouahaskell.com/
+* [[[3]]] 'Applicative Programming With Effects', McBride and Paterson, http://www.soi.city.ac.uk/~ross/papers/Applicative.pdf.
+* [[[4]]] Generic Groovy traits issue, https://github.com/mperry/bug-generic-grooy-traits
+* [[[5]]] Groovy Functors, https://mperry.github.io/2014/07/01/groovy-functors.html
+* [[[6]]] Groovy typeclasses (includes definition of Functor, Applicative and Monad), https://github.com/mperry/functionalgroovy/tree/master/typeclass/src/main/groovy/com/github/mperry/fg/typeclass
+
+
