@@ -6,9 +6,333 @@
     <atom:link href="http://mperry.github.io/feed.xml" rel="self" type="application/rss+xml" />
     <description>Thoughts on the discipline of software engineering</description>
     <language>en</language>
-    <pubDate>02/07/2014 1:17:45 AM</pubDate>
-    <lastBuildDate>02/07/2014 1:17:45 AM</lastBuildDate>
+    <pubDate>05/07/2014 12:25:16 AM</pubDate>
+    <lastBuildDate>05/07/2014 12:25:16 AM</lastBuildDate>
 
+      <item>
+        <title>Groovy Applicatives</title>
+        <author>Mark Perry</author>
+        <link>http://mperry.github.io2014/07/02/groovy-applicatives.html</link>
+        <pubDate>02/07/2014 12:00:00 AM</pubDate>
+        <guid isPermaLink="false">2014/07/02/groovy-applicatives.html</guid>
+        <description>
+          &lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;My last post discussed creating &lt;a href=&quot;https://mperry.github.io/2014/07/01/groovy-functors.html&quot;&gt;Functors in Groovy&lt;/a&gt; &lt;a href=&quot;#5&quot;&gt;[5]&lt;/a&gt;.  I demonstrated how to create a list functor.  Before we start creating the applicative abstraction, let&amp;#8217;s create a functor based on the rich &lt;a href=&quot;https://github.com/functionaljava/functionaljava&quot;&gt;FunctionalJava&lt;/a&gt; &lt;a href=&quot;https://functionaljava.ci.cloudbees.com/job/master/javadoc/&quot;&gt;Option&lt;/a&gt; type to review functors and to later demonstrate applicatives.&lt;/p&gt;
+&lt;/div&gt;
+&lt;!-- more --&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint linenums groovy language-groovy&quot;&gt;&lt;code&gt;@TypeChecked
+class OptionFunctor implements Functor&amp;lt;Option&amp;gt; {
+    @Override
+    def &amp;lt;A, B&amp;gt; Option&amp;lt;B&amp;gt; map(Option&amp;lt;A&amp;gt; o, F&amp;lt;A, B&amp;gt; f) {
+        o.map(f)
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Note that I swapped the traditional order of the parameters to map to match Groovy&amp;#8217;s convention of putting the closure as the last parameter of a method.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;To motivate the example, I will be converting some of the code from the excellent book for FP beginners, Learn You A Haskell &lt;a href=&quot;#2&quot;&gt;[2]&lt;/a&gt;.  When we map over functors, the function we are mapping with takes a single parameter.  Consider the case where a function takes multiple parameters, e.g. multiplication of integers takes two parameters.  To use this to map over a list of integers we curry the multiply function and map the curried function over the list.  This creates a list of functions (list1) where each function takes a single integer parameter and returns an integer.  We can then map over this list with another function that takes the function from the list and applies it to multiply by a number, say three.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint linenums groovy language-groovy&quot;&gt;&lt;code&gt;    @Test
+    void test1() {
+        def listFunctor = new ListFunctor()
+        def list1 = listFunctor.map([1, 2, 3], curry({ Integer a, Integer b -&amp;gt; a * b }))
+        def list2 = listFunctor.map(list1, { F&amp;lt;Integer, Integer&amp;gt; f -&amp;gt; f.f(3) })
+        println list1
+        println list2
+    }&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This produces the output:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre&gt;[fj.F2Functions$2$1@4e91d63f, fj.F2Functions$2$1@d4342c2, fj.F2Functions$2$1@2bbf180e]
+[3, 6, 9]&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;With functors, we can&amp;#8217;t combine two functors together.  Consider having a functor of List&amp;lt;F&amp;lt;Integer, Integer&amp;gt;&amp;gt; and a functor of List&amp;lt;Integer&amp;gt; and taking the integer value from the second functor and applying it to the function in the first functor.  However, functors only support mapping over functors with normal functions.  We need to construct a new abstraction that allows us to combine these two abstractions.  This abstraction, called an applicative (or applicative functor), was first described in &lt;a href=&quot;#3&quot;&gt;[3]&lt;/a&gt;.  It will take practice to learn the intuition of the abstraction, so focus on the definition and examples and build intuition through usage.  The Applicative class has two abstract methods (with other concrete methods omitted here):&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint linenums groovy language-groovy&quot;&gt;&lt;code&gt;@TypeChecked
+abstract class Applicative&amp;lt;App&amp;gt; implements Functor&amp;lt;App&amp;gt; {
+    abstract &amp;lt;A&amp;gt; App&amp;lt;A&amp;gt; pure(A a)
+    abstract &amp;lt;A, B&amp;gt; App&amp;lt;B&amp;gt; apply(App&amp;lt;F&amp;lt;A, B&amp;gt;&amp;gt; a1, App&amp;lt;A&amp;gt; a2)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;This could be expressed as a Groovy trait, but the current implementation of Groovy (2.3.3) does not allow this &lt;a href=&quot;#4&quot;&gt;[4]&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We define a List applicative to allow us to try our example which we couldn&amp;#8217;t do with functors, we need to define the pure and apply methods from Applicative and the map method from Functor.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint linenums groovy language-groovy&quot;&gt;&lt;code&gt;@TypeChecked
+class ListApplicative extends Applicative&amp;lt;List&amp;gt; {
+
+    @Override
+    def &amp;lt;A&amp;gt; List&amp;lt;A&amp;gt; pure(A a) {
+        [a]
+    }
+
+    @Override
+    def &amp;lt;A, B&amp;gt; List&amp;lt;B&amp;gt; apply(List&amp;lt;F&amp;lt;A, B&amp;gt;&amp;gt; fs, List&amp;lt;A&amp;gt; list) {
+        fs.flatMap { F&amp;lt;A, B&amp;gt; f -&amp;gt;
+            list.map { A a -&amp;gt;
+                f.f(a)
+            }
+        }
+    }
+
+    @Override
+    def &amp;lt;A, B&amp;gt; List&amp;lt;B&amp;gt; map(List&amp;lt;A&amp;gt; list, F&amp;lt;A, B&amp;gt; f) {
+        list.collect(f)
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We use the Groovy trick (abuse?) of applying type parameters to the generic type to keep type information as documented in my post on functors &lt;a href=&quot;#5&quot;&gt;[5]&lt;/a&gt;.  Don&amp;#8217;t concern yourself too much with the implementation here, the type signature is the important part of each method.  We can now use the applicative to combine a List&amp;lt;F&amp;lt;Integer,Integer&amp;gt;&amp;gt; and List&amp;lt;Integer&amp;gt;, which we could not do with functors.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint linenums groovy language-groovy&quot;&gt;&lt;code&gt;	@TypeChecked
+	class ListApplicativeTest {
+
+		@Test
+		void test1() {
+			def listFunctor = new ListFunctor()
+			def app = new ListApplicative()
+
+			// two examples of the apply method of list applicative
+			def list1 = (1..3).toList().map { { Integer a -&amp;gt; 4 + a } as F }
+			def list2 = app.apply(list1, [1, 2, 3])
+			def list3 = listFunctor.map([1, 2, 3], F2Functions.curry({ Integer a, Integer b -&amp;gt; a * b }))
+			def list4 = app.apply(list3, [1, 2, 3])
+
+			println list1
+			println list2
+			println list3
+			println list4
+		}
+	}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Which produces the output:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre&gt;[com.github.mperry.fg.typeclass.ListApplicativeTest$_test1_closure1_closure3@21507a04, com.github.mperry.fg.typeclass.ListApplicativeTest$_test1_closure1_closure3@143640d5, com.github.mperry.fg.typeclass.ListApplicativeTest$_test1_closure1_closure3@6295d394]
+[5, 6, 7, 5, 6, 7, 5, 6, 7]
+[fj.F2Functions$2$1@475e586c, fj.F2Functions$2$1@657c8ad9, fj.F2Functions$2$1@436a4e4b]
+[1, 2, 3, 2, 4, 6, 3, 6, 9]&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Let&amp;#8217;s define an option applicative to further investigate the applicative abstraction.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint linenums groovy language-groovy&quot;&gt;&lt;code&gt;@TypeChecked
+class OptionApplicative extends Applicative&amp;lt;Option&amp;gt; {
+
+    @Override
+    def &amp;lt;A&amp;gt; Option&amp;lt;A&amp;gt; pure(A a) {
+        Option.some(a)
+    }
+
+    @Override
+    def &amp;lt;A, B&amp;gt; Option&amp;lt;B&amp;gt; apply(Option&amp;lt;F&amp;lt;A, B&amp;gt;&amp;gt; optF, Option&amp;lt;A&amp;gt; o) {
+        o.flatMap { A a -&amp;gt;
+            optF.map { F&amp;lt;A, B&amp;gt; f -&amp;gt;
+                f.f(a)
+            }
+        }
+    }
+
+    @Override
+    def &amp;lt;A, B&amp;gt; Option&amp;lt;B&amp;gt; map(Option&amp;lt;A&amp;gt; o, F&amp;lt;A, B&amp;gt; f) {
+        o.map(f)
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In the code below we play with simple, one argument functions with the option applicative.  I then include a more complicated example, where I curry a 3 argument function to produce a single function F&amp;lt;A, F&amp;lt;B, F&amp;lt;C, D&amp;gt;&amp;gt;&amp;gt; and gradually apply options until the final result is obtained.  Note that this can be written more neatly using infix operators.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint linenums groovy language-groovy&quot;&gt;&lt;code&gt;    @Test
+    void test1() {
+        def app = new OptionApplicative()
+        F&amp;lt;Integer, Integer&amp;gt; f = { Integer a -&amp;gt; 3 + a } as F
+        def o1 = app.apply(some(f), some(10)) // Some(13)
+        def o2 = app.apply(some({ Integer a -&amp;gt; 3 + a } as F), some(10)) // Some(13)
+        def o3 = app.apply(some(f), none()) // None
+
+        // use the discriminate for quadratic equations: b^2 - 4ac
+        F3&amp;lt;Integer, Integer, Integer, Integer&amp;gt; f3 = { Integer a, Integer b, Integer c -&amp;gt; b * b - 4 * a * c } as F3
+        def o4 = app.apply(app.apply(app.apply(app.pure(Function.curry(f3)), some(4)), some(5)), some(3)) // Some(-23)
+        // note, with infix methods we could have written this more elegantly as:
+        // app.pure(Function.curry(f3)) app.apply some(4) app.apply some(5) app.apply some(3)
+
+        println o1
+        println o2
+        println o3
+        println o4
+    }&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre&gt;Some(13)
+Some(13)
+None
+Some(-23)&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Instead of gradually applying applicatives, we can lift the function through the applicative using the method liftA3, defined on Applicative with the type signature&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre&gt;def &amp;lt;A, B, C, D&amp;gt; App&amp;lt;D&amp;gt; liftA3(F3&amp;lt;A, B, C, D&amp;gt; f, App&amp;lt;A&amp;gt; apa, App&amp;lt;B&amp;gt; apb, App&amp;lt;C&amp;gt; apc)&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We could add a line to the code above to use this method:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint linenums groovy language-groovy&quot;&gt;&lt;code&gt;    def o5 = app.liftA3(f3, some(4), some(5), some(3)) // some(-23)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We can also combine an arbitrary number of applicatives into a single applicative of a list of results of those applicatives.  The method is called &lt;em&gt;sequenceA&lt;/em&gt; (sequence applicative).  It&amp;#8217;s type signature is:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint linenums groovy language-groovy&quot;&gt;&lt;code&gt;	def &amp;lt;A&amp;gt; App&amp;lt;List&amp;lt;A&amp;gt;&amp;gt; sequenceA(List&amp;lt;App&amp;lt;A&amp;gt;&amp;gt; list) { ... }&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We can then combine various applicatives:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint linenums groovy language-groovy&quot;&gt;&lt;code&gt;	def app1 = new OptionApplicative()
+	def o1 = app1.sequenceA([some(3), some(2), some(1)]) // some([3, 2, 1])
+	def o2 = app1.sequenceA([some(3), none(), some(1)]) // none()
+
+	def app2 = new ListApplicative()
+	def list1 = app.sequenceA([[1, 2, 3], [4, 5, 6]]) // [[1,4],[1,5],[1,6],[2,4],[2,5],[2,6],[3,4],[3,5],[3,6]]
+	def list2 = app.sequenceA([[1,2,3],[4,5,6],[3,4,4],[]]) // []
+
+	[[1, 2, 3], [4, 5, 6]].combinations() // [[1, 4], [2, 4], [3, 4], [1, 5], [2, 5], [3, 5], [1, 6], [2, 6], [3, 6]]&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;For lists, &lt;em&gt;sequenceA&lt;/em&gt; creates lists of all possible combinations.  This gives the same result (ignoring ordering) that the Groovy default method &lt;em&gt;combinations&lt;/em&gt; on the Collection class.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;It is expected that all applicatives satisfy the following properties (warning: Haskell code ahead):&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;identity: pure id &amp;lt;*&amp;gt; u == u&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;composition: pure (.) &amp;lt;*&amp;gt; u &amp;lt;*&amp;gt; v &amp;lt;*&amp;gt; w == u &amp;lt;*&amp;gt; (v &amp;lt;*&amp;gt; w)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;homomorphism: pure f &amp;lt;*&amp;gt; pure x == pure (f x)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;interchange: u &amp;lt;*&amp;gt; pure x == pure (\f &amp;#8594; f x) &amp;lt;*&amp;gt; u
+where &amp;lt;*&amp;gt; is the apply method and (.) is function composition.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Once you grok applicatives you start seeing them everywhere.  If you are familiar with monads, it turns out all monads are also applicatives, so all the monad classes you might be familiar with are also applicatives including:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;IO&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Set&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Tree&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;List&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Option&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Software transactional memory (STM)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Arrows&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Either (right biased)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_bibliography&quot;&gt;Bibliography&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;ulist bibliography&quot;&gt;
+&lt;ul class=&quot;bibliography&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a id=&quot;1&quot;&gt;&lt;/a&gt;[1] FunctionalGroovy, &lt;a href=&quot;https://github.com/mperry/functionalgroovy&quot;&gt;https://github.com/mperry/functionalgroovy&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a id=&quot;2&quot;&gt;&lt;/a&gt;[2] Learn You A Haskell, &lt;a href=&quot;http://learnyouahaskell.com/&quot;&gt;http://learnyouahaskell.com/&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a id=&quot;3&quot;&gt;&lt;/a&gt;[3] &lt;em&gt;Applicative Programming With Effects&lt;/em&gt;, McBride and Paterson, &lt;a href=&quot;http://www.soi.city.ac.uk/~ross/papers/Applicative.pdf&quot;&gt;http://www.soi.city.ac.uk/~ross/papers/Applicative.pdf&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a id=&quot;4&quot;&gt;&lt;/a&gt;[4] Generic Groovy traits issue, &lt;a href=&quot;https://github.com/mperry/bug-generic-grooy-traits&quot;&gt;https://github.com/mperry/bug-generic-grooy-traits&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a id=&quot;5&quot;&gt;&lt;/a&gt;[5] Groovy Functors, &lt;a href=&quot;https://mperry.github.io/2014/07/01/groovy-functors.html&quot;&gt;https://mperry.github.io/2014/07/01/groovy-functors.html&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a id=&quot;6&quot;&gt;&lt;/a&gt;[6] Groovy typeclasses (includes definition of Functor, Applicative and Monad), &lt;a href=&quot;https://github.com/mperry/functionalgroovy/tree/master/typeclass/src/main/groovy/com/github/mperry/fg/typeclass&quot;&gt;https://github.com/mperry/functionalgroovy/tree/master/typeclass/src/main/groovy/com/github/mperry/fg/typeclass&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a id=&quot;7&quot;&gt;&lt;/a&gt;[7] Haskell Applicative Functors, &lt;a href=&quot;http://en.wikibooks.org/wiki/Haskell/Applicative_Functors&quot;&gt;http://en.wikibooks.org/wiki/Haskell/Applicative_Functors&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+        </description>
+      </item>
       <item>
         <title>Groovy Functors</title>
         <author>Mark Perry</author>
@@ -482,7 +806,7 @@ static &amp;lt;A, B&amp;gt; List&amp;lt;A&amp;gt; unfold(B b, Closure&amp;lt;Opt
 &lt;/div&gt;
 &lt;!-- more --&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;This is stated eloquently at &quot;Haskell/Simple input and output&quot;:https://en.wikibooks.org/wiki/Haskell/Simple_input_and_output,&lt;/p&gt;
+&lt;p&gt;This is stated eloquently at &lt;a href=&quot;https://en.wikibooks.org/wiki/Haskell/Simple_input_and_output&quot;&gt;Haskell/Simple input and output&lt;/a&gt;,&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;quoteblock&quot;&gt;
 &lt;blockquote&gt;
