@@ -188,11 +188,12 @@ An essential method for SimpleIO is to combine two SimpleIO instances that, when
             }
         }
     }
-</pre>
+----
 
 I was not happy with the suggested solution to workaround this problem with the Groovy compiler, so switched this class from Groovy to Java.  The _append_ method then becomes:
 
-<pre class="brush:java">
+[source,groovy,numbered]
+----
     public <B> SimpleIO<B> append(final SimpleIO<B> io) {
         return new SimpleIO<B>() {
             @Override
