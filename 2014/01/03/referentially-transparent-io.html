@@ -289,13 +289,15 @@ class IOConstants {
                 return io.run()
             }
         }
-    }
-&lt;/pre&gt;
-
-I was not happy with the suggested solution to workaround this problem with the Groovy compiler, so switched this class from Groovy to Java.  The _append_ method then becomes:
-
-&lt;pre class="brush:java"&gt;
-    public &lt;B&gt; SimpleIO&lt;B&gt; append(final SimpleIO&lt;B&gt; io) {
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>I was not happy with the suggested solution to workaround this problem with the Groovy compiler, so switched this class from Groovy to Java.  The <em>append</em> method then becomes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint linenums groovy language-groovy"><code>    public &lt;B&gt; SimpleIO&lt;B&gt; append(final SimpleIO&lt;B&gt; io) {
         return new SimpleIO&lt;B&gt;() {
             @Override
             public B run() {

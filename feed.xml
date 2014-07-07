@@ -6,14 +6,14 @@
     <atom:link href="http://mperry.github.io/feed.xml" rel="self" type="application/rss+xml" />
     <description>Thoughts on the discipline of software engineering</description>
     <language>en</language>
-    <pubDate>05/07/2014 12:25:16 AM</pubDate>
-    <lastBuildDate>05/07/2014 12:25:16 AM</lastBuildDate>
+    <pubDate>Jul 7, 2014 8:25:32 AM</pubDate>
+    <lastBuildDate>Jul 7, 2014 8:25:32 AM</lastBuildDate>
 
       <item>
         <title>Groovy Applicatives</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2014/07/02/groovy-applicatives.html</link>
-        <pubDate>02/07/2014 12:00:00 AM</pubDate>
+        <pubDate>Jul 2, 2014 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2014/07/02/groovy-applicatives.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -337,7 +337,7 @@ where &amp;lt;*&amp;gt; is the apply method and (.) is function composition.&lt;
         <title>Groovy Functors</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2014/07/01/groovy-functors.html</link>
-        <pubDate>01/07/2014 12:00:00 AM</pubDate>
+        <pubDate>Jul 1, 2014 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2014/07/01/groovy-functors.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -513,7 +513,7 @@ class ListFunctor implements Functor&amp;lt;List&amp;gt; {
         <title>Converting to JBake</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2014/06/16/converting-to-jbake.html</link>
-        <pubDate>16/06/2014 12:00:00 AM</pubDate>
+        <pubDate>Jun 16, 2014 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2014/06/16/converting-to-jbake.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -537,7 +537,7 @@ Mark&lt;/p&gt;
         <title>Folds and Unfolds</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2014/01/21/folds-and-unfolds.html</link>
-        <pubDate>21/01/2014 12:00:00 AM</pubDate>
+        <pubDate>Jan 21, 2014 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2014/01/21/folds-and-unfolds.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -793,7 +793,7 @@ static &amp;lt;A, B&amp;gt; List&amp;lt;A&amp;gt; unfold(B b, Closure&amp;lt;Opt
         <title>Referentially Transparent Input/Output in Groovy</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2014/01/03/referentially-transparent-io.html</link>
-        <pubDate>03/01/2014 12:00:00 AM</pubDate>
+        <pubDate>Jan 3, 2014 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2014/01/03/referentially-transparent-io.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -1009,13 +1009,15 @@ class IOConstants {
                 return io.run()
             }
         }
-    }
-&amp;lt;/pre&amp;gt;
-
-I was not happy with the suggested solution to workaround this problem with the Groovy compiler, so switched this class from Groovy to Java.  The _append_ method then becomes:
-
-&amp;lt;pre class=&quot;brush:java&quot;&amp;gt;
-    public &amp;lt;B&amp;gt; SimpleIO&amp;lt;B&amp;gt; append(final SimpleIO&amp;lt;B&amp;gt; io) {
+    }&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;I was not happy with the suggested solution to workaround this problem with the Groovy compiler, so switched this class from Groovy to Java.  The &lt;em&gt;append&lt;/em&gt; method then becomes:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint linenums groovy language-groovy&quot;&gt;&lt;code&gt;    public &amp;lt;B&amp;gt; SimpleIO&amp;lt;B&amp;gt; append(final SimpleIO&amp;lt;B&amp;gt; io) {
         return new SimpleIO&amp;lt;B&amp;gt;() {
             @Override
             public B run() {
@@ -1258,7 +1260,7 @@ class SimpleIODemoFunctional {
         <title>Specification Based Testing</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2013/12/09/specification-based-testing.html</link>
-        <pubDate>09/12/2013 12:00:00 AM</pubDate>
+        <pubDate>Dec 9, 2013 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2013/12/09/specification-based-testing.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -1695,7 +1697,7 @@ class TotalStack&amp;lt;T&amp;gt; {
         <title>Groovy Null Handling Using Bind, Comprehensions and Lift</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2013/07/28/groovy-null-handling.html</link>
-        <pubDate>28/07/2013 12:00:00 AM</pubDate>
+        <pubDate>Jul 28, 2013 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2013/07/28/groovy-null-handling.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -2019,7 +2021,7 @@ Option&amp;lt;B&amp;gt; map(F&amp;lt;A, B&amp;gt; f)&lt;/code&gt;&lt;/pre&gt;
         <title>Early Software Estimation</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/11/12/early-software-estimation.html</link>
-        <pubDate>12/11/2012 12:00:00 AM</pubDate>
+        <pubDate>Nov 12, 2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/11/12/early-software-estimation.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -2340,7 +2342,7 @@ Option&amp;lt;B&amp;gt; map(F&amp;lt;A, B&amp;gt; f)&lt;/code&gt;&lt;/pre&gt;
         <title>Project Eueler in Groovy</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/11/10/groovy-project-euler.html</link>
-        <pubDate>10/11/2012 12:00:00 AM</pubDate>
+        <pubDate>Nov 10, 2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/11/10/groovy-project-euler.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -2367,7 +2369,7 @@ Option&amp;lt;B&amp;gt; map(F&amp;lt;A, B&amp;gt; f)&lt;/code&gt;&lt;/pre&gt;
         <title>Introduction to Dependent Types</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/11/09/dependent-types.html</link>
-        <pubDate>09/11/2012 12:00:00 AM</pubDate>
+        <pubDate>Nov 9, 2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/11/09/dependent-types.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -2457,7 +2459,7 @@ Option&amp;lt;B&amp;gt; map(F&amp;lt;A, B&amp;gt; f)&lt;/code&gt;&lt;/pre&gt;
         <title>Software Metrics</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/08/18/software-metrics.html</link>
-        <pubDate>18/08/2012 12:00:00 AM</pubDate>
+        <pubDate>Aug 18, 2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/08/18/software-metrics.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -2765,7 +2767,7 @@ Option&amp;lt;B&amp;gt; map(F&amp;lt;A, B&amp;gt; f)&lt;/code&gt;&lt;/pre&gt;
         <title>New Leadership Competencies</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/08/06/leadership-competencies.html</link>
-        <pubDate>06/08/2012 12:00:00 AM</pubDate>
+        <pubDate>Aug 6, 2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/08/06/leadership-competencies.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -2888,7 +2890,7 @@ Option&amp;lt;B&amp;gt; map(F&amp;lt;A, B&amp;gt; f)&lt;/code&gt;&lt;/pre&gt;
         <title>The Difficulty of Software Engineering</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/07/26/software-engineering-is-hard.html</link>
-        <pubDate>26/07/2012 12:00:00 AM</pubDate>
+        <pubDate>Jul 26, 2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/07/26/software-engineering-is-hard.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -3137,7 +3139,7 @@ Option&amp;lt;B&amp;gt; map(F&amp;lt;A, B&amp;gt; f)&lt;/code&gt;&lt;/pre&gt;
         <title>Principles of Team Motivation</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/07/12/motivation.html</link>
-        <pubDate>12/07/2012 12:00:00 AM</pubDate>
+        <pubDate>Jul 12, 2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/07/12/motivation.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -3457,7 +3459,7 @@ Option&amp;lt;B&amp;gt; map(F&amp;lt;A, B&amp;gt; f)&lt;/code&gt;&lt;/pre&gt;
         <title>The Groovy Type System</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/06/15/groovy-optional-typing.html</link>
-        <pubDate>15/06/2012 12:00:00 AM</pubDate>
+        <pubDate>Jun 15, 2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/06/15/groovy-optional-typing.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -3559,7 +3561,7 @@ public class Test
         <title>State of Software Quality</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/06/07/state-of-software-quality.html</link>
-        <pubDate>07/06/2012 12:00:00 AM</pubDate>
+        <pubDate>Jun 7, 2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/06/07/state-of-software-quality.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -3607,7 +3609,7 @@ public class Test
         <title>Development Activities Effort</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/05/31/development-activities.html</link>
-        <pubDate>31/05/2012 12:00:00 AM</pubDate>
+        <pubDate>May 31, 2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/05/31/development-activities.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -3640,7 +3642,7 @@ public class Test
         <title>Sum Types</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/05/18/sum-types.html</link>
-        <pubDate>18/05/2012 12:00:00 AM</pubDate>
+        <pubDate>May 18, 2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/05/18/sum-types.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -3747,7 +3749,7 @@ public class Test
         <title>Product Types</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/05/17/product-types.html</link>
-        <pubDate>17/05/2012 12:00:00 AM</pubDate>
+        <pubDate>May 17, 2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/05/17/product-types.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -3871,7 +3873,7 @@ public class Test
         <title>Design By Contract Talk</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/05/01/design-by-contract.html</link>
-        <pubDate>01/05/2012 12:00:00 AM</pubDate>
+        <pubDate>May 1, 2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/05/01/design-by-contract.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -3916,7 +3918,7 @@ public class Test
         <title>OO is anti-modular</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/02/16/oo-is-anti-modular.html</link>
-        <pubDate>16/02/2012 12:00:00 AM</pubDate>
+        <pubDate>Feb 16, 2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/02/16/oo-is-anti-modular.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -4029,7 +4031,7 @@ public class Test
         <title>Quality Attributes</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/02/15/quality-attributes.html</link>
-        <pubDate>15/02/2012 12:00:00 AM</pubDate>
+        <pubDate>Feb 15, 2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/02/15/quality-attributes.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -4624,7 +4626,7 @@ with access to:&lt;/p&gt;
         <title>Java Pain Points</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/02/01/java-pain-points.html</link>
-        <pubDate>01/02/2012 12:00:00 AM</pubDate>
+        <pubDate>Feb 1, 2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/02/01/java-pain-points.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -4956,7 +4958,7 @@ public class DoublePrecision {
         <title>Edsger Dijkstra</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/01/30/dijkstra.html</link>
-        <pubDate>30/01/2012 12:00:00 AM</pubDate>
+        <pubDate>Jan 30, 2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/01/30/dijkstra.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -5083,7 +5085,7 @@ I mean, if 10 years from now, when you are doing something quick and dirty, you 
         <title>Making the Case for Organisational Improvement</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/01/30/organisational-improvement.html</link>
-        <pubDate>30/01/2012 12:00:00 AM</pubDate>
+        <pubDate>Jan 30, 2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/01/30/organisational-improvement.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -5272,7 +5274,7 @@ I mean, if 10 years from now, when you are doing something quick and dirty, you 
         <title>Bugs vs Defects</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/01/28/bugs-vs-defects.html</link>
-        <pubDate>28/01/2012 12:00:00 AM</pubDate>
+        <pubDate>Jan 28, 2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/01/28/bugs-vs-defects.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -5319,7 +5321,7 @@ a : imperfect in form or function : faulty, &quot;a defective pane of glass&quot
         <title>Fast Software Sizing</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/01/02/software-estimation.html</link>
-        <pubDate>02/01/2012 12:00:00 AM</pubDate>
+        <pubDate>Jan 2, 2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/01/02/software-estimation.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -5486,7 +5488,7 @@ a : imperfect in form or function : faulty, &quot;a defective pane of glass&quot
         <title>Initial Test</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2011/10/19/test.html</link>
-        <pubDate>19/10/2011 12:00:00 AM</pubDate>
+        <pubDate>Oct 19, 2011 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2011/10/19/test.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
