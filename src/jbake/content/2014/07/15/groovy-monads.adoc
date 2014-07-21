@@ -2,23 +2,23 @@
 Mark Perry
 2014-07-15
 :jbake-type: post
-:jbake-tags: groovy, monad, functional programming, functor, kind, higher-order type, typeclass
+:jbake-tags: groovy, monad, functional programming, functor, kind, higher-order type, typeclass, applicative
 :jbake-status: published
 
-In the last two posts, I have discussed how to implement Functors and Applicatives in Groovy.  This post moves onto the next related topic of Monads.
+In the last two posts, I have discussed how to implement functors and applicatives in Groovy.  This post discusses the related topic of monads.
 
-Before we start, let's review the essence of the differences between these three concepts.  The primary method for these classes are _map_, _apply_ and _flatMap_ respectively.
+Before we start, let's review the essence of the differences between these three concepts.  The primary method for functors, applicatives and monads are _map_, _apply_ and _flatMap_ respectively.
 
 .Types used for Functor, Applicative and Monad
 [width="60%",frame="topbot",options="header,footer"]
 |=======
-| Class | Method | Argument | Argument | Result |
+| Class | Primary Method | Argument | Argument | Result |
 | Functor<T<_>> | map | T<A> | F<A, B> | T<B> |
 | Applicative<T<_>> | apply | T<A> | T<F<A, B>> | T<B> |
 | Monad<T<_>> | flatMap | T<A> | F<A, T<B>> | T<B> |
 |=======
 
-In the table above, I have used invalid syntax to represent the class to indicate that Functor, Applicative and Monad all take a single generic type argument.  This generic type is itself generic with a single type argument.  In Groovy, we make do with a lack of higher order types and represent the class without the <_> component, e.g. Functor<T> <<3>>.
+In the table above, I have used invalid syntax to represent the class to indicate that Functor, Applicative and Monad all take a single generic type argument.  The type argument itself takes a single type argument.  In Groovy, we make do with a lack of higher order types and represent the class without the <_> component, e.g. Functor<T> <<3>>.
 
 We deduce that the differences between the classes in the table are:
 
@@ -42,7 +42,7 @@ abstract class Monad<M> extends Applicative<M> {
 }
 ----
 
-As we have done previously for functors and applicatives, let's create concrete monads for _java.util.List_ and _fj.data.Option_ (we could have done similarly for _java.util.Optional_):
+As we have done previously for functors and applicatives, let's create concrete monads for _java.util.List_ and _fj.data.Option_ (we could have done similarly for _java.util.Optional_) to build intuition on how these work.
 
 [source,groovy,numbered]
 ----
@@ -69,6 +69,7 @@ class ListMonad extends Monad<List> {
 ----
 @TypeChecked
 class OptionMonad extends Monad<Option> {
+
     @Override
     def <A> Option<A> unit(A a) {
         Option.some(a)
