@@ -1,12 +1,15 @@
 
 buildscript {
     repositories {
-//        mavenLocal() // needed to use the local JBake 2.3.0 build
+        mavenLocal()
+        maven {
+            url "https://oss.sonatype.org/content/groups/public"
+        }
         jcenter()
     }
 
     dependencies {
-        classpath "me.champeau.gradle:jbake-gradle-plugin:0.2"
+        classpath "me.champeau.gradle:jbake-gradle-plugin:0.2.1-SNAPSHOT"
 //        classpath 'me.champeau.gradle:jbake-gradle-plugin:0.1'
         classpath 'org.asciidoctor:asciidoctor-java-integration:0.1.4'
         classpath 'org.freemarker:freemarker:2.3.19'
@@ -19,15 +22,22 @@ buildscript {
     }
 }
 
+apply plugin: "groovy"
 apply plugin: 'me.champeau.jbake'
+
 //apply plugin: 'jbake'
 
-task clean(type: Delete) {
+task newClean(type: Delete) {
   delete "$projectDir/build"
 }
 
 repositories {
+
 	mavenCentral()
+    maven {
+        url "https://oss.sonatype.org/content/groups/public"
+
+    }
 }
 
 configurations {
@@ -35,6 +45,10 @@ configurations {
 }
 
 dependencies {
+//    compile localGroovy()
+    compile "org.codehaus.groovy:groovy-all:2.3.+"
+    compile "org.functionaljava:functionaljava:4.+"
+
 	server "org.jbake:jbake-core:2.3.0"
     server "org.eclipse.jetty:jetty-server:8.1.+"
 }
