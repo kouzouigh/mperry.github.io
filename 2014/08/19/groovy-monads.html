@@ -3,7 +3,7 @@
   <head>
     <title>
     Software Matters!
-        - Groovy Functors
+        - Groovy Monads
     </title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -66,159 +66,157 @@
       <div class="row">
         <div class="col-md-12">
           <article>
-            <div class="page-header"><h1>Groovy Functors</h1>
+            <div class="page-header"><h1>Groovy Monads</h1>
               <ol class="breadcrumb tagsbar">
-                <li><a href="/tags/.html"></a></li>
+                <li><a href="/tags/groovy.html">groovy</a></li>
+                <li><a href="/tags/monad.html">monad</a></li>
+                <li><a href="/tags/functional-programming.html">functional-programming</a></li>
+                <li><a href="/tags/functor.html">functor</a></li>
+                <li><a href="/tags/kind.html">kind</a></li>
+                <li><a href="/tags/higher-order-type.html">higher-order-type</a></li>
+                <li><a href="/tags/typeclass.html">typeclass</a></li>
+                <li><a href="/tags/applicative.html">applicative</a></li>
               </ol>
             </div>
           <p class="post-meta">
-            <i class="fa fa-calendar"></i>&nbsp;01 July 2014&nbsp;&nbsp;
+            <i class="fa fa-calendar"></i>&nbsp;15 July 2014&nbsp;&nbsp;
             <i class="fa fa-user"></i>&nbsp;Mark Perry&nbsp;&nbsp;
-              <i class="fa fa-comment"></i>&nbsp;<span class="badge"><a href="http://mperry.github.io2014/07/01/groovy-functors.html#disqus_thread"></a></span>
+              <i class="fa fa-comment"></i>&nbsp;<span class="badge"><a href="http://mperry.github.io2014/08/19/groovy-monads.html#disqus_thread"></a></span>
           </p>
               <p><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Groovy and Java both provide abstractions that allow programmers to transform values within that abstraction.  For example, Groovy provides the collect method on Collections and Java 8 provides the map method on the Stream class.  This pattern is more widely applicable than these classes, however the simple Java type system prevents this idea from being expressed within Java.</p>
+<p>In the last two posts, I have discussed how to implement functors and applicatives in Groovy.  This post discusses the related topic of monads.</p>
 </div>
 <div class="paragraph">
-<p>If Java allowed this idea to be expressed it might be expressed as:</p>
+<p>Before we start, let&#8217;s review the essence of the differences between these three concepts.  The primary method for functors, applicatives and monads are <em>map</em>, <em>apply</em> and <em>flatMap</em> respectively.</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint linenums java language-java"><code>public interface Mappable&lt;M&lt;Z&gt;&gt; {
-	public M&lt;B&gt; map(M&lt;A&gt; m, F&lt;A, B&gt; f);
-}</code></pre>
+<table class="tableblock frame-topbot grid-all" style="width:60%; ">
+<caption class="title">Table 1. Types used for Functor, Applicative and Monad</caption>
+<colgroup>
+<col style="width:16%;">
+<col style="width:16%;">
+<col style="width:16%;">
+<col style="width:16%;">
+<col style="width:16%;">
+<col style="width:16%;"> 
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Class</th>
+<th class="tableblock halign-left valign-top">Primary Method</th>
+<th class="tableblock halign-left valign-top">Argument</th>
+<th class="tableblock halign-left valign-top">Argument</th>
+<th class="tableblock halign-left valign-top">Result</th>
+<th class="tableblock halign-left valign-top"></th>
+</tr>
+</thead>
+<tfoot>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Monad&lt;T&lt;_&gt;&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">flatMap</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">T&lt;A&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">F&lt;A, T&lt;B&gt;&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">T&lt;B&gt;</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tfoot>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Functor&lt;T&lt;_&gt;&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">map</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">T&lt;A&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">F&lt;A, B&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">T&lt;B&gt;</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Applicative&lt;T&lt;_&gt;&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">apply</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">T&lt;A&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">T&lt;F&lt;A, B&gt;&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">T&lt;B&gt;</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+
+<div class="paragraph">
+<p>In the table above, I have used invalid syntax to represent the class to indicate that Functor, Applicative and Monad all take a single generic type argument.  The type argument itself takes a single type argument.  In Groovy, we make do with a lack of higher order types and represent the class without the &lt;_&gt; component, e.g. Functor&lt;T&gt; <a href="#3">[3]</a>.</p>
 </div>
+<div class="paragraph">
+<p>We deduce that the differences between the classes in the table are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Functor: apply a function (<em>F&lt;A, B&gt;</em>) to a contextual value using <em>map</em>.</p>
+</li>
+<li>
+<p>Applicative: apply a contextual function (<em>T&lt;F&lt;A, B&gt;&gt;</em>) to a contextual value using <em>apply</em>.</p>
+</li>
+<li>
+<p>Monad: apply a function that returns a contextual value (<em>F&lt;A, T&lt;B&gt;&gt;</em>) to a contextual value using <em>flatMap</em>.</p>
+</li>
+</ul>
 </div>
 <!-- more -->
 <div class="paragraph">
-<p>Here the Mappable interface takes a single generic type parameter M.  The generic type M itself takes a single generic type parameter Z.  However Java does not allow this because Java does not have kinds <a href="#2">[2]</a> that express the constraint that a generic type parameter requires a generic type parameter.  The Java compiler rejects this code with the error message:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>Error:(6, 28) java: &gt; expected
-Error:(6, 30) java: &lt;identifier&gt; expected
-Error:(6, 32) java: ';' expected</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You might try to change the definition of Mappable to remove the type parameter Z:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint linenums java language-java"><code>public interface Mappable2&lt;M&gt; {
-	public M&lt;B&gt; map(M&lt;A&gt; m, F&lt;A, B&gt; f);
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The compiler rejects this too because a type parameter cannot be applied to the generic type M:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>Error:(10, 32) java: unexpected type
-  required: class
-  found:    type parameter M
-Error:(10, 23) java: unexpected type
-  required: class
-  found:    type parameter M</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>One might simplify this definition further by removing the type parameter to M in map:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint linenums java language-java"><code>public interface Mappable3&lt;M&gt; {
-	public &lt;A, B&gt; M map(M m, F&lt;A, B&gt; f);
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This interface can then be implemented (below), losing much of the generic type information:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint linenums java language-java"><code>public class MappableList implements Mappable3&lt;List&gt; {
-	@Override
-	public &lt;A, B&gt; List map(List list, F&lt;A, B&gt; f) {
-		return null;
-	}
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You could try to keep the type information on the map method:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint linenums java language-java"><code>public class MappableList implements Mappable3&lt;List&gt; {
-	@Override
-	public &lt;A, B&gt; List&lt;B&gt; map(List&lt;A&gt; list, F&lt;A, B&gt; f) {
-		return null;
-	}
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>But the compiler rejects this as not implementing the map method in Mappable3 as the compiler error shows:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>Error:(9, 8) java: MappableList is not abstract and does not override abstract method &lt;A,B&gt;map(java.util.List,fj.F&lt;A,B&gt;) in com.github.mperry.Mappable3
-Error:(11, 9) java: method does not override or implement a method from a supertype</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Groovy allows us to get closer to what we want to express.  Here I use the Functor interface as a synonym for the Mappable interface above.  The term Functor is already established to represent the Mappable interface (inspired from category theory and Haskell).  Groovy 2.3.3 allows us to define the Functor interface as:</p>
+<p>We define a Monad class containing two abstract methods <em>unit</em> and <em>flatMap</em>.  Monad inherits from the Applicative class, in practice, the two abstract methods <em>unit</em> and <em>flatMap</em> are sufficient to implement Functor&#8217;s <em>map</em> method and Applicative&#8217;s <em>pure</em> and <em>apply</em> methods.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint linenums groovy language-groovy"><code>@TypeChecked
-interface Functor&lt;T&gt; {
-    abstract &lt;A, B&gt; T&lt;B&gt; map(F&lt;A, B&gt; f, T&lt;A&gt; fa)
+abstract class Monad&lt;M&gt; extends Applicative&lt;M&gt; {
+    abstract &lt;B&gt; M&lt;B&gt; unit(B b)
+    abstract &lt;A, B&gt; M&lt;B&gt; flatMap(M&lt;A&gt; ma, F&lt;A, M&lt;B&gt;&gt; f)
+    // other concrete methods omitted for clarity
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Significantly, the Groovy compiler (incorrectly) allows the generic type parameter to be applied to the type T, e.g. T&lt;A&gt;.</p>
-</div>
-<div class="paragraph">
-<p>Using Intellij to implement the methods of a class implementing the Functor interface allows us to define a List functor to be mapped over:</p>
+<p>As we have done previously for functors and applicatives, let&#8217;s create concrete monads for <em>java.util.List</em> and <em>fj.data.Option</em> (we could have done similarly for <em>java.util.Optional</em>) to build intuition on how these work.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint linenums groovy language-groovy"><code>@TypeChecked
-class ListFunctor implements Functor&lt;List&gt; {
-	@Override
-	def &lt;A, B&gt; List map(F&lt;A, B&gt; f, List fa) {
-		// TODO
-		null
-	}
+class ListMonad extends Monad&lt;List&gt; {
+
+    @Override
+    def &lt;A&gt; List&lt;A&gt; unit(A a) {
+        [a]
+    }
+
+    @Override
+    def &lt;A, B&gt; List&lt;B&gt; flatMap(List&lt;A&gt; list, F&lt;A, List&lt;B&gt;&gt; f) {
+        def result = new LinkedList&lt;B&gt;()
+        for (A a: list) {
+            result.addAll(f.f(a))
+        }
+        result
+    }
 }</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>The Groovy compiler, however, also allows type parameters to be added to List in the definition of map, whilst also overriding the definition of Functor&#8217;s map (unlike the Java compiler above):</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint linenums groovy language-groovy"><code>@TypeChecked
-class ListFunctor implements Functor&lt;List&gt; {
-	@Override
-	def &lt;A, B&gt; List&lt;B&gt; map(F&lt;A, B&gt; f, List&lt;A&gt; list)
-		// TODO
-		null
-	}
+class OptionMonad extends Monad&lt;Option&gt; {
+
+    @Override
+    def &lt;A&gt; Option&lt;A&gt; unit(A a) {
+        Option.some(a)
+    }
+
+    @Override
+    def &lt;A, B&gt; Option&lt;B&gt; flatMap(Option&lt;A&gt; o, F&lt;A, Option&lt;B&gt;&gt; f) {
+        o.isSome() ? f.f(o.some()) : Option.&lt;B&gt;none()
+    }
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This allows client code to map over lists in a reusable type safe way.  But this does not get us much more than what using the collect method of List gives us (it gives type safety which Groovy Closures do not).  It has shown that Groovy has a workaround for Java&#8217;s lack of kinds (aka higher order types) as implemented in Haskell, Scala, ML and various dependently typed languages (and others).</p>
-</div>
-<div class="paragraph">
-<p>The presence of this abstraction allows us to build further abstractions based on Functor, in particular Applicative and Monad.  I have implemented this in FunctionalGroovy <a href="#1">[1]</a> and will be exploring this further in the next blog post.</p>
+<p>Conclusion</p>
 </div>
 </div>
 </div>
@@ -231,13 +229,10 @@ class ListFunctor implements Functor&lt;List&gt; {
 <p><a id="1"></a>[1] FunctionalGroovy, <a href="https://github.com/mperry/functionalgroovy">https://github.com/mperry/functionalgroovy</a></p>
 </li>
 <li>
-<p><a id="2"></a>[2] Kinds (higher order types), <a href="http://en.wikipedia.org/wiki/Kind_(type_theory)">http://en.wikipedia.org/wiki/Kind_(type_theory)</a></p>
+<p><a id="2"></a>[2] Functors, Applicatives, And Monads In Pictures, <a href="http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html">http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html</a></p>
 </li>
 <li>
-<p><a id="3"></a>[3] Scalaz Functor definition, <a href="https://github.com/scalaz/scalaz/blob/v7.0.1/core/src/main/scala/scalaz/Functor.scala">https://github.com/scalaz/scalaz/blob/v7.0.1/core/src/main/scala/scalaz/Functor.scala</a></p>
-</li>
-<li>
-<p><a id="4"></a>[4] Haskell Functor definition, <a href="https://hackage.haskell.org/package/base-4.7.0.0/docs/Data-Functor.html">https://hackage.haskell.org/package/base-4.7.0.0/docs/Data-Functor.html</a></p>
+<p><a id="3"></a>[3] Groovy Functors, <a href="http://mperry.github.io/2014/07/01/groovy-functors.html">http://mperry.github.io/2014/07/01/groovy-functors.html</a>.</p>
 </li>
 </ul>
 </div>
@@ -245,11 +240,11 @@ class ListFunctor implements Functor&lt;List&gt; {
 </div></p>
       <div class="share">
   <!-- Facebook -->
-          <a href="http://www.facebook.com/sharer.php?u=http://mperry.github.io2014/07/01/groovy-functors.html" target="_blank"><img src="/img/sharebuttons/facebook.png" alt="Facebook" /></a>
+          <a href="http://www.facebook.com/sharer.php?u=http://mperry.github.io2014/08/19/groovy-monads.html" target="_blank"><img src="/img/sharebuttons/facebook.png" alt="Facebook" /></a>
   <!-- Google+ -->
-          <a href="https://plus.google.com/share?url=http://mperry.github.io2014/07/01/groovy-functors.html" target="_blank"><img src="/img/sharebuttons/google_plus.png" alt="Google" /></a>
+          <a href="https://plus.google.com/share?url=http://mperry.github.io2014/08/19/groovy-monads.html" target="_blank"><img src="/img/sharebuttons/google_plus.png" alt="Google" /></a>
   <!-- Twitter -->
-          <a href="http://twitter.com/share?url=http://mperry.github.io2014/07/01/groovy-functors.html&text=Groovy Functors mperry.github.io2014/07/01/groovy-functors.html" target="_blank"><img src="/img/sharebuttons/twitter.png" alt="Twitter" /></a>
+          <a href="http://twitter.com/share?url=http://mperry.github.io2014/08/19/groovy-monads.html&text=Groovy Monads mperry.github.io2014/08/19/groovy-monads.html" target="_blank"><img src="/img/sharebuttons/twitter.png" alt="Twitter" /></a>
       </div>
 <hr>
 <section class="comments">

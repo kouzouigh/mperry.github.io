@@ -6,14 +6,178 @@
     <atom:link href="http://mperry.github.io/feed.xml" rel="self" type="application/rss+xml" />
     <description>Thoughts on the discipline of software engineering</description>
     <language>en</language>
-    <pubDate>Jul 7, 2014 8:25:32 AM</pubDate>
-    <lastBuildDate>Jul 7, 2014 8:25:32 AM</lastBuildDate>
+    <pubDate>27/08/2014 10:11:56 PM</pubDate>
+    <lastBuildDate>27/08/2014 10:11:56 PM</lastBuildDate>
 
+      <item>
+        <title>Groovy Monads</title>
+        <author>Mark Perry</author>
+        <link>http://mperry.github.io2014/08/19/groovy-monads.html</link>
+        <pubDate>15/07/2014 12:00:00 AM</pubDate>
+        <guid isPermaLink="false">2014/08/19/groovy-monads.html</guid>
+        <description>
+          &lt;div id=&quot;preamble&quot;&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In the last two posts, I have discussed how to implement functors and applicatives in Groovy.  This post discusses the related topic of monads.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Before we start, let&amp;#8217;s review the essence of the differences between these three concepts.  The primary method for functors, applicatives and monads are &lt;em&gt;map&lt;/em&gt;, &lt;em&gt;apply&lt;/em&gt; and &lt;em&gt;flatMap&lt;/em&gt; respectively.&lt;/p&gt;
+&lt;/div&gt;
+&lt;table class=&quot;tableblock frame-topbot grid-all&quot; style=&quot;width:60%; &quot;&gt;
+&lt;caption class=&quot;title&quot;&gt;Table 1. Types used for Functor, Applicative and Monad&lt;/caption&gt;
+&lt;colgroup&gt;
+&lt;col style=&quot;width:16%;&quot;&gt;
+&lt;col style=&quot;width:16%;&quot;&gt;
+&lt;col style=&quot;width:16%;&quot;&gt;
+&lt;col style=&quot;width:16%;&quot;&gt;
+&lt;col style=&quot;width:16%;&quot;&gt;
+&lt;col style=&quot;width:16%;&quot;&gt; 
+&lt;/colgroup&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th class=&quot;tableblock halign-left valign-top&quot;&gt;Class&lt;/th&gt;
+&lt;th class=&quot;tableblock halign-left valign-top&quot;&gt;Primary Method&lt;/th&gt;
+&lt;th class=&quot;tableblock halign-left valign-top&quot;&gt;Argument&lt;/th&gt;
+&lt;th class=&quot;tableblock halign-left valign-top&quot;&gt;Argument&lt;/th&gt;
+&lt;th class=&quot;tableblock halign-left valign-top&quot;&gt;Result&lt;/th&gt;
+&lt;th class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tfoot&gt;
+&lt;tr&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;Monad&amp;lt;T&amp;lt;_&amp;gt;&amp;gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;flatMap&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;T&amp;lt;A&amp;gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;F&amp;lt;A, T&amp;lt;B&amp;gt;&amp;gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;T&amp;lt;B&amp;gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tfoot&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;Functor&amp;lt;T&amp;lt;_&amp;gt;&amp;gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;map&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;T&amp;lt;A&amp;gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;F&amp;lt;A, B&amp;gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;T&amp;lt;B&amp;gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;Applicative&amp;lt;T&amp;lt;_&amp;gt;&amp;gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;apply&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;T&amp;lt;A&amp;gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;T&amp;lt;F&amp;lt;A, B&amp;gt;&amp;gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;p class=&quot;tableblock&quot;&gt;T&amp;lt;B&amp;gt;&lt;/p&gt;&lt;/td&gt;
+&lt;td class=&quot;tableblock halign-left valign-top&quot;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;In the table above, I have used invalid syntax to represent the class to indicate that Functor, Applicative and Monad all take a single generic type argument.  The type argument itself takes a single type argument.  In Groovy, we make do with a lack of higher order types and represent the class without the &amp;lt;_&amp;gt; component, e.g. Functor&amp;lt;T&amp;gt; &lt;a href=&quot;#3&quot;&gt;[3]&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We deduce that the differences between the classes in the table are:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;ulist&quot;&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Functor: apply a function (&lt;em&gt;F&amp;lt;A, B&amp;gt;&lt;/em&gt;) to a contextual value using &lt;em&gt;map&lt;/em&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Applicative: apply a contextual function (&lt;em&gt;T&amp;lt;F&amp;lt;A, B&amp;gt;&amp;gt;&lt;/em&gt;) to a contextual value using &lt;em&gt;apply&lt;/em&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Monad: apply a function that returns a contextual value (&lt;em&gt;F&amp;lt;A, T&amp;lt;B&amp;gt;&amp;gt;&lt;/em&gt;) to a contextual value using &lt;em&gt;flatMap&lt;/em&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;!-- more --&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;We define a Monad class containing two abstract methods &lt;em&gt;unit&lt;/em&gt; and &lt;em&gt;flatMap&lt;/em&gt;.  Monad inherits from the Applicative class, in practice, the two abstract methods &lt;em&gt;unit&lt;/em&gt; and &lt;em&gt;flatMap&lt;/em&gt; are sufficient to implement Functor&amp;#8217;s &lt;em&gt;map&lt;/em&gt; method and Applicative&amp;#8217;s &lt;em&gt;pure&lt;/em&gt; and &lt;em&gt;apply&lt;/em&gt; methods.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint linenums groovy language-groovy&quot;&gt;&lt;code&gt;@TypeChecked
+abstract class Monad&amp;lt;M&amp;gt; extends Applicative&amp;lt;M&amp;gt; {
+    abstract &amp;lt;B&amp;gt; M&amp;lt;B&amp;gt; unit(B b)
+    abstract &amp;lt;A, B&amp;gt; M&amp;lt;B&amp;gt; flatMap(M&amp;lt;A&amp;gt; ma, F&amp;lt;A, M&amp;lt;B&amp;gt;&amp;gt; f)
+    // other concrete methods omitted for clarity
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;As we have done previously for functors and applicatives, let&amp;#8217;s create concrete monads for &lt;em&gt;java.util.List&lt;/em&gt; and &lt;em&gt;fj.data.Option&lt;/em&gt; (we could have done similarly for &lt;em&gt;java.util.Optional&lt;/em&gt;) to build intuition on how these work.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint linenums groovy language-groovy&quot;&gt;&lt;code&gt;@TypeChecked
+class ListMonad extends Monad&amp;lt;List&amp;gt; {
+
+    @Override
+    def &amp;lt;A&amp;gt; List&amp;lt;A&amp;gt; unit(A a) {
+        [a]
+    }
+
+    @Override
+    def &amp;lt;A, B&amp;gt; List&amp;lt;B&amp;gt; flatMap(List&amp;lt;A&amp;gt; list, F&amp;lt;A, List&amp;lt;B&amp;gt;&amp;gt; f) {
+        def result = new LinkedList&amp;lt;B&amp;gt;()
+        for (A a: list) {
+            result.addAll(f.f(a))
+        }
+        result
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;listingblock&quot;&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;pre class=&quot;prettyprint linenums groovy language-groovy&quot;&gt;&lt;code&gt;@TypeChecked
+class OptionMonad extends Monad&amp;lt;Option&amp;gt; {
+
+    @Override
+    def &amp;lt;A&amp;gt; Option&amp;lt;A&amp;gt; unit(A a) {
+        Option.some(a)
+    }
+
+    @Override
+    def &amp;lt;A, B&amp;gt; Option&amp;lt;B&amp;gt; flatMap(Option&amp;lt;A&amp;gt; o, F&amp;lt;A, Option&amp;lt;B&amp;gt;&amp;gt; f) {
+        o.isSome() ? f.f(o.some()) : Option.&amp;lt;B&amp;gt;none()
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;Conclusion&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_bibliography&quot;&gt;Bibliography&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;ulist bibliography&quot;&gt;
+&lt;ul class=&quot;bibliography&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a id=&quot;1&quot;&gt;&lt;/a&gt;[1] FunctionalGroovy, &lt;a href=&quot;https://github.com/mperry/functionalgroovy&quot;&gt;https://github.com/mperry/functionalgroovy&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a id=&quot;2&quot;&gt;&lt;/a&gt;[2] Functors, Applicatives, And Monads In Pictures, &lt;a href=&quot;http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html&quot;&gt;http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a id=&quot;3&quot;&gt;&lt;/a&gt;[3] Groovy Functors, &lt;a href=&quot;http://mperry.github.io/2014/07/01/groovy-functors.html&quot;&gt;http://mperry.github.io/2014/07/01/groovy-functors.html&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+        </description>
+      </item>
       <item>
         <title>Groovy Applicatives</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2014/07/02/groovy-applicatives.html</link>
-        <pubDate>Jul 2, 2014 12:00:00 AM</pubDate>
+        <pubDate>02/07/2014 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2014/07/02/groovy-applicatives.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -337,7 +501,7 @@ where &amp;lt;*&amp;gt; is the apply method and (.) is function composition.&lt;
         <title>Groovy Functors</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2014/07/01/groovy-functors.html</link>
-        <pubDate>Jul 1, 2014 12:00:00 AM</pubDate>
+        <pubDate>01/07/2014 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2014/07/01/groovy-functors.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -513,7 +677,7 @@ class ListFunctor implements Functor&amp;lt;List&amp;gt; {
         <title>Converting to JBake</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2014/06/16/converting-to-jbake.html</link>
-        <pubDate>Jun 16, 2014 12:00:00 AM</pubDate>
+        <pubDate>16/06/2014 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2014/06/16/converting-to-jbake.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -537,7 +701,7 @@ Mark&lt;/p&gt;
         <title>Folds and Unfolds</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2014/01/21/folds-and-unfolds.html</link>
-        <pubDate>Jan 21, 2014 12:00:00 AM</pubDate>
+        <pubDate>21/01/2014 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2014/01/21/folds-and-unfolds.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -793,7 +957,7 @@ static &amp;lt;A, B&amp;gt; List&amp;lt;A&amp;gt; unfold(B b, Closure&amp;lt;Opt
         <title>Referentially Transparent Input/Output in Groovy</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2014/01/03/referentially-transparent-io.html</link>
-        <pubDate>Jan 3, 2014 12:00:00 AM</pubDate>
+        <pubDate>03/01/2014 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2014/01/03/referentially-transparent-io.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -1017,7 +1181,7 @@ class IOConstants {
 &lt;/div&gt;
 &lt;div class=&quot;listingblock&quot;&gt;
 &lt;div class=&quot;content&quot;&gt;
-&lt;pre class=&quot;prettyprint linenums groovy language-groovy&quot;&gt;&lt;code&gt;    public &amp;lt;B&amp;gt; SimpleIO&amp;lt;B&amp;gt; append(final SimpleIO&amp;lt;B&amp;gt; io) {
+&lt;pre class=&quot;prettyprint linenums java language-java&quot;&gt;&lt;code&gt;    public &amp;lt;B&amp;gt; SimpleIO&amp;lt;B&amp;gt; append(final SimpleIO&amp;lt;B&amp;gt; io) {
         return new SimpleIO&amp;lt;B&amp;gt;() {
             @Override
             public B run() {
@@ -1260,7 +1424,7 @@ class SimpleIODemoFunctional {
         <title>Specification Based Testing</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2013/12/09/specification-based-testing.html</link>
-        <pubDate>Dec 9, 2013 12:00:00 AM</pubDate>
+        <pubDate>09/12/2013 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2013/12/09/specification-based-testing.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -1697,7 +1861,7 @@ class TotalStack&amp;lt;T&amp;gt; {
         <title>Groovy Null Handling Using Bind, Comprehensions and Lift</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2013/07/28/groovy-null-handling.html</link>
-        <pubDate>Jul 28, 2013 12:00:00 AM</pubDate>
+        <pubDate>28/07/2013 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2013/07/28/groovy-null-handling.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -2021,7 +2185,7 @@ Option&amp;lt;B&amp;gt; map(F&amp;lt;A, B&amp;gt; f)&lt;/code&gt;&lt;/pre&gt;
         <title>Early Software Estimation</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/11/12/early-software-estimation.html</link>
-        <pubDate>Nov 12, 2012 12:00:00 AM</pubDate>
+        <pubDate>12/11/2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/11/12/early-software-estimation.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -2342,7 +2506,7 @@ Option&amp;lt;B&amp;gt; map(F&amp;lt;A, B&amp;gt; f)&lt;/code&gt;&lt;/pre&gt;
         <title>Project Eueler in Groovy</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/11/10/groovy-project-euler.html</link>
-        <pubDate>Nov 10, 2012 12:00:00 AM</pubDate>
+        <pubDate>10/11/2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/11/10/groovy-project-euler.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -2369,7 +2533,7 @@ Option&amp;lt;B&amp;gt; map(F&amp;lt;A, B&amp;gt; f)&lt;/code&gt;&lt;/pre&gt;
         <title>Introduction to Dependent Types</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/11/09/dependent-types.html</link>
-        <pubDate>Nov 9, 2012 12:00:00 AM</pubDate>
+        <pubDate>09/11/2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/11/09/dependent-types.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -2459,7 +2623,7 @@ Option&amp;lt;B&amp;gt; map(F&amp;lt;A, B&amp;gt; f)&lt;/code&gt;&lt;/pre&gt;
         <title>Software Metrics</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/08/18/software-metrics.html</link>
-        <pubDate>Aug 18, 2012 12:00:00 AM</pubDate>
+        <pubDate>18/08/2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/08/18/software-metrics.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -2767,7 +2931,7 @@ Option&amp;lt;B&amp;gt; map(F&amp;lt;A, B&amp;gt; f)&lt;/code&gt;&lt;/pre&gt;
         <title>New Leadership Competencies</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/08/06/leadership-competencies.html</link>
-        <pubDate>Aug 6, 2012 12:00:00 AM</pubDate>
+        <pubDate>06/08/2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/08/06/leadership-competencies.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -2890,7 +3054,7 @@ Option&amp;lt;B&amp;gt; map(F&amp;lt;A, B&amp;gt; f)&lt;/code&gt;&lt;/pre&gt;
         <title>The Difficulty of Software Engineering</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/07/26/software-engineering-is-hard.html</link>
-        <pubDate>Jul 26, 2012 12:00:00 AM</pubDate>
+        <pubDate>26/07/2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/07/26/software-engineering-is-hard.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -3139,7 +3303,7 @@ Option&amp;lt;B&amp;gt; map(F&amp;lt;A, B&amp;gt; f)&lt;/code&gt;&lt;/pre&gt;
         <title>Principles of Team Motivation</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/07/12/motivation.html</link>
-        <pubDate>Jul 12, 2012 12:00:00 AM</pubDate>
+        <pubDate>12/07/2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/07/12/motivation.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -3459,7 +3623,7 @@ Option&amp;lt;B&amp;gt; map(F&amp;lt;A, B&amp;gt; f)&lt;/code&gt;&lt;/pre&gt;
         <title>The Groovy Type System</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/06/15/groovy-optional-typing.html</link>
-        <pubDate>Jun 15, 2012 12:00:00 AM</pubDate>
+        <pubDate>15/06/2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/06/15/groovy-optional-typing.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -3561,7 +3725,7 @@ public class Test
         <title>State of Software Quality</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/06/07/state-of-software-quality.html</link>
-        <pubDate>Jun 7, 2012 12:00:00 AM</pubDate>
+        <pubDate>07/06/2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/06/07/state-of-software-quality.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -3609,7 +3773,7 @@ public class Test
         <title>Development Activities Effort</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/05/31/development-activities.html</link>
-        <pubDate>May 31, 2012 12:00:00 AM</pubDate>
+        <pubDate>31/05/2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/05/31/development-activities.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -3642,7 +3806,7 @@ public class Test
         <title>Sum Types</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/05/18/sum-types.html</link>
-        <pubDate>May 18, 2012 12:00:00 AM</pubDate>
+        <pubDate>18/05/2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/05/18/sum-types.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -3749,7 +3913,7 @@ public class Test
         <title>Product Types</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/05/17/product-types.html</link>
-        <pubDate>May 17, 2012 12:00:00 AM</pubDate>
+        <pubDate>17/05/2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/05/17/product-types.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -3873,7 +4037,7 @@ public class Test
         <title>Design By Contract Talk</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/05/01/design-by-contract.html</link>
-        <pubDate>May 1, 2012 12:00:00 AM</pubDate>
+        <pubDate>01/05/2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/05/01/design-by-contract.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -3918,7 +4082,7 @@ public class Test
         <title>OO is anti-modular</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/02/16/oo-is-anti-modular.html</link>
-        <pubDate>Feb 16, 2012 12:00:00 AM</pubDate>
+        <pubDate>16/02/2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/02/16/oo-is-anti-modular.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -4031,7 +4195,7 @@ public class Test
         <title>Quality Attributes</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/02/15/quality-attributes.html</link>
-        <pubDate>Feb 15, 2012 12:00:00 AM</pubDate>
+        <pubDate>15/02/2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/02/15/quality-attributes.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -4626,7 +4790,7 @@ with access to:&lt;/p&gt;
         <title>Java Pain Points</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/02/01/java-pain-points.html</link>
-        <pubDate>Feb 1, 2012 12:00:00 AM</pubDate>
+        <pubDate>01/02/2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/02/01/java-pain-points.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -4958,7 +5122,7 @@ public class DoublePrecision {
         <title>Edsger Dijkstra</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/01/30/dijkstra.html</link>
-        <pubDate>Jan 30, 2012 12:00:00 AM</pubDate>
+        <pubDate>30/01/2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/01/30/dijkstra.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -5085,7 +5249,7 @@ I mean, if 10 years from now, when you are doing something quick and dirty, you 
         <title>Making the Case for Organisational Improvement</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/01/30/organisational-improvement.html</link>
-        <pubDate>Jan 30, 2012 12:00:00 AM</pubDate>
+        <pubDate>30/01/2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/01/30/organisational-improvement.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -5274,7 +5438,7 @@ I mean, if 10 years from now, when you are doing something quick and dirty, you 
         <title>Bugs vs Defects</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/01/28/bugs-vs-defects.html</link>
-        <pubDate>Jan 28, 2012 12:00:00 AM</pubDate>
+        <pubDate>28/01/2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/01/28/bugs-vs-defects.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -5321,7 +5485,7 @@ a : imperfect in form or function : faulty, &quot;a defective pane of glass&quot
         <title>Fast Software Sizing</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2012/01/02/software-estimation.html</link>
-        <pubDate>Jan 2, 2012 12:00:00 AM</pubDate>
+        <pubDate>02/01/2012 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2012/01/02/software-estimation.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;
@@ -5488,7 +5652,7 @@ a : imperfect in form or function : faulty, &quot;a defective pane of glass&quot
         <title>Initial Test</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io2011/10/19/test.html</link>
-        <pubDate>Oct 19, 2011 12:00:00 AM</pubDate>
+        <pubDate>19/10/2011 12:00:00 AM</pubDate>
         <guid isPermaLink="false">2011/10/19/test.html</guid>
         <description>
           &lt;div id=&quot;preamble&quot;&gt;

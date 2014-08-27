@@ -65,6 +65,94 @@
         <div class="row">
           <div class="col-md-9">
             <article>
+              <h2><a href="2014/08/19/groovy-monads.html">Groovy Monads</a></h2>
+          <p class="post-meta">
+            <i class="fa fa-calendar"></i>&nbsp;15 July 2014&nbsp;&nbsp;
+            <i class="fa fa-user"></i>&nbsp;Mark Perry&nbsp;&nbsp;
+              <i class="fa fa-comment"></i>&nbsp;<span class="badge"><a href="http://mperry.github.io2014/08/19/groovy-monads.html#disqus_thread"></a></span>
+          </p>
+              <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the last two posts, I have discussed how to implement functors and applicatives in Groovy.  This post discusses the related topic of monads.</p>
+</div>
+<div class="paragraph">
+<p>Before we start, let&#8217;s review the essence of the differences between these three concepts.  The primary method for functors, applicatives and monads are <em>map</em>, <em>apply</em> and <em>flatMap</em> respectively.</p>
+</div>
+<table class="tableblock frame-topbot grid-all" style="width:60%; ">
+<caption class="title">Table 1. Types used for Functor, Applicative and Monad</caption>
+<colgroup>
+<col style="width:16%;">
+<col style="width:16%;">
+<col style="width:16%;">
+<col style="width:16%;">
+<col style="width:16%;">
+<col style="width:16%;"> 
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Class</th>
+<th class="tableblock halign-left valign-top">Primary Method</th>
+<th class="tableblock halign-left valign-top">Argument</th>
+<th class="tableblock halign-left valign-top">Argument</th>
+<th class="tableblock halign-left valign-top">Result</th>
+<th class="tableblock halign-left valign-top"></th>
+</tr>
+</thead>
+<tfoot>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Monad&lt;T&lt;_&gt;&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">flatMap</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">T&lt;A&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">F&lt;A, T&lt;B&gt;&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">T&lt;B&gt;</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tfoot>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Functor&lt;T&lt;_&gt;&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">map</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">T&lt;A&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">F&lt;A, B&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">T&lt;B&gt;</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Applicative&lt;T&lt;_&gt;&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">apply</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">T&lt;A&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">T&lt;F&lt;A, B&gt;&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">T&lt;B&gt;</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+
+<div class="paragraph">
+<p>In the table above, I have used invalid syntax to represent the class to indicate that Functor, Applicative and Monad all take a single generic type argument.  The type argument itself takes a single type argument.  In Groovy, we make do with a lack of higher order types and represent the class without the &lt;_&gt; component, e.g. Functor&lt;T&gt; <a href="#3">[3]</a>.</p>
+</div>
+<div class="paragraph">
+<p>We deduce that the differences between the classes in the table are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Functor: apply a function (<em>F&lt;A, B&gt;</em>) to a contextual value using <em>map</em>.</p>
+</li>
+<li>
+<p>Applicative: apply a contextual function (<em>T&lt;F&lt;A, B&gt;&gt;</em>) to a contextual value using <em>apply</em>.</p>
+</li>
+<li>
+<p>Monad: apply a function that returns a contextual value (<em>F&lt;A, T&lt;B&gt;&gt;</em>) to a contextual value using <em>flatMap</em>.</p>
+</li>
+</ul>
+</div>
+
+              <a href="2014/08/19/groovy-monads.html" class="btn btn-success btn-sm read-more">Read <i class="fa fa-arrow-right"></i></a>
+              <br>
+            </article>
+            <article>
               <h2><a href="2014/07/02/groovy-applicatives.html">Groovy Applicatives</a></h2>
           <p class="post-meta">
             <i class="fa fa-calendar"></i>&nbsp;02 July 2014&nbsp;&nbsp;
@@ -141,25 +229,6 @@
               <a href="2014/01/21/folds-and-unfolds.html" class="btn btn-success btn-sm read-more">Read <i class="fa fa-arrow-right"></i></a>
               <br>
             </article>
-            <article>
-              <h2><a href="2014/01/03/referentially-transparent-io.html">Referentially Transparent Input/Output in Groovy</a></h2>
-          <p class="post-meta">
-            <i class="fa fa-calendar"></i>&nbsp;03 January 2014&nbsp;&nbsp;
-            <i class="fa fa-user"></i>&nbsp;Mark Perry&nbsp;&nbsp;
-              <i class="fa fa-comment"></i>&nbsp;<span class="badge"><a href="http://mperry.github.io2014/01/03/referentially-transparent-io.html#disqus_thread"></a></span>
-          </p>
-              <div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>When learning functional programming, a difficult concept to grasp is how any "actual work" gets done.  That is, if all functions are referentially transparent, then how does the program perform IO (input/output), which is not typically referentially transparent?  Are our functional programs locked out of IO, consigned to calculations without doing useful things like reading from the keyboard, printing to the screen, saving to disk or communicating over a network?</p>
-</div>
-<div class="paragraph">
-<p>The answer, of course, is no. We create programs so that our entire program is a single IO action that, when run, can perform IO.  Ideally, the program we write never actually runs any IO action, we rely on the runtime environment to run the single IO action representing our program.  Most languages don&#8217;t have this environment; we compromise by making our main method run the single IO action representing the program.</p>
-</div>
-
-              <a href="2014/01/03/referentially-transparent-io.html" class="btn btn-success btn-sm read-more">Read <i class="fa fa-arrow-right"></i></a>
-              <br>
-            </article>
               <br>
               <ul class="pager">
                 Older posts can be found in <li><a href="/archive.html"> Archive</a></li>
@@ -176,7 +245,8 @@
                 </div>
 
                 <div id="recent-posts" class="panel-body">
-                  				 <p>2014-07-02 - <a href="2014/07/02/groovy-applicatives.html">Groovy Applicatives</a></p>
+                  				 <p>2014-07-15 - <a href="2014/08/19/groovy-monads.html">Groovy Monads</a></p>
+				 <p>2014-07-02 - <a href="2014/07/02/groovy-applicatives.html">Groovy Applicatives</a></p>
 				 <p>2014-07-01 - <a href="2014/07/01/groovy-functors.html">Groovy Functors</a></p>
 				 <p>2014-06-16 - <a href="2014/06/16/converting-to-jbake.html">Converting to JBake</a></p>
 				 <p>2014-01-21 - <a href="2014/01/21/folds-and-unfolds.html">Folds and Unfolds</a></p>
@@ -185,7 +255,6 @@
 				 <p>2013-07-28 - <a href="2013/07/28/groovy-null-handling.html">Groovy Null Handling Using Bind, Comprehensions and Lift</a></p>
 				 <p>2012-11-12 - <a href="2012/11/12/early-software-estimation.html">Early Software Estimation</a></p>
 				 <p>2012-11-10 - <a href="2012/11/10/groovy-project-euler.html">Project Eueler in Groovy</a></p>
-				 <p>2012-11-09 - <a href="2012/11/09/dependent-types.html">Introduction to Dependent Types</a></p>
 				</div>
 			</div>
 
@@ -240,7 +309,7 @@
         <hr>
         <div class="row">
           <div class="col-xs-10">
-            <p class="text-muted credit">&copy;  2014 | Mixed with <a href="http://getbootstrap.com/">Bootstrap v3.1.1</a> | Baked with <a href="http://jbake.org">JBake v2.3.0</a> | <i title="Linux" class="fa fa-linux"></i></p>
+            <p class="text-muted credit">&copy;  2014 | Mixed with <a href="http://getbootstrap.com/">Bootstrap v3.1.1</a> | Baked with <a href="http://jbake.org">JBake v2.3.1</a> | <i title="Linux" class="fa fa-linux"></i></p>
           </div>
           <div class="col-xs-2 gotop">
             <a href="#"><i class="fa fa-arrow-circle-up"> top</i></a>
@@ -252,6 +321,18 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-28753951-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
     <script src="//cdnjs.cloudflare.com/ajax/libs/gist-embed/1.6/gist-embed.min.js"></script>
     
     <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
