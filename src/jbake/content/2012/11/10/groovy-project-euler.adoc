@@ -1,4 +1,4 @@
-= Project Eueler in Groovy
+= Project Euler in Groovy
 Mark Perry
 2012-11-10
 :jbake-type: post
@@ -16,7 +16,7 @@ ____
 <!-- more -->
 +++++
 
-I used Groovy 2.0.5 to explore type safety in Groovy to solve practical programming problems.  For now, I will post a link to my https://github.com/mperry/euler_groovy/tree/master/src/perry[Grooy Project Eueler GitHub project], with analysis to come in the future.  Currently, I have completed the first ten programming problems.
+I used Groovy 2.0.5 to explore type safety in Groovy to solve practical programming problems.  For now, I will post a link to my https://github.com/mperry/euler_groovy/tree/master/src/perry[Groovy Project Euler GitHub project], with analysis to come in the future.  Currently, I have completed the first ten programming problems.
 
 
 
