@@ -6,8 +6,8 @@
     <atom:link href="http://mperry.github.io/feed.xml" rel="self" type="application/rss+xml" />
     <description>Thoughts on the discipline of software engineering</description>
     <language>en</language>
-    <pubDate>01/09/2014 11:35:42 PM</pubDate>
-    <lastBuildDate>01/09/2014 11:35:42 PM</lastBuildDate>
+    <pubDate>06/09/2014 8:47:31 PM</pubDate>
+    <lastBuildDate>06/09/2014 8:47:31 PM</lastBuildDate>
 
       <item>
         <title>Groovy Monads</title>
@@ -149,7 +149,7 @@ class OptionMonad extends Monad&amp;lt;Option&amp;gt; {
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;Conclusion&lt;/p&gt;
+&lt;p&gt;My intent is to show some examples of using these simple monads and some concrete methods we can derive from the monad methods &lt;em&gt;unit&lt;/em&gt; and &lt;em&gt;flatMap&lt;/em&gt; in the next post&lt;a href=&quot;#4&quot;&gt;[4]&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -168,6 +168,14 @@ class OptionMonad extends Monad&amp;lt;Option&amp;gt; {
 &lt;p&gt;&lt;a id=&quot;3&quot;&gt;&lt;/a&gt;[3] Groovy Functors, &lt;a href=&quot;http://mperry.github.io/2014/07/01/groovy-functors.html&quot;&gt;http://mperry.github.io/2014/07/01/groovy-functors.html&lt;/a&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;sect1&quot;&gt;
+&lt;h2 id=&quot;_postscript&quot;&gt;Postscript&lt;/h2&gt;
+&lt;div class=&quot;sectionbody&quot;&gt;
+&lt;div class=&quot;paragraph&quot;&gt;
+&lt;p&gt;&lt;a id=&quot;4&quot;&gt;&lt;/a&gt;[4] This post was originally meant to be longer, but was published in a draft state, so I will continue the topic in a new blog post.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -2503,7 +2511,7 @@ Option&amp;lt;B&amp;gt; map(F&amp;lt;A, B&amp;gt; f)&lt;/code&gt;&lt;/pre&gt;
         </description>
       </item>
       <item>
-        <title>Project Eueler in Groovy</title>
+        <title>Project Euler in Groovy</title>
         <author>Mark Perry</author>
         <link>http://mperry.github.io/2012/11/10/groovy-project-euler.html</link>
         <pubDate>10/11/2012 12:00:00 AM</pubDate>
@@ -2523,7 +2531,7 @@ Option&amp;lt;B&amp;gt; map(F&amp;lt;A, B&amp;gt; f)&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;!-- more --&gt;
 &lt;div class=&quot;paragraph&quot;&gt;
-&lt;p&gt;I used Groovy 2.0.5 to explore type safety in Groovy to solve practical programming problems.  For now, I will post a link to my &lt;a href=&quot;https://github.com/mperry/euler_groovy/tree/master/src/perry&quot;&gt;Grooy Project Eueler GitHub project&lt;/a&gt;, with analysis to come in the future.  Currently, I have completed the first ten programming problems.&lt;/p&gt;
+&lt;p&gt;I used Groovy 2.0.5 to explore type safety in Groovy to solve practical programming problems.  For now, I will post a link to my &lt;a href=&quot;https://github.com/mperry/euler_groovy/tree/master/src/perry&quot;&gt;Groovy Project Euler GitHub project&lt;/a&gt;, with analysis to come in the future.  Currently, I have completed the first ten programming problems.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
