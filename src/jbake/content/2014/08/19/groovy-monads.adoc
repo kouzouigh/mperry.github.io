@@ -82,12 +82,7 @@ class OptionMonad extends Monad<Option> {
 }
 ----
 
-
-
-
-Conclusion
-
-
+My intent is to show some examples of using these simple monads and some concrete methods we can derive from the monad methods _unit_ and _flatMap_ in the next post<<4>>.
 
 == Bibliography
 
@@ -95,6 +90,10 @@ Conclusion
 * [[[1]]] FunctionalGroovy, https://github.com/mperry/functionalgroovy
 * [[[2]]] Functors, Applicatives, And Monads In Pictures, http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html
 * [[[3]]] Groovy Functors, http://mperry.github.io/2014/07/01/groovy-functors.html.
+
+== Postscript
+
+[[[4]]] This post was originally meant to be longer, but was published in a draft state, so I will continue the topic in a new blog post.
 
 
 
