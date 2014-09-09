@@ -1,0 +1,126 @@
+= Groovy Monads 2
+Mark Perry
+2014-09-07
+:jbake-type: post
+:jbake-tags: groovy, monad, functional programming, functor, kind, higher-order type, typeclass, applicative
+:jbake-status: published
+
+In the previous post I discussed how to define monads in Groovy and looked a little at how they differ from functors and applicatives.
+
+TODO
+
++++++
+<!-- more -->
++++++
+
+The payoff for defining monads is not having the methods _unit_ and _flatMap_ defined for the monad, although this is useful.  The key benefit is the many methods derived from these methods that come with the abstraction.
+
+We start by defining the methods unit and flatMap where:
+
+* unit - lift a value into the monadic type
+* flatMap - compose two actions, passing any value from the first as the argument to the second
+
+From this the following (selection of) useful methods are derived:
+
+* apply - sequence computations and combine their results.
+* compose - monad composition.
+* filterM - monadic filtering
+* foldM - monadic folding
+* join - remove one level of structure
+* liftM - lift function to a monad
+* liftM2 - lift a two argument function to a monad
+* map - apply function to each element
+* map2 - apply a two argument function over two monads
+* replicateM - perform the monad _n_ times, gathering the results
+* sequence - evaluate action left to right, gathering the results
+* traverse - map each element to an action and evaluate left to right, gathering the results.
+
+I am going to focus on just a couple of these, _sequence_ and _traverse_ and show their usefulness for a few concrete types.  The type signatures of these two methods are:
+
+[source]
+----
+@TypeChecked
+abstract class Monad<M> extends Applicative<M> {
+
+    /**
+     * Evaluate each action in the sequence from left to right, and gather the results.
+     */
+    def <A> M<List<A>> sequence(List<M<A>> list)
+
+    /**
+     * Map each element of a structure to an action, evaluate these actions from
+     * left to right and gather the results.
+     */
+    def <A, B> M<List<B>> traverse(List<A> list, F<A, M<B>> f)
+
+}
+
+----
+
+For the Option monad we can test the use of _sequence_ and _traverse_ as follows:
+
+* sequence a list of optional integers to get an optional list of integers
+* traverse a list of integers to determine if they are all even
+
+[source,groovy]
+----
+@TypeChecked
+class OptionMonadTest {
+
+    OptionMonad monad() {
+        new OptionMonad()
+    }
+
+    @Test
+    void sequence() {
+        assert(monad().sequence([some(3), some(2), some(5)]) == some([3, 2, 5]))
+        assert(monad().sequence([some(3), none(), some(5)]) == none())
+    }
+
+    @Test
+    void traverse() {
+        def even = { Integer i -> i % 2 == 0 ? some(i) : none()} as F
+        assert(monad().traverse([2, 4, 6], even) ==  some([2, 4, 6]))
+        assert(monad().traverse([2, 3, 6], even) ==  none())
+    }
+}
+----
+
+We have used integers here, but with just a little imagination you could sequence an optional value from a map, value from property files, successful remote calls or any other abstraction with a sequence of success/fail methods.  For traverse, we map each integer to an `Option<Integer>` and gather the results to a `List<Option<Integer>>`.  These two methods are quite similar, they both have the same return type.  I believe they can be implemented in terms of each other.  Perhaps you could try to do this yourself.
+
+Now consider a little more exotic example of an input/output type (IO).  We define an interface, which when the `run` method is called, returns a type `A`.  We ignore any exception value in the following examples for simplicity.
+
+[source,groovy]
+----
+public interface IO<A> {
+    public A run() throws IOException;
+}
+----
+
+We define an IO monad by implementing _unit_ and _flatMap_:
+
+[source,groovy]
+----
+@TypeChecked
+class IOMonad extends Monad<IO> {
+
+    @Override
+    def <A> IO<A> unit(A a) {
+        { -> a } as IO<A>
+    }
+
+    @Override
+    def <A, B> IO<B> flatMap(IO<A> io, F<A, IO<B>> f) {
+        { -> f.f(io.run()).run() } as IO<B>
+    }
+}
+----
+
+
+== Bibliography
+
+[bibliography]
+* [[[1]]] FunctionalGroovy, https://github.com/mperry/functionalgroovy
+* [[[2]]] Functors, Applicatives, And Monads In Pictures, http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html
+* [[[3]]] Groovy Functors, http://mperry.github.io/2014/07/01/groovy-functors.html.
+

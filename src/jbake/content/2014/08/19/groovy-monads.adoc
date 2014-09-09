@@ -1,6 +1,6 @@
 = Groovy Monads
 Mark Perry
-2014-07-15
+2014-08-19
 :jbake-type: post
 :jbake-tags: groovy, monad, functional programming, functor, kind, higher-order type, typeclass, applicative
 :jbake-status: published
