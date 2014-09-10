@@ -1,4 +1,4 @@
-= Groovy Monads 2
+= Groovy Monads Combinators
 Mark Perry
 2014-09-07
 :jbake-type: post
@@ -7,13 +7,11 @@ Mark Perry
 
 In the previous post I discussed how to define monads in Groovy and looked a little at how they differ from functors and applicatives.
 
-TODO
+The payoff for defining monads is not having the methods _unit_ and _flatMap_ defined for the monad, although this is useful.  The key benefit is the many methods derived from these methods that come with the abstraction.
 
 +++++
 <!-- more -->
 +++++
-
-The payoff for defining monads is not having the methods _unit_ and _flatMap_ defined for the monad, although this is useful.  The key benefit is the many methods derived from these methods that come with the abstraction.
 
 We start by defining the methods unit and flatMap where:
 
@@ -52,9 +50,7 @@ abstract class Monad<M> extends Applicative<M> {
      * left to right and gather the results.
      */
     def <A, B> M<List<B>> traverse(List<A> list, F<A, M<B>> f)
-
 }
-
 ----
 
 For the Option monad we can test the use of _sequence_ and _traverse_ as follows:
@@ -67,9 +63,7 @@ For the Option monad we can test the use of _sequence_ and _traverse_ as follows
 @TypeChecked
 class OptionMonadTest {
 
-    OptionMonad monad() {
-        new OptionMonad()
-    }
+    static OptionMonad monad = new OptionMonad()
 
     @Test
     void sequence() {
@@ -116,11 +110,82 @@ class IOMonad extends Monad<IO> {
 }
 ----
 
+We define some _referentially transparent_ IO functions which we will use:
+
+[source,groovy]
+----
+    static IO<List<File>> listFiles(File f) {
+        { ->
+            def files = new ArrayList<File>()
+            files.addAll(f.listFiles())
+            files
+        } as IO<List<File>>
+    }
+
+    static IO<List<File>> listFiles() {
+        listFiles(new File("."))
+    }
+
+    static IO<Long> size(File f) {
+        { -> f.length() } as IO
+    }
+
+    static IO<String> info(File f) {
+        { -> "${f.name}:${f.length()}" } as IO
+    }
+----
+
+Now we can use _sequence_ and _traverse_ to list the files in the current directory and their sizes.  We use the sequence method first (whose type signature for IO is `IO<List<A>> sequence(List<IO<A>>)`).
+
+[source,groovy]
+----
+    static IOMonad monad = new IOMonad()
+
+    @Test
+    void sequence() {
+        def io = monad.flatMap(listFiles(), { List<File> list ->
+            monad.sequence(list.map{ File f -> info(f) }) as IO<List<String>>
+        })
+        println(io.run().join("\n"))
+    }
+----
+
+This produces the following output snippet for the FunctionalGroovy base directory:
+
+----
+.git:4096
+.gitattributes:518
+.gitignore:72
+.gradle:0
+.idea:4096
+.travis.yml:453
+build:0
+build.gradle:3458
+consume:4096
+...
+----
+
+We can remove a map call in the example above by using the traverse method (whose type for IO is `IO<List<B>> traverse(List<A>, F<A, IO<B>>)`):
+
+[source,groovy]
+----
+    static IOMonad monad = new IOMonad()
+
+    @Test
+    void traverse() {
+        def io = monad.flatMap(listFiles(), { List<File> list ->
+            monad.traverse(list, { File f -> info(f) }) as IO<List<String>>
+        })
+        println(io.run().join("\n"))
+    }
+----
+
+== Summary
+
+Remember that sequence and traverse are just two methods derived from the definition of a monad.  To view the full definition of monad combinators, go to the https://github.com/mperry/functionalgroovy/blob/master/typeclass/src/main/groovy/com/github/mperry/fg/typeclass/Monad.groovy[Github FunctionalGroovy Monad class].
 
 == Bibliography
 
 [bibliography]
 * [[[1]]] FunctionalGroovy, https://github.com/mperry/functionalgroovy
-* [[[2]]] Functors, Applicatives, And Monads In Pictures, http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html
-* [[[3]]] Groovy Functors, http://mperry.github.io/2014/07/01/groovy-functors.html.
 
